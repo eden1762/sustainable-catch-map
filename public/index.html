@@ -34,7 +34,7 @@
       })
       .catch((err) => {
         console.error("LIFF 初始化失敗", err);
-        document.getElementById('status').innerText = "系統連線失敗，請稍後再試。"+err.message;
+        document.getElementById('status').innerText = "系統連線失敗，請稍後再試。err=" + err.toString();
       });
   </script>
 </body>
