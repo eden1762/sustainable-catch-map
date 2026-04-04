@@ -1,0 +1,10 @@
+{
+  "name": "sustainable-catch-map",
+  "version": "1.0.0",
+  "scripts": {
+    "start": "node api/webhook.js"
+  },
+  "dependencies": {
+    "@line/bot-sdk": "^8.0.0"
+  }
+}
