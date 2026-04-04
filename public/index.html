@@ -1,0 +1,41 @@
+<!DOCTYPE html>
+<html lang="zh-TW">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>永續漁人地圖 Sustainable Catch Map</title>
+  <script charset="utf-8" src="https://static.line-scdn.net/liff/edge/2/sdk.js"></script>
+  <style>
+    body { font-family: '微軟正黑體', sans-serif; padding: 20px; text-align: center; }
+    .btn { background-color: #00B900; color: white; padding: 10px 20px; border: none; border-radius: 5px; cursor: pointer; }
+  </style>
+</head>
+<body>
+  <h1>🐟 永續漁人地圖</h1>
+  <p id="status">正在載入漁獲數據庫...</p>
+  
+  <div id="content" style="display: none;">
+    <p>您好！歡迎使用永續海鮮推薦系統。</p>
+    <button class="btn" onclick="liff.closeWindow()">關閉地圖</button>
+  </div>
+
+  <script>
+    // 請將 YOUR_LIFF_ID 替換成截圖三中 FishFullMiniApp 綁定的 LIFF ID
+    const liffId = "2009686844"; 
+
+    liff.init({ liffId: liffId })
+      .then(() => {
+        if (!liff.isLoggedIn()) {
+          liff.login();
+        } else {
+          document.getElementById('status').style.display = 'none';
+          document.getElementById('content').style.display = 'block';
+        }
+      })
+      .catch((err) => {
+        console.error("LIFF 初始化失敗", err);
+        document.getElementById('status').innerText = "系統連線失敗，請稍後再試。";
+      });
+  </script>
+</body>
+</html>
