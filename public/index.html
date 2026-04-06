@@ -9,7 +9,8 @@
   
   <script type="module" src="https://ajax.googleapis.com/ajax/libs/model-viewer/3.3.0/model-viewer.min.js"></script>
   
-  <script async defer src="https://maps.googleapis.com/maps/api/js?key=YOUR_GOOGLE_MAPS_API_KEY&callback=initMap"></script>
+  <link rel="stylesheet" href="https://unpkg.com/leaflet@1.9.4/dist/leaflet.css" />
+  <script src="https://unpkg.com/leaflet@1.9.4/dist/leaflet.js"></script>
 
   <style>
     /* 藍綠色系與海灘風味調色盤 */
@@ -59,12 +60,13 @@
 
     .card h3 { margin-top: 0; color: var(--ocean-blue); }
 
-    /* Google Map 容器 */
+    /* 開源地圖容器 */
     #map {
       width: 100%;
       height: 250px;
       border-radius: 10px;
       background-color: #e0e0e0;
+      z-index: 1; /* 避免遮擋其他選單 */
     }
 
     /* AR/3D 容器 */
@@ -130,24 +132,29 @@
   </div>
 
   <script>
-    // 1. 初始化 Google Map
+    // 1. 初始化 Leaflet 開源地圖的函式
     function initMap() {
-      // 預設中心點 (可設定為台灣中心或使用 Geolocation API 抓取用戶當前位置)
-      const centerLoc = { lat: 25.0330, lng: 121.5654 }; 
-      const map = new google.maps.Map(document.getElementById("map"), {
-        zoom: 13,
-        center: centerLoc,
-        mapTypeControl: false,
-        streetViewControl: false
-      });
+      // 預設中心點 (緯度, 經度)
+      const centerLoc = [25.0330, 121.5654]; 
+      
+      // 建立地圖物件並綁定到 id 為 map 的 div
+      const map = L.map('map').setView(centerLoc, 13);
 
-      // 示範地標：永續海鮮合作餐廳
-      const marker = new google.maps.Marker({
-        position: centerLoc,
-        map: map,
-        title: "示範點：永續海鮮示範餐廳",
-        icon: "http://maps.google.com/mapfiles/ms/icons/blue-dot.png"
-      });
+      // 載入 OpenStreetMap 免費圖磚
+      L.tileLayer('https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png', {
+        attribution: '&copy; <a href="https://www.openstreetmap.org/copyright">OpenStreetMap</a> 貢獻者',
+        maxZoom: 19
+      }).addTo(map);
+
+      // 新增一個示範地標：永續海鮮合作餐廳
+      L.marker(centerLoc).addTo(map)
+        .bindPopup('<b>示範點：</b><br>永續海鮮示範餐廳')
+        .openPopup();
+        
+      // 確保地圖在 div 顯示後重新計算大小，避免破圖
+      setTimeout(() => {
+        map.invalidateSize();
+      }, 100);
     }
 
     // 2. LIFF 初始化與邏輯
@@ -158,8 +165,12 @@
         if (!liff.isLoggedIn()) {
           liff.login();
         } else {
+          // 顯示主要內容
           document.getElementById('status').style.display = 'none';
           document.getElementById('content').style.display = 'flex';
+          
+          // 在內容顯示後才初始化地圖，確保 Leaflet 能正確抓到容器大小
+          initMap();
         }
       })
       .catch((err) => {
