@@ -150,7 +150,12 @@ function Sand() {
   return (
     <mesh rotation={[-Math.PI / 2, 0, 0]} position={[0, -0.02, 0]} receiveShadow>
       <planeGeometry args={[80, 80, 64, 64]} />
-      <meshStandardMaterial color="#f8f3df" roughness={0.97} metalness={0.02} />
+      <meshStandardMaterial
+        color="#f8f3df"
+        roughness={0.98}
+        metalness={0.02}
+        bumpScale={0.02}
+      />
     </mesh>
   )
 }
