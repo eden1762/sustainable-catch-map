@@ -107,7 +107,19 @@ function BeachWorld({ activeKey, setActiveKey }) {
   return (
     <>
       <ambientLight intensity={1.2} />
-      <directionalLight position={[5, 9, 4]} intensity={2.4} castShadow />
+      <directionalLight
+        position={[5, 9, 4]}
+        intensity={2.4}
+        castShadow
+        shadow-mapSize-width={2048}
+        shadow-mapSize-height={2048}
+        shadow-camera-near={0.5}
+        shadow-camera-far={30}
+        shadow-camera-left={-12}
+        shadow-camera-right={12}
+        shadow-camera-top={12}
+        shadow-camera-bottom={-12}
+      />
       <hemisphereLight args={['#fff8dd', '#a9dcff', 1.3]} />
       <Sky sunPosition={[8, 6, -5]} turbidity={4} rayleigh={1.6} />
       <Stars radius={60} depth={30} count={1000} factor={2} saturation={0} fade speed={0.3} />
