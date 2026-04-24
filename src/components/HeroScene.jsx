@@ -921,3 +921,37 @@ function NewtonCradle({ active, color }) {
     </group>
   )
 }
+
+/* ============================================================
+   共用基座
+============================================================ */
+function RoundBase({ color, accent }) {
+  return (
+    <group>
+      <mesh position={[0, 0.06, 0]} castShadow receiveShadow>
+        <cylinderGeometry args={[0.78, 0.9, 0.16, 48]} />
+        <meshStandardMaterial color={color} roughness={0.65} metalness={0.02} />
+      </mesh>
+
+      <mesh position={[0, 0.14, 0]} castShadow>
+        <cylinderGeometry args={[0.65, 0.75, 0.05, 48]} />
+        <meshStandardMaterial color={accent} roughness={0.86} />
+      </mesh>
+
+      <mesh position={[0, 0.155, 0.28]} rotation={[-Math.PI / 2, 0, 0]}>
+        <ringGeometry args={[0.3, 0.5, 24, 1, 0.5, Math.PI * 0.65]} />
+        <meshStandardMaterial color="#bfe8ff" transparent opacity={0.55} side={THREE.DoubleSide} />
+      </mesh>
+
+      <mesh position={[-0.38, 0.16, 0.12]} rotation={[-Math.PI / 2, 0, 0.2]}>
+        <circleGeometry args={[0.06, 18]} />
+        <meshBasicMaterial color="#d9c2a0" transparent opacity={0.42} />
+      </mesh>
+
+      <mesh position={[0.36, 0.16, 0.18]} rotation={[-Math.PI / 2, 0, -0.15]}>
+        <circleGeometry args={[0.07, 18]} />
+        <meshBasicMaterial color="#d9c2a0" transparent opacity={0.42} />
+      </mesh>
+    </group>
+  )
+}
