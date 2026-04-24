@@ -50,8 +50,8 @@ export default function HeroScene() {
   return (
     <div className="hero-shell">
       <Canvas camera={{ position: [0, 1.7, 8], fov: 55 }} dpr={[1, 2]} shadows>
-        <color attach="background" args={['#eef8ff']} />
-        <fog attach="fog" args={['#eef8ff', 14, 38]} />
+        <color attach="background" args={['#d6eeff']} />
+        <fog attach="fog" args={['#c8e8ff', 18, 42]} />
         <Suspense fallback={null}>
           <BeachWorld activeKey={activeKey} setActiveKey={setActiveKey} />
         </Suspense>
@@ -81,9 +81,7 @@ export default function HeroScene() {
               className={`hero-menu-item ${item.key === activeKey ? 'active' : ''}`}
               onMouseEnter={() => setActiveKey(item.key)}
               onFocus={() => setActiveKey(item.key)}
-              onClick={() => {
-                window.location.href = item.route
-              }}
+              onClick={() => { window.location.href = item.route }}
             >
               <span className="hero-menu-title">{item.title}</span>
               <span className="hero-menu-subtitle">{item.subtitle}</span>
@@ -102,33 +100,54 @@ export default function HeroScene() {
   )
 }
 
+/* ============================================================
+   Beach World — 整體場景
+============================================================ */
 function BeachWorld({ activeKey, setActiveKey }) {
   return (
     <>
-      <ambientLight intensity={1.1} />
+      <ambientLight intensity={1.2} />
       <directionalLight
-        position={[5, 9, 4]}
-        intensity={2.4}
+        position={[6, 10, 3]}
+        intensity={2.8}
         castShadow
         shadow-mapSize-width={2048}
         shadow-mapSize-height={2048}
         shadow-camera-near={0.5}
-        shadow-camera-far={30}
-        shadow-camera-left={-12}
-        shadow-camera-right={12}
-        shadow-camera-top={12}
-        shadow-camera-bottom={-12}
+        shadow-camera-far={35}
+        shadow-camera-left={-14}
+        shadow-camera-right={14}
+        shadow-camera-top={14}
+        shadow-camera-bottom={-14}
       />
-      <hemisphereLight args={['#fff8dd', '#a9dcff', 1.3]} />
-      <Sky sunPosition={[8, 6, -5]} turbidity={4} rayleigh={1.6} />
-      <Stars radius={60} depth={30} count={1000} factor={2} saturation={0} fade speed={0.3} />
-      <Sparkles count={80} scale={[24, 8, 24]} size={2.2} speed={0.25} opacity={0.2} />
+      {/* 補光：模擬天空反射 */}
+      <directionalLight position={[-4, 3, 8]} intensity={0.6} color="#a8d8f8" />
+      <hemisphereLight args={['#ffe8b0', '#7eceff', 1.5]} />
+
+      {/* 晴天天空：加強太陽位置、清晰度 */}
+      <Sky
+        sunPosition={[6, 5, -8]}
+        turbidity={2.5}
+        rayleigh={1.2}
+        mieCoefficient={0.003}
+        mieDirectionalG={0.85}
+        inclination={0.48}
+        azimuth={0.25}
+      />
+      <Stars radius={80} depth={40} count={800} factor={1.8} saturation={0} fade speed={0.2} />
+      <Sparkles count={100} scale={[28, 10, 28]} size={1.8} speed={0.2} opacity={0.15} color="#fff8e0" />
 
       <SunGlare />
+      <Clouds />
       <Sand />
+      <SandDetails />
       <Sea />
+      <SeaReflection />
+      <WaveLayer offset={0} speed={1.4} opacity={0.55} color="#a8e4f8" z={-9.5} />
+      <WaveLayer offset={Math.PI * 0.5} speed={1.1} opacity={0.4} color="#c2eeff" z={-10.5} />
       <ShoreFoam />
       <Footsteps />
+      <SeashellDecor />
 
       {MENU_ITEMS.map(item => (
         <InteractiveMenuObject
@@ -142,77 +161,344 @@ function BeachWorld({ activeKey, setActiveKey }) {
   )
 }
 
+/* ============================================================
+   太陽光暈 — 更豐富的光芒效果
+============================================================ */
 function SunGlare() {
-  return (
-    <mesh position={[9, 6, -14]}>
-      <sphereGeometry args={[1.1, 32, 32]} />
-      <meshBasicMaterial color="#fff9db" toneMapped={false} />
-    </mesh>
-  )
-}
-
-function Sand() {
-  return (
-    <mesh rotation={[-Math.PI / 2, 0, 0]} position={[0, -0.02, 0]} receiveShadow>
-      <planeGeometry args={[80, 80, 64, 64]} />
-      <meshStandardMaterial color="#f8f3df" roughness={0.98} metalness={0.02} />
-    </mesh>
-  )
-}
-
-function Sea() {
-  const ref = useRef()
+  const coreRef = useRef()
+  const halo1Ref = useRef()
+  const halo2Ref = useRef()
 
   useFrame((state) => {
-    if (!ref.current) return
-    ref.current.material.opacity = 0.9 + Math.sin(state.clock.elapsedTime * 0.8) * 0.05
-    ref.current.position.z = -15 + Math.sin(state.clock.elapsedTime * 0.4) * 0.2
+    const t = state.clock.elapsedTime
+    if (halo1Ref.current) {
+      halo1Ref.current.material.opacity = 0.12 + Math.sin(t * 0.7) * 0.03
+      halo1Ref.current.scale.setScalar(1 + Math.sin(t * 0.5) * 0.04)
+    }
+    if (halo2Ref.current) {
+      halo2Ref.current.material.opacity = 0.06 + Math.sin(t * 0.4) * 0.02
+    }
   })
 
   return (
-    <mesh ref={ref} rotation={[-Math.PI / 2, 0, 0]} position={[0, 0.03, -15]}>
-      <planeGeometry args={[80, 28, 2, 2]} />
-      <meshStandardMaterial color="#83d8ff" transparent opacity={0.92} roughness={0.2} metalness={0.05} />
-    </mesh>
+    <group position={[7, 6.5, -16]}>
+      {/* 太陽核心 */}
+      <mesh ref={coreRef}>
+        <sphereGeometry args={[0.85, 32, 32]} />
+        <meshBasicMaterial color="#fff9e0" toneMapped={false} />
+      </mesh>
+      {/* 暈圈 1 */}
+      <mesh ref={halo1Ref} rotation={[0, 0, 0]}>
+        <ringGeometry args={[1.0, 2.2, 64]} />
+        <meshBasicMaterial color="#fff4c0" transparent opacity={0.12} side={THREE.DoubleSide} toneMapped={false} />
+      </mesh>
+      {/* 暈圈 2 */}
+      <mesh ref={halo2Ref}>
+        <ringGeometry args={[2.4, 4.5, 64]} />
+        <meshBasicMaterial color="#ffe8a0" transparent opacity={0.06} side={THREE.DoubleSide} toneMapped={false} />
+      </mesh>
+    </group>
   )
 }
 
-function ShoreFoam() {
-  const ref = useRef()
-
-  useFrame((state) => {
-    if (!ref.current) return
-    ref.current.position.z = -8.8 + Math.sin(state.clock.elapsedTime * 1.4) * 0.16
-    ref.current.material.opacity = 0.5 + Math.sin(state.clock.elapsedTime * 1.6) * 0.09
-  })
-
+/* ============================================================
+   雲朵 — 多層靜態體積雲
+============================================================ */
+function CloudPuff({ position, scale = 1 }) {
   return (
-    <mesh ref={ref} rotation={[-Math.PI / 2, 0, 0]} position={[0, 0.04, -8.8]}>
-      <planeGeometry args={[80, 5]} />
-      <meshBasicMaterial color="#ffffff" transparent opacity={0.56} />
-    </mesh>
-  )
-}
-
-function Footsteps() {
-  return (
-    <group position={[0, 0.01, 4.2]} rotation={[-Math.PI / 2, 0, 0]}>
-      {[-0.45, 0.45].map((x, i) => (
-        <mesh key={i} position={[x, 0, i * 0.6]}>
-          <circleGeometry args={[0.18, 20]} />
-          <meshBasicMaterial color="#d6c3a4" transparent opacity={0.45} />
-        </mesh>
-      ))}
-      {[-0.38, 0.38].map((x, i) => (
-        <mesh key={`b${i}`} position={[x, -0.6, 0.8 + i * 0.65]}>
-          <circleGeometry args={[0.18, 20]} />
-          <meshBasicMaterial color="#d6c3a4" transparent opacity={0.45} />
+    <group position={position}>
+      {[
+        [0, 0, 0, 1.0],
+        [0.9, -0.2, 0.3, 0.8],
+        [-0.8, -0.15, 0.2, 0.75],
+        [0.3, 0.3, -0.1, 0.65],
+        [-0.4, 0.2, 0.4, 0.6],
+        [1.5, 0.1, 0, 0.55],
+        [-1.4, 0.05, 0.1, 0.5],
+      ].map(([x, y, z, s], i) => (
+        <mesh key={i} position={[x * scale, y * scale, z * scale]}>
+          <sphereGeometry args={[s * scale, 12, 12]} />
+          <meshStandardMaterial
+            color="#ffffff"
+            roughness={1}
+            metalness={0}
+            transparent
+            opacity={0.82}
+          />
         </mesh>
       ))}
     </group>
   )
 }
 
+function Clouds() {
+  const groupRef = useRef()
+
+  useFrame((state) => {
+    if (groupRef.current) {
+      groupRef.current.position.x = Math.sin(state.clock.elapsedTime * 0.025) * 0.5
+    }
+  })
+
+  return (
+    <group ref={groupRef}>
+      <CloudPuff position={[-14, 9, -22]} scale={1.6} />
+      <CloudPuff position={[8, 10.5, -26]} scale={1.2} />
+      <CloudPuff position={[20, 8, -30]} scale={2.0} />
+      <CloudPuff position={[-22, 11, -35]} scale={1.4} />
+      <CloudPuff position={[2, 12, -40]} scale={1.8} />
+    </group>
+  )
+}
+
+/* ============================================================
+   沙灘 — 更細緻的沙質材質與漸層
+============================================================ */
+function Sand() {
+  // 使用頂點色彩模擬沙紋顏色變化
+  const geometry = useMemo(() => {
+    const geo = new THREE.PlaneGeometry(90, 90, 80, 80)
+    const positions = geo.attributes.position
+    const colors = new Float32Array(positions.count * 3)
+
+    for (let i = 0; i < positions.count; i++) {
+      const x = positions.getX(i)
+      const y = positions.getY(i) // y in local plane coords = Z in world
+
+      // 越靠近海（y < 0 = world z < 0）越深色、越濕潤
+      const wetness = Math.max(0, Math.min(1, (-y - 5) / 20))
+      // 加入細微雜訊
+      const noise = (Math.sin(x * 3.7 + y * 2.3) * 0.5 + 0.5) * 0.04
+
+      const r = THREE.MathUtils.lerp(0.972, 0.68, wetness) + noise
+      const g = THREE.MathUtils.lerp(0.952, 0.62, wetness) + noise * 0.8
+      const b = THREE.MathUtils.lerp(0.878, 0.52, wetness) + noise * 0.6
+
+      colors[i * 3] = r
+      colors[i * 3 + 1] = g
+      colors[i * 3 + 2] = b
+    }
+
+    geo.setAttribute('color', new THREE.BufferAttribute(colors, 3))
+    return geo
+  }, [])
+
+  return (
+    <mesh rotation={[-Math.PI / 2, 0, 0]} position={[0, -0.02, 0]} receiveShadow geometry={geometry}>
+      <meshStandardMaterial
+        vertexColors
+        roughness={0.96}
+        metalness={0.01}
+      />
+    </mesh>
+  )
+}
+
+/* 沙灘細節：小沙丘起伏感 */
+function SandDetails() {
+  const ripples = useMemo(() => {
+    const items = []
+    for (let i = 0; i < 18; i++) {
+      items.push({
+        x: (Math.random() - 0.5) * 14,
+        z: (Math.random() * 6 - 1),
+        rot: Math.random() * Math.PI,
+        scale: 0.3 + Math.random() * 0.9,
+        opacity: 0.1 + Math.random() * 0.18
+      })
+    }
+    return items
+  }, [])
+
+  return (
+    <group position={[0, 0.005, 0]} rotation={[-Math.PI / 2, 0, 0]}>
+      {ripples.map((r, i) => (
+        <mesh key={i} position={[r.x, r.z, 0]} rotation={[0, 0, r.rot]}>
+          <ellipseGeometry args={[r.scale * 1.8, r.scale * 0.35, 24]} />
+          <meshBasicMaterial color="#e8d8b0" transparent opacity={r.opacity} />
+        </mesh>
+      ))}
+    </group>
+  )
+}
+
+/* ============================================================
+   海洋 — 多層次、帶波紋反光
+============================================================ */
+function Sea() {
+  const ref = useRef()
+  const normalRef = useRef(0)
+
+  useFrame((state) => {
+    if (!ref.current) return
+    const t = state.clock.elapsedTime
+    ref.current.material.opacity = 0.88 + Math.sin(t * 0.6) * 0.05
+    ref.current.position.z = -16 + Math.sin(t * 0.35) * 0.25
+    // 模擬水面起伏
+    ref.current.rotation.x = -Math.PI / 2 + Math.sin(t * 0.3) * 0.008
+  })
+
+  return (
+    <mesh ref={ref} rotation={[-Math.PI / 2, 0, 0]} position={[0, 0.04, -16]}>
+      <planeGeometry args={[90, 32, 4, 4]} />
+      <meshStandardMaterial
+        color="#4ab8e8"
+        transparent
+        opacity={0.9}
+        roughness={0.08}
+        metalness={0.18}
+        envMapIntensity={1.2}
+      />
+    </mesh>
+  )
+}
+
+/* 海面高光反射層 */
+function SeaReflection() {
+  const ref = useRef()
+
+  useFrame((state) => {
+    if (!ref.current) return
+    const t = state.clock.elapsedTime
+    ref.current.material.opacity = 0.12 + Math.sin(t * 1.8 + 1) * 0.06
+    ref.current.position.z = -14 + Math.sin(t * 0.5) * 0.3
+    ref.current.position.x = Math.sin(t * 0.4) * 0.8
+  })
+
+  return (
+    <mesh ref={ref} rotation={[-Math.PI / 2, 0, 0]} position={[2, 0.055, -14]}>
+      <planeGeometry args={[18, 8, 1, 1]} />
+      <meshBasicMaterial color="#e8f8ff" transparent opacity={0.15} />
+    </mesh>
+  )
+}
+
+/* 波浪層 */
+function WaveLayer({ offset, speed, opacity, color, z }) {
+  const ref = useRef()
+
+  useFrame((state) => {
+    if (!ref.current) return
+    const t = state.clock.elapsedTime
+    ref.current.position.z = z + Math.sin(t * speed + offset) * 0.22
+    ref.current.material.opacity = opacity * (0.85 + Math.sin(t * speed * 1.3 + offset) * 0.15)
+    // 輕微縮放模擬浪高
+    ref.current.scale.x = 1 + Math.sin(t * speed * 0.7 + offset) * 0.03
+  })
+
+  return (
+    <mesh ref={ref} rotation={[-Math.PI / 2, 0, 0]} position={[0, 0.05, z]}>
+      <planeGeometry args={[90, 3.5, 1, 1]} />
+      <meshBasicMaterial color={color} transparent opacity={opacity} />
+    </mesh>
+  )
+}
+
+/* 海浪泡沫 — 更自然的多層泡沫 */
+function ShoreFoam() {
+  const foam1Ref = useRef()
+  const foam2Ref = useRef()
+
+  useFrame((state) => {
+    const t = state.clock.elapsedTime
+
+    if (foam1Ref.current) {
+      foam1Ref.current.position.z = -9.0 + Math.sin(t * 1.5) * 0.28
+      foam1Ref.current.material.opacity = 0.55 + Math.sin(t * 1.7) * 0.12
+      foam1Ref.current.scale.x = 1 + Math.sin(t * 0.9) * 0.04
+    }
+
+    if (foam2Ref.current) {
+      foam2Ref.current.position.z = -8.2 + Math.sin(t * 1.2 + 1.5) * 0.18
+      foam2Ref.current.material.opacity = 0.3 + Math.sin(t * 2.0 + 0.8) * 0.1
+      foam2Ref.current.scale.x = 1 + Math.sin(t * 1.1 + 0.5) * 0.05
+    }
+  })
+
+  return (
+    <>
+      {/* 主泡沫帶 */}
+      <mesh ref={foam1Ref} rotation={[-Math.PI / 2, 0, 0]} position={[0, 0.055, -9.0]}>
+        <planeGeometry args={[90, 4.5]} />
+        <meshBasicMaterial color="#f0faff" transparent opacity={0.55} />
+      </mesh>
+      {/* 次泡沫帶（退潮尾跡） */}
+      <mesh ref={foam2Ref} rotation={[-Math.PI / 2, 0, 0]} position={[0, 0.05, -8.2]}>
+        <planeGeometry args={[90, 2.5]} />
+        <meshBasicMaterial color="#ffffff" transparent opacity={0.3} />
+      </mesh>
+    </>
+  )
+}
+
+/* 腳印 */
+function Footsteps() {
+  return (
+    <group position={[0, 0.012, 4.2]} rotation={[-Math.PI / 2, 0, 0]}>
+      {[-0.45, 0.45].map((x, i) => (
+        <mesh key={i} position={[x, 0, i * 0.65]}>
+          <ellipseGeometry args={[0.12, 0.18, 20]} />
+          <meshBasicMaterial color="#c8b08a" transparent opacity={0.5} />
+        </mesh>
+      ))}
+      {[-0.38, 0.38].map((x, i) => (
+        <mesh key={`b${i}`} position={[x, -0.65, 0.85 + i * 0.68]}>
+          <ellipseGeometry args={[0.12, 0.18, 20]} />
+          <meshBasicMaterial color="#c8b08a" transparent opacity={0.5} />
+        </mesh>
+      ))}
+      {/* 腳趾印 */}
+      {[[-0.52, 0.14], [-0.42, 0.18], [-0.35, 0.16], [-0.28, 0.12]].map(([x, z], i) => (
+        <mesh key={`t${i}`} position={[x, z, 0]}>
+          <circleGeometry args={[0.04, 10]} />
+          <meshBasicMaterial color="#c0a880" transparent opacity={0.38} />
+        </mesh>
+      ))}
+      {[[0.28, 0.14], [0.38, 0.18], [0.46, 0.16], [0.53, 0.12]].map(([x, z], i) => (
+        <mesh key={`tr${i}`} position={[x, z, 0]}>
+          <circleGeometry args={[0.04, 10]} />
+          <meshBasicMaterial color="#c0a880" transparent opacity={0.38} />
+        </mesh>
+      ))}
+    </group>
+  )
+}
+
+/* 貝殼裝飾 */
+function SeashellDecor() {
+  const shells = useMemo(() => [
+    { x: 2.4, z: 2.1, rot: 0.3, scale: 1.0, color: '#f8e8d0' },
+    { x: -1.8, z: 3.5, rot: -0.8, scale: 0.75, color: '#ffd4b8' },
+    { x: 3.8, z: 1.2, rot: 1.2, scale: 0.9, color: '#f5dfc8' },
+    { x: -3.2, z: 2.8, rot: 0.5, scale: 0.65, color: '#ffe0c8' },
+    { x: 0.6, z: 4.8, rot: -0.2, scale: 0.8, color: '#faebd5' },
+  ], [])
+
+  return (
+    <group position={[0, 0.01, 0]}>
+      {shells.map((s, i) => (
+        <group key={i} position={[s.x, 0, s.z]} rotation={[-Math.PI / 2, s.rot, 0]} scale={[s.scale, s.scale, s.scale * 0.4]}>
+          {/* 貝殼主體（扁橢圓） */}
+          <mesh>
+            <sphereGeometry args={[0.11, 16, 10, 0, Math.PI * 2, 0, Math.PI * 0.5]} />
+            <meshStandardMaterial color={s.color} roughness={0.6} metalness={0.04} side={THREE.DoubleSide} />
+          </mesh>
+          {/* 貝殼紋路 */}
+          {[0.25, 0.5, 0.75, 1.0].map((r, ri) => (
+            <mesh key={ri}>
+              <torusGeometry args={[r * 0.09, 0.004, 8, 24, Math.PI]} />
+              <meshBasicMaterial color="#e8c8a8" transparent opacity={0.55} />
+            </mesh>
+          ))}
+        </group>
+      ))}
+    </group>
+  )
+}
+
+/* ============================================================
+   互動物件容器
+============================================================ */
 function InteractiveMenuObject({ item, active, setActiveKey }) {
   const ref = useRef()
   const haloRef = useRef()
@@ -228,9 +514,9 @@ function InteractiveMenuObject({ item, active, setActiveKey }) {
     ref.current.rotation.y = Math.sin(t * 0.5 + item.position[0]) * 0.18
 
     if (haloRef.current) {
-      haloRef.current.material.opacity = active || hovered ? 0.42 : 0.18
-      haloRef.current.rotation.z += 0.01
-      haloRef.current.scale.setScalar(active || hovered ? 1.15 : 1)
+      haloRef.current.material.opacity = active || hovered ? 0.48 : 0.2
+      haloRef.current.rotation.z += 0.008
+      haloRef.current.scale.setScalar(active || hovered ? 1.18 : 1)
     }
   })
 
@@ -240,9 +526,7 @@ function InteractiveMenuObject({ item, active, setActiveKey }) {
       setActiveKey(item.key)
     },
     onPointerLeave: () => setHovered(false),
-    onClick: () => {
-      window.location.href = item.route
-    }
+    onClick: () => { window.location.href = item.route }
   }
 
   return (
@@ -253,19 +537,26 @@ function InteractiveMenuObject({ item, active, setActiveKey }) {
         {item.key === 'ar' && <NewtonCradle active={active || hovered} color={item.accent} />}
       </Float>
 
+      {/* 光圈 */}
       <mesh ref={haloRef} position={[0, -0.75, 0]} rotation={[-Math.PI / 2, 0, 0]}>
-        <ringGeometry args={[0.85, 1.25, 50]} />
-        <meshBasicMaterial color={item.accent} transparent opacity={0.2} />
+        <ringGeometry args={[0.88, 1.32, 56]} />
+        <meshBasicMaterial color={item.accent} transparent opacity={0.22} />
+      </mesh>
+      {/* 內光圈 */}
+      <mesh position={[0, -0.74, 0]} rotation={[-Math.PI / 2, 0, 0]}>
+        <ringGeometry args={[0.5, 0.88, 56]} />
+        <meshBasicMaterial color={item.accent} transparent opacity={0.06} />
       </mesh>
 
-      <Billboard position={[0, 2.35, 0]} follow>
-        <Text fontSize={0.28} color="#183b56" anchorX="center" anchorY="middle" maxWidth={3.2}>
+      <Billboard position={[0, 2.38, 0]} follow>
+        <Text fontSize={0.27} color="#183b56" anchorX="center" anchorY="middle" maxWidth={3.2}
+          outlineWidth={0.008} outlineColor="#ffffff">
           {item.title}
         </Text>
       </Billboard>
 
       {(hovered || active) && (
-        <Html position={[0, 2.9, 0]} center distanceFactor={10}>
+        <Html position={[0, 2.95, 0]} center distanceFactor={10}>
           <div className="floating-tooltip">{item.hoverText}</div>
         </Html>
       )}
@@ -274,44 +565,71 @@ function InteractiveMenuObject({ item, active, setActiveKey }) {
 }
 
 /* ============================================================
-   1. EyesGuide —— 一雙眼睛，適合「網站導覽」
+   1. EyesGuide — 精緻的一雙眼睛
+   改進：虹膜分層、睫毛、更豐富的眼部結構
 ============================================================ */
 function EyesGuide({ active, color }) {
   const groupRef = useRef()
-  const leftPupil = useRef()
-  const rightPupil = useRef()
+  const leftPupilRef = useRef()
+  const rightPupilRef = useRef()
+  const leftIrisRef = useRef()
+  const rightIrisRef = useRef()
   const blinkRef = useRef()
   const glowRef = useRef()
+  const lidTopLeftRef = useRef()
+  const lidTopRightRef = useRef()
 
   useFrame((state) => {
     const t = state.clock.elapsedTime
 
     if (groupRef.current) {
-      groupRef.current.position.y = 1.08 + Math.sin(t * 1.6) * 0.045
+      groupRef.current.position.y = 1.1 + Math.sin(t * 1.6) * 0.045
       groupRef.current.rotation.y = Math.sin(t * 0.8) * 0.18
     }
 
-    const lookX = Math.sin(t * 1.3) * 0.045
-    const lookY = Math.cos(t * 1.1) * 0.025
+    // 眼球追蹤運動
+    const lookX = Math.sin(t * 1.3) * 0.048
+    const lookY = Math.cos(t * 1.05) * 0.026
 
-    if (leftPupil.current) {
-      leftPupil.current.position.x = -0.28 + lookX
-      leftPupil.current.position.y = lookY
+    if (leftPupilRef.current) {
+      leftPupilRef.current.position.x = -0.285 + lookX
+      leftPupilRef.current.position.y = lookY
+      leftPupilRef.current.position.z = 0.245
+    }
+    if (rightPupilRef.current) {
+      rightPupilRef.current.position.x = 0.285 + lookX
+      rightPupilRef.current.position.y = lookY
+      rightPupilRef.current.position.z = 0.245
+    }
+    if (leftIrisRef.current) {
+      leftIrisRef.current.position.x = -0.285 + lookX * 0.7
+      leftIrisRef.current.position.y = lookY * 0.7
+      leftIrisRef.current.position.z = 0.228
+    }
+    if (rightIrisRef.current) {
+      rightIrisRef.current.position.x = 0.285 + lookX * 0.7
+      rightIrisRef.current.position.y = lookY * 0.7
+      rightIrisRef.current.position.z = 0.228
     }
 
-    if (rightPupil.current) {
-      rightPupil.current.position.x = 0.28 + lookX
-      rightPupil.current.position.y = lookY
-    }
-
+    // 眨眼動畫
     if (blinkRef.current) {
-      const blink = active ? 1 : 0.92 + Math.sin(t * 2.2) * 0.04
-      blinkRef.current.scale.y = blink
+      const blinkCycle = Math.sin(t * 2.2)
+      const isBlinking = active ? false : blinkCycle > 0.93
+      blinkRef.current.scale.y = isBlinking ? 0.08 : 1
+    }
+
+    // 眼瞼跟隨
+    if (lidTopLeftRef.current) {
+      lidTopLeftRef.current.position.y = 1.1 + 0.17 + Math.sin(t * 1.6) * 0.045
+    }
+    if (lidTopRightRef.current) {
+      lidTopRightRef.current.position.y = 1.1 + 0.17 + Math.sin(t * 1.6) * 0.045
     }
 
     if (glowRef.current) {
-      glowRef.current.material.opacity = active ? 0.36 + Math.sin(t * 3) * 0.06 : 0.18
-      glowRef.current.scale.setScalar(active ? 1.08 + Math.sin(t * 2.4) * 0.04 : 1)
+      glowRef.current.material.opacity = active ? 0.4 + Math.sin(t * 3) * 0.07 : 0.18
+      glowRef.current.scale.setScalar(active ? 1.1 + Math.sin(t * 2.4) * 0.04 : 1)
     }
   })
 
@@ -319,72 +637,154 @@ function EyesGuide({ active, color }) {
     <group>
       <RoundBase color={color} accent="#eefaff" />
 
-      <mesh ref={glowRef} position={[0, 1.08, -0.04]}>
-        <cylinderGeometry args={[0.86, 0.86, 0.035, 56]} />
-        <meshBasicMaterial color="#dff7ff" transparent opacity={0.2} />
+      {/* 底部發光盤 */}
+      <mesh ref={glowRef} position={[0, 1.1, -0.04]}>
+        <cylinderGeometry args={[0.9, 0.9, 0.03, 56]} />
+        <meshBasicMaterial color="#c8f0ff" transparent opacity={0.2} />
       </mesh>
 
       <group ref={groupRef}>
-        <group ref={blinkRef} position={[0, 1.08, 0]}>
-          <mesh position={[-0.28, 0, 0]} castShadow>
-            <sphereGeometry args={[0.28, 32, 32]} />
-            <meshStandardMaterial color="#ffffff" roughness={0.28} metalness={0.02} />
-          </mesh>
+        <group ref={blinkRef} position={[0, 1.1, 0]}>
 
-          <mesh position={[0.28, 0, 0]} castShadow>
-            <sphereGeometry args={[0.28, 32, 32]} />
-            <meshStandardMaterial color="#ffffff" roughness={0.28} metalness={0.02} />
+          {/* === 左眼 === */}
+          {/* 眼白 */}
+          <mesh position={[-0.285, 0, 0]} castShadow>
+            <sphereGeometry args={[0.285, 36, 36]} />
+            <meshStandardMaterial color="#f8f8f8" roughness={0.22} metalness={0.01} />
           </mesh>
-
-          <mesh ref={leftPupil} position={[-0.28, 0, 0.23]}>
-            <sphereGeometry args={[0.105, 24, 24]} />
+          {/* 虹膜（彩色環） */}
+          <mesh ref={leftIrisRef} position={[-0.285, 0, 0.228]}>
+            <cylinderGeometry args={[0.138, 0.138, 0.02, 36]} rotation={[Math.PI / 2, 0, 0]} />
             <meshStandardMaterial
-              color="#15324a"
-              emissive={active ? '#244f6f' : '#000000'}
-              emissiveIntensity={active ? 0.45 : 0.08}
-              roughness={0.2}
+              color={active ? '#3a9fd8' : '#2a7fba'}
+              emissive={active ? '#5bbff8' : '#1060a0'}
+              emissiveIntensity={active ? 0.5 : 0.1}
+              roughness={0.3}
+              metalness={0.05}
             />
           </mesh>
-
-          <mesh ref={rightPupil} position={[0.28, 0, 0.23]}>
-            <sphereGeometry args={[0.105, 24, 24]} />
+          {/* 虹膜紋路環 */}
+          {[0.08, 0.1, 0.12, 0.125].map((r, i) => (
+            <mesh key={i} position={[-0.285, 0, 0.232]} rotation={[0, 0, i * 0.8]}>
+              <torusGeometry args={[r, 0.003, 6, 24, Math.PI * (0.4 + i * 0.15)]} />
+              <meshBasicMaterial color={active ? '#88d4ff' : '#5aaacf'} transparent opacity={0.35} />
+            </mesh>
+          ))}
+          {/* 瞳孔 */}
+          <mesh ref={leftPupilRef} position={[-0.285, 0, 0.245]}>
+            <sphereGeometry args={[active ? 0.072 : 0.058, 20, 20]} />
             <meshStandardMaterial
-              color="#15324a"
-              emissive={active ? '#244f6f' : '#000000'}
-              emissiveIntensity={active ? 0.45 : 0.08}
-              roughness={0.2}
+              color="#0d1e2e"
+              emissive={active ? '#1a3a56' : '#000000'}
+              emissiveIntensity={active ? 0.5 : 0.08}
+              roughness={0.15}
             />
           </mesh>
-
-          <mesh position={[-0.32, 0.12, 0.31]}>
-            <sphereGeometry args={[0.035, 12, 12]} />
+          {/* 眼睛高光（大） */}
+          <mesh position={[-0.308, 0.10, 0.258]}>
+            <sphereGeometry args={[0.038, 12, 12]} />
             <meshBasicMaterial color="#ffffff" />
           </mesh>
+          {/* 眼睛高光（小） */}
+          <mesh position={[-0.255, 0.06, 0.262]}>
+            <sphereGeometry args={[0.018, 10, 10]} />
+            <meshBasicMaterial color="#e8f8ff" transparent opacity={0.8} />
+          </mesh>
 
-          <mesh position={[0.24, 0.12, 0.31]}>
-            <sphereGeometry args={[0.035, 12, 12]} />
+          {/* === 右眼 === */}
+          <mesh position={[0.285, 0, 0]} castShadow>
+            <sphereGeometry args={[0.285, 36, 36]} />
+            <meshStandardMaterial color="#f8f8f8" roughness={0.22} metalness={0.01} />
+          </mesh>
+          <mesh ref={rightIrisRef} position={[0.285, 0, 0.228]}>
+            <cylinderGeometry args={[0.138, 0.138, 0.02, 36]} rotation={[Math.PI / 2, 0, 0]} />
+            <meshStandardMaterial
+              color={active ? '#3a9fd8' : '#2a7fba'}
+              emissive={active ? '#5bbff8' : '#1060a0'}
+              emissiveIntensity={active ? 0.5 : 0.1}
+              roughness={0.3}
+              metalness={0.05}
+            />
+          </mesh>
+          {[0.08, 0.1, 0.12, 0.125].map((r, i) => (
+            <mesh key={i} position={[0.285, 0, 0.232]} rotation={[0, 0, i * 0.8]}>
+              <torusGeometry args={[r, 0.003, 6, 24, Math.PI * (0.4 + i * 0.15)]} />
+              <meshBasicMaterial color={active ? '#88d4ff' : '#5aaacf'} transparent opacity={0.35} />
+            </mesh>
+          ))}
+          <mesh ref={rightPupilRef} position={[0.285, 0, 0.245]}>
+            <sphereGeometry args={[active ? 0.072 : 0.058, 20, 20]} />
+            <meshStandardMaterial
+              color="#0d1e2e"
+              emissive={active ? '#1a3a56' : '#000000'}
+              emissiveIntensity={active ? 0.5 : 0.08}
+              roughness={0.15}
+            />
+          </mesh>
+          <mesh position={[0.308, 0.10, 0.258]}>
+            <sphereGeometry args={[0.038, 12, 12]} />
             <meshBasicMaterial color="#ffffff" />
           </mesh>
+          <mesh position={[0.255, 0.06, 0.262]}>
+            <sphereGeometry args={[0.018, 10, 10]} />
+            <meshBasicMaterial color="#e8f8ff" transparent opacity={0.8} />
+          </mesh>
+
+          {/* === 睫毛 === */}
+          {/* 左眼睫毛 */}
+          {[-0.16, -0.08, 0, 0.08, 0.16, 0.22].map((xOff, i) => (
+            <mesh
+              key={`ll${i}`}
+              position={[-0.285 + xOff * 0.5, 0.26 + Math.abs(xOff) * 0.08, 0.18]}
+              rotation={[0, 0, (xOff / 0.22) * 0.35]}
+            >
+              <cylinderGeometry args={[0.006, 0.003, 0.12 - Math.abs(xOff) * 0.1, 6]} />
+              <meshBasicMaterial color="#1a2030" />
+            </mesh>
+          ))}
+          {/* 右眼睫毛 */}
+          {[-0.22, -0.16, -0.08, 0, 0.08, 0.16].map((xOff, i) => (
+            <mesh
+              key={`rl${i}`}
+              position={[0.285 + xOff * 0.5, 0.26 + Math.abs(xOff) * 0.08, 0.18]}
+              rotation={[0, 0, (xOff / 0.22) * 0.35]}
+            >
+              <cylinderGeometry args={[0.006, 0.003, 0.12 - Math.abs(xOff) * 0.1, 6]} />
+              <meshBasicMaterial color="#1a2030" />
+            </mesh>
+          ))}
         </group>
 
-        <mesh position={[0, 0.72, 0]}>
-          <torusGeometry args={[0.7, 0.025, 16, 90]} />
+        {/* 眉毛 */}
+        <mesh position={[-0.285, 1.38, 0.2]} rotation={[0.1, 0, 0.1]}>
+          <torusGeometry args={[0.16, 0.016, 8, 20, Math.PI * 0.75]} />
+          <meshStandardMaterial color="#3a2a1e" roughness={0.8} />
+        </mesh>
+        <mesh position={[0.285, 1.38, 0.2]} rotation={[0.1, 0, -0.1]}>
+          <torusGeometry args={[0.16, 0.016, 8, 20, Math.PI * 0.75]} />
+          <meshStandardMaterial color="#3a2a1e" roughness={0.8} />
+        </mesh>
+
+        {/* 眼睛間連接裝飾光環 */}
+        <mesh position={[0, 1.1, 0.05]}>
+          <torusGeometry args={[0.72, 0.022, 16, 90]} />
           <meshStandardMaterial
-            color="#8fd3ff"
-            emissive="#8fd3ff"
-            emissiveIntensity={active ? 0.8 : 0.18}
-            roughness={0.35}
+            color="#7eceff"
+            emissive="#7eceff"
+            emissiveIntensity={active ? 0.9 : 0.2}
+            roughness={0.3}
           />
         </mesh>
       </group>
 
-      {[[-0.62, 1.42, 0.1], [0.62, 1.38, 0.1], [0, 1.63, -0.12]].map((pos, i) => (
+      {/* 小裝飾光點 */}
+      {[[-0.65, 1.45, 0.1], [0.65, 1.40, 0.1], [0, 1.68, -0.1], [-0.3, 1.6, 0.2], [0.32, 1.58, 0.18]].map((pos, i) => (
         <mesh key={i} position={pos}>
-          <sphereGeometry args={[0.045, 14, 14]} />
+          <sphereGeometry args={[i < 3 ? 0.042 : 0.028, 12, 12]} />
           <meshStandardMaterial
-            color={i === 2 ? '#fff4b8' : '#dff8ff'}
+            color={i === 2 ? '#fff4b8' : i > 2 ? '#c8f0ff' : '#dff8ff'}
             emissive={i === 2 ? '#fff4b8' : '#dff8ff'}
-            emissiveIntensity={active ? 1 : 0.35}
+            emissiveIntensity={active ? 1.2 : 0.4}
           />
         </mesh>
       ))}
@@ -393,121 +793,241 @@ function EyesGuide({ active, color }) {
 }
 
 /* ============================================================
-   2. FriendlyFish —— 一條魚，適合「附近的友善海鮮地圖」
+   2. FriendlyFish — 精緻的友善小魚
+   改進：魚鱗、更圓潤的魚身、光澤感、鰭動畫改良
 ============================================================ */
 function FriendlyFish({ active, color }) {
   const fishRef = useRef()
   const tailRef = useRef()
-  const finRef = useRef()
+  const finTopRef = useRef()
+  const finBotRef = useRef()
+  const pectoral1Ref = useRef()
+  const pectoral2Ref = useRef()
   const bubbleRef = useRef()
 
+  // 魚尾造型（更飽滿的新月形）
   const tailShape = useMemo(() => {
     const shape = new THREE.Shape()
-    shape.moveTo(0.02, 0)
-    shape.lineTo(-0.46, 0.34)
-    shape.lineTo(-0.38, 0)
-    shape.lineTo(-0.46, -0.34)
-    shape.lineTo(0.02, 0)
+    shape.moveTo(0.04, 0)
+    shape.bezierCurveTo(0.0, 0.18, -0.3, 0.38, -0.5, 0.38)
+    shape.bezierCurveTo(-0.58, 0.38, -0.58, 0.28, -0.5, 0.2)
+    shape.bezierCurveTo(-0.38, 0.1, -0.24, 0.05, -0.18, 0)
+    shape.bezierCurveTo(-0.24, -0.05, -0.38, -0.1, -0.5, -0.2)
+    shape.bezierCurveTo(-0.58, -0.28, -0.58, -0.38, -0.5, -0.38)
+    shape.bezierCurveTo(-0.3, -0.38, 0.0, -0.18, 0.04, 0)
     shape.closePath()
     return shape
   }, [])
 
-  const tailExtrude = useMemo(
-    () => ({
-      depth: 0.08,
-      bevelEnabled: true,
-      bevelSegments: 2,
-      steps: 1,
-      bevelSize: 0.015,
-      bevelThickness: 0.015
-    }),
-    []
-  )
+  const tailExtrude = useMemo(() => ({
+    depth: 0.06,
+    bevelEnabled: true,
+    bevelSegments: 3,
+    steps: 1,
+    bevelSize: 0.018,
+    bevelThickness: 0.018
+  }), [])
+
+  // 背鰭造型（三角形帆狀）
+  const finShape = useMemo(() => {
+    const shape = new THREE.Shape()
+    shape.moveTo(0, 0)
+    shape.bezierCurveTo(0.1, 0.12, 0.22, 0.25, 0.2, 0.36)
+    shape.bezierCurveTo(0.15, 0.42, 0.08, 0.38, 0, 0.35)
+    shape.bezierCurveTo(-0.06, 0.28, -0.08, 0.16, -0.05, 0.08)
+    shape.lineTo(0, 0)
+    shape.closePath()
+    return shape
+  }, [])
+
+  const finExtrude = useMemo(() => ({
+    depth: 0.03,
+    bevelEnabled: true,
+    bevelSegments: 2,
+    steps: 1,
+    bevelSize: 0.01,
+    bevelThickness: 0.01
+  }), [])
 
   useFrame((state) => {
     const t = state.clock.elapsedTime
 
     if (fishRef.current) {
-      fishRef.current.position.y = 1.08 + Math.sin(t * 1.6) * 0.06
-      fishRef.current.rotation.y = Math.sin(t * 0.75) * 0.22
-      fishRef.current.rotation.z = Math.sin(t * 1.2) * 0.04
+      fishRef.current.position.y = 1.08 + Math.sin(t * 1.5) * 0.065
+      // S形游泳曲線
+      fishRef.current.rotation.y = Math.sin(t * 0.7) * 0.24
+      fishRef.current.rotation.z = Math.sin(t * 1.4) * 0.035
+      fishRef.current.rotation.x = Math.sin(t * 0.5 + 0.8) * 0.025
     }
 
     if (tailRef.current) {
-      tailRef.current.rotation.y = Math.sin(t * (active ? 6 : 3.2)) * 0.42
+      tailRef.current.rotation.y = Math.sin(t * (active ? 6.5 : 3.5)) * 0.44
     }
 
-    if (finRef.current) {
-      finRef.current.rotation.z = -0.4 + Math.sin(t * 2.8) * 0.18
+    if (finTopRef.current) {
+      finTopRef.current.rotation.z = -0.3 + Math.sin(t * 3.2) * 0.14
+    }
+    if (finBotRef.current) {
+      finBotRef.current.rotation.z = Math.PI + 0.3 + Math.sin(t * 2.8 + 1) * 0.12
     }
 
+    // 胸鰭
+    if (pectoral1Ref.current) {
+      pectoral1Ref.current.rotation.y = -0.4 + Math.sin(t * 2.5) * 0.2
+    }
+    if (pectoral2Ref.current) {
+      pectoral2Ref.current.rotation.y = 0.4 + Math.sin(t * 2.5 + Math.PI) * 0.2
+    }
+
+    // 氣泡
     if (bubbleRef.current) {
       bubbleRef.current.children.forEach((child, index) => {
-        child.position.y = 0.75 + index * 0.23 + Math.sin(t * 1.4 + index) * 0.06
-        child.material.opacity = active ? 0.55 : 0.28
+        child.position.y = 0.72 + index * 0.26 + Math.sin(t * 1.6 + index * 1.2) * 0.07
+        child.position.x = 0.62 + index * 0.1 + Math.sin(t * 0.8 + index) * 0.04
+        child.material.opacity = active ? 0.55 + Math.sin(t * 1.2 + index) * 0.12 : 0.25
       })
     }
   })
 
   return (
     <group>
-      <RoundBase color={color} accent="#e9fff9" />
+      <RoundBase color={color} accent="#e4fff8" />
 
       <group ref={fishRef} position={[0, 1.08, 0]}>
-        <mesh castShadow scale={[1.15, 0.62, 0.48]}>
-          <sphereGeometry args={[0.42, 36, 36]} />
+
+        {/* 魚身主體（更圓潤的橢球） */}
+        <mesh castShadow scale={[1.18, 0.65, 0.52]}>
+          <sphereGeometry args={[0.42, 40, 32]} />
           <meshStandardMaterial
-            color="#47d6c7"
-            emissive={active ? '#4ee7d8' : '#1aaea0'}
-            emissiveIntensity={active ? 0.55 : 0.14}
-            roughness={0.38}
-            metalness={0.03}
+            color="#38d4c0"
+            emissive={active ? '#50e8d5' : '#189898'}
+            emissiveIntensity={active ? 0.55 : 0.15}
+            roughness={0.32}
+            metalness={0.05}
           />
         </mesh>
 
-        <group ref={tailRef} position={[-0.55, 0, -0.04]}>
+        {/* 腹部（淡色） */}
+        <mesh scale={[1.0, 0.42, 0.46]} position={[0.05, -0.15, 0.04]}>
+          <sphereGeometry args={[0.4, 36, 28]} />
+          <meshStandardMaterial
+            color="#c8f5ee"
+            roughness={0.5}
+            metalness={0.01}
+            transparent
+            opacity={0.65}
+          />
+        </mesh>
+
+        {/* 魚鱗紋路（橫條紋環） */}
+        {[-0.1, 0.08, 0.25, 0.38].map((xPos, i) => (
+          <mesh key={i} position={[xPos, 0, 0]} rotation={[0, Math.PI / 2, 0]}>
+            <torusGeometry args={[0.22 - i * 0.025, 0.008, 8, 28, Math.PI * 1.5]} />
+            <meshBasicMaterial
+              color={active ? '#8af0e8' : '#5ac8bc'}
+              transparent
+              opacity={0.28}
+            />
+          </mesh>
+        ))}
+
+        {/* 魚尾 */}
+        <group ref={tailRef} position={[-0.52, 0, -0.02]}>
           <mesh castShadow>
             <extrudeGeometry args={[tailShape, tailExtrude]} />
             <meshStandardMaterial
-              color="#ffca7a"
-              emissive={active ? '#ffd89b' : '#e7a94d'}
-              emissiveIntensity={active ? 0.45 : 0.12}
-              roughness={0.42}
+              color="#ffc864"
+              emissive={active ? '#ffd880' : '#e09830'}
+              emissiveIntensity={active ? 0.5 : 0.12}
+              roughness={0.38}
+              side={THREE.DoubleSide}
             />
           </mesh>
         </group>
 
-        <mesh ref={finRef} position={[0.05, 0.36, 0.03]} rotation={[0, 0, -0.45]}>
-          <coneGeometry args={[0.16, 0.35, 3]} />
-          <meshStandardMaterial color="#ffdf9c" roughness={0.45} />
+        {/* 背鰭 */}
+        <group ref={finTopRef} position={[0.08, 0.38, 0.04]} rotation={[0, 0, -0.35]}>
+          <mesh castShadow>
+            <extrudeGeometry args={[finShape, finExtrude]} />
+            <meshStandardMaterial
+              color="#ffe09a"
+              roughness={0.45}
+              transparent
+              opacity={0.88}
+              side={THREE.DoubleSide}
+            />
+          </mesh>
+        </group>
+
+        {/* 腹鰭 */}
+        <group ref={finBotRef} position={[0.05, -0.38, 0.04]} rotation={[0, 0, Math.PI + 0.3]}>
+          <mesh castShadow>
+            <extrudeGeometry args={[finShape, { ...finExtrude, depth: 0.025 }]} />
+            <meshStandardMaterial
+              color="#ffe09a"
+              roughness={0.45}
+              transparent
+              opacity={0.75}
+              side={THREE.DoubleSide}
+            />
+          </mesh>
+        </group>
+
+        {/* 胸鰭（左右） */}
+        <group ref={pectoral1Ref} position={[0.1, -0.08, 0.36]}>
+          <mesh rotation={[0.4, 0, 0.3]}>
+            <coneGeometry args={[0.09, 0.22, 4]} />
+            <meshStandardMaterial color="#ffd888" roughness={0.5} transparent opacity={0.8} side={THREE.DoubleSide} />
+          </mesh>
+        </group>
+        <group ref={pectoral2Ref} position={[0.1, -0.08, -0.36]}>
+          <mesh rotation={[-0.4, 0, 0.3]}>
+            <coneGeometry args={[0.09, 0.22, 4]} />
+            <meshStandardMaterial color="#ffd888" roughness={0.5} transparent opacity={0.8} side={THREE.DoubleSide} />
+          </mesh>
+        </group>
+
+        {/* 眼睛（白） */}
+        <mesh position={[0.36, 0.1, 0.36]} castShadow>
+          <sphereGeometry args={[0.062, 18, 18]} />
+          <meshStandardMaterial color="#ffffff" roughness={0.18} />
+        </mesh>
+        {/* 眼睛（瞳孔） */}
+        <mesh position={[0.395, 0.1, 0.4]}>
+          <sphereGeometry args={[0.028, 14, 14]} />
+          <meshStandardMaterial color="#0f2535" roughness={0.2} />
+        </mesh>
+        {/* 眼睛高光 */}
+        <mesh position={[0.408, 0.118, 0.41]}>
+          <sphereGeometry args={[0.01, 10, 10]} />
+          <meshBasicMaterial color="#ffffff" />
         </mesh>
 
-        <mesh position={[0.12, -0.36, 0.03]} rotation={[0, 0, Math.PI]}>
-          <coneGeometry args={[0.13, 0.28, 3]} />
-          <meshStandardMaterial color="#ffdf9c" roughness={0.45} />
+        {/* 嘴巴（弧形） */}
+        <mesh position={[0.5, -0.05, 0.3]} rotation={[0, 0, -0.2]}>
+          <torusGeometry args={[0.072, 0.013, 8, 22, Math.PI * 0.65]} />
+          <meshStandardMaterial color="#0d4d5c" roughness={0.4} />
         </mesh>
 
-        <mesh position={[0.36, 0.1, 0.35]}>
-          <sphereGeometry args={[0.055, 16, 16]} />
-          <meshStandardMaterial color="#ffffff" roughness={0.2} />
-        </mesh>
-
-        <mesh position={[0.385, 0.1, 0.39]}>
-          <sphereGeometry args={[0.024, 12, 12]} />
-          <meshStandardMaterial color="#123345" roughness={0.25} />
-        </mesh>
-
-        <mesh position={[0.5, -0.08, 0.34]} rotation={[0, 0, -0.15]}>
-          <torusGeometry args={[0.085, 0.012, 8, 24, Math.PI]} />
-          <meshStandardMaterial color="#15515d" roughness={0.4} />
+        {/* 側線 */}
+        <mesh position={[0, 0, 0.42]} rotation={[0, Math.PI / 2, 0]}>
+          <torusGeometry args={[0.28, 0.006, 6, 40, Math.PI * 1.1]} />
+          <meshBasicMaterial color="#20b0a0" transparent opacity={0.4} />
         </mesh>
       </group>
 
+      {/* 氣泡群 */}
       <group ref={bubbleRef}>
-        {[0, 1, 2, 3].map((_, i) => (
-          <mesh key={i} position={[0.68 + i * 0.12, 0.75 + i * 0.22, 0.18]}>
-            <sphereGeometry args={[0.045 + i * 0.01, 12, 12]} />
-            <meshBasicMaterial color="#dffaff" transparent opacity={0.3} />
+        {[0, 1, 2, 3, 4].map((_, i) => (
+          <mesh key={i} position={[0.62 + i * 0.1, 0.72 + i * 0.25, 0.22 - i * 0.04]}>
+            <sphereGeometry args={[0.038 + i * 0.012, 14, 14]} />
+            <meshStandardMaterial
+              color="#dffffa"
+              transparent
+              opacity={0.28}
+              roughness={0.1}
+              metalness={0.08}
+            />
           </mesh>
         ))}
       </group>
@@ -516,13 +1036,15 @@ function FriendlyFish({ active, color }) {
 }
 
 /* ============================================================
-   3. NewtonCradle —— 牛頓擺球組，適合「AR 互動與永續標籤」
+   3. NewtonCradle — 精緻的牛頓擺
+   改進：金屬框架、真實懸吊線、碰撞時閃光、底座紋理
 ============================================================ */
 function NewtonCradle({ active, color }) {
   const frameRef = useRef()
-  const leftSwing = useRef()
-  const rightSwing = useRef()
+  const leftSwingRef = useRef()
+  const rightSwingRef = useRef()
   const glowRef = useRef()
+  const impactGlowRef = useRef()
 
   useFrame((state) => {
     const t = state.clock.elapsedTime
@@ -532,98 +1054,167 @@ function NewtonCradle({ active, color }) {
       frameRef.current.rotation.y = Math.sin(t * 0.55) * 0.16
     }
 
-    const swing = Math.sin(t * 2.4)
-    const power = active ? 0.46 : 0.25
+    const swingCycle = Math.sin(t * (active ? 2.8 : 2.4))
+    const power = active ? 0.52 : 0.28
 
-    if (leftSwing.current) {
-      leftSwing.current.rotation.z = swing > 0 ? swing * power : 0
+    if (leftSwingRef.current) {
+      leftSwingRef.current.rotation.z = swingCycle > 0 ? swingCycle * power : 0
     }
-
-    if (rightSwing.current) {
-      rightSwing.current.rotation.z = swing < 0 ? swing * power : 0
+    if (rightSwingRef.current) {
+      rightSwingRef.current.rotation.z = swingCycle < 0 ? swingCycle * power : 0
     }
 
     if (glowRef.current) {
-      glowRef.current.material.opacity = active ? 0.32 + Math.sin(t * 2.6) * 0.05 : 0.16
-      glowRef.current.scale.setScalar(active ? 1.06 + Math.sin(t * 2.2) * 0.04 : 1)
+      glowRef.current.material.opacity = active ? 0.35 + Math.sin(t * 2.6) * 0.06 : 0.16
+      glowRef.current.scale.setScalar(active ? 1.08 + Math.sin(t * 2.2) * 0.04 : 1)
+    }
+
+    // 碰撞閃光：擺球接觸瞬間
+    if (impactGlowRef.current) {
+      const nearImpact = Math.abs(swingCycle) < 0.15
+      impactGlowRef.current.material.opacity = active && nearImpact
+        ? 0.6 + Math.sin(t * 12) * 0.3
+        : 0
     }
   })
 
-  const Ball = ({ x, color = '#eef3ff' }) => (
+  // 單顆球組件（含懸吊線）
+  const PendulumBall = ({ x, ballColor = '#e8ecf8', wireColor = '#a0aac0', emit = false }) => (
     <group position={[x, 0, 0]}>
-      <mesh position={[0, -0.28, 0]}>
-        <cylinderGeometry args={[0.01, 0.01, 0.58, 8]} />
-        <meshStandardMaterial color="#9aa9bd" roughness={0.38} metalness={0.35} />
+      {/* 前懸吊線 */}
+      <mesh position={[0, -0.25, 0.055]}>
+        <cylinderGeometry args={[0.007, 0.007, 0.55, 6]} />
+        <meshStandardMaterial color={wireColor} roughness={0.3} metalness={0.5} />
       </mesh>
+      {/* 後懸吊線 */}
+      <mesh position={[0, -0.25, -0.055]}>
+        <cylinderGeometry args={[0.007, 0.007, 0.55, 6]} />
+        <meshStandardMaterial color={wireColor} roughness={0.3} metalness={0.5} />
+      </mesh>
+      {/* 球體 */}
       <mesh position={[0, -0.62, 0]} castShadow>
-        <sphereGeometry args={[0.13, 24, 24]} />
+        <sphereGeometry args={[0.135, 28, 28]} />
         <meshStandardMaterial
-          color={color}
-          metalness={0.35}
-          roughness={0.22}
-          emissive={active ? '#dfe8ff' : '#000000'}
-          emissiveIntensity={active ? 0.2 : 0}
+          color={ballColor}
+          metalness={0.55}
+          roughness={0.16}
+          emissive={emit && active ? '#c8d8f8' : '#000000'}
+          emissiveIntensity={emit && active ? 0.3 : 0}
+          envMapIntensity={1.5}
         />
+      </mesh>
+      {/* 球體頂部連接環 */}
+      <mesh position={[0, -0.48, 0]}>
+        <torusGeometry args={[0.05, 0.012, 10, 20]} />
+        <meshStandardMaterial color="#8898b8" metalness={0.6} roughness={0.25} />
       </mesh>
     </group>
   )
 
   return (
     <group>
-      <RoundBase color={color} accent="#f7efff" />
+      <RoundBase color={color} accent="#f0ecff" />
 
+      {/* 底部光盤 */}
       <mesh ref={glowRef} position={[0, 1.05, -0.06]}>
-        <cylinderGeometry args={[0.82, 0.82, 0.035, 56]} />
-        <meshBasicMaterial color="#ece2ff" transparent opacity={0.18} />
+        <cylinderGeometry args={[0.84, 0.84, 0.03, 56]} />
+        <meshBasicMaterial color="#e0d4ff" transparent opacity={0.18} />
+      </mesh>
+
+      {/* 碰撞閃光（球中心） */}
+      <mesh ref={impactGlowRef} position={[0, 0.42, 0]}>
+        <sphereGeometry args={[0.22, 20, 20]} />
+        <meshBasicMaterial color="#ffffff" transparent opacity={0} />
       </mesh>
 
       <group ref={frameRef} position={[0, 1.02, 0]}>
-        <mesh position={[0, 0.42, 0]} castShadow>
-          <boxGeometry args={[1.35, 0.08, 0.08]} />
-          <meshStandardMaterial color="#d7def0" metalness={0.25} roughness={0.35} />
+
+        {/* 頂部橫梁 */}
+        <mesh position={[0, 0.44, 0]} castShadow>
+          <boxGeometry args={[1.4, 0.07, 0.065]} />
+          <meshStandardMaterial color="#ccd4e8" metalness={0.35} roughness={0.28} />
         </mesh>
 
-        <mesh position={[-0.72, -0.12, 0]} castShadow>
-          <boxGeometry args={[0.08, 1.12, 0.08]} />
-          <meshStandardMaterial color="#d7def0" metalness={0.25} roughness={0.35} />
+        {/* 左立柱（前） */}
+        <mesh position={[-0.72, -0.1, 0.065]} castShadow>
+          <boxGeometry args={[0.065, 1.1, 0.065]} />
+          <meshStandardMaterial color="#c8d0e4" metalness={0.32} roughness={0.3} />
+        </mesh>
+        {/* 左立柱（後） */}
+        <mesh position={[-0.72, -0.1, -0.065]}>
+          <boxGeometry args={[0.065, 1.1, 0.065]} />
+          <meshStandardMaterial color="#c8d0e4" metalness={0.32} roughness={0.3} />
         </mesh>
 
-        <mesh position={[0.72, -0.12, 0]} castShadow>
-          <boxGeometry args={[0.08, 1.12, 0.08]} />
-          <meshStandardMaterial color="#d7def0" metalness={0.25} roughness={0.35} />
+        {/* 右立柱（前） */}
+        <mesh position={[0.72, -0.1, 0.065]} castShadow>
+          <boxGeometry args={[0.065, 1.1, 0.065]} />
+          <meshStandardMaterial color="#c8d0e4" metalness={0.32} roughness={0.3} />
+        </mesh>
+        {/* 右立柱（後） */}
+        <mesh position={[0.72, -0.1, -0.065]}>
+          <boxGeometry args={[0.065, 1.1, 0.065]} />
+          <meshStandardMaterial color="#c8d0e4" metalness={0.32} roughness={0.3} />
         </mesh>
 
-        <mesh position={[0, -0.7, 0]} castShadow>
-          <boxGeometry args={[1.55, 0.08, 0.12]} />
-          <meshStandardMaterial color="#f3f0fb" roughness={0.45} />
+        {/* 底座 */}
+        <mesh position={[0, -0.72, 0]} castShadow>
+          <boxGeometry args={[1.62, 0.07, 0.22]} />
+          <meshStandardMaterial color="#eceafc" roughness={0.38} metalness={0.08} />
+        </mesh>
+        {/* 底座裝飾線 */}
+        <mesh position={[0, -0.685, 0.1]}>
+          <boxGeometry args={[1.56, 0.012, 0.012]} />
+          <meshBasicMaterial color="#b8b4e8" transparent opacity={0.5} />
         </mesh>
 
-        <group ref={leftSwing} position={[-0.46, 0.38, 0]}>
-          <Ball x={0} color="#cfefff" />
+        {/* 頂部橫梁連接角（四個角落） */}
+        {[[-0.72, 0.44, 0.065], [-0.72, 0.44, -0.065], [0.72, 0.44, 0.065], [0.72, 0.44, -0.065]].map((pos, i) => (
+          <mesh key={i} position={pos}>
+            <sphereGeometry args={[0.04, 12, 12]} />
+            <meshStandardMaterial color="#b0bcd4" metalness={0.5} roughness={0.2} />
+          </mesh>
+        ))}
+
+        {/* 擺球群 */}
+        <group ref={leftSwingRef} position={[-0.46, 0.4, 0]}>
+          <PendulumBall x={0} ballColor="#c0e4ff" wireColor="#98b0cc" emit />
         </group>
 
-        <group position={[-0.23, 0.38, 0]}>
-          <Ball x={0} color="#eef3ff" />
+        <group position={[-0.23, 0.4, 0]}>
+          <PendulumBall x={0} ballColor="#e8ecf8" />
         </group>
 
-        <group position={[0, 0.38, 0]}>
-          <Ball x={0} color="#eef3ff" />
+        <group position={[0, 0.4, 0]}>
+          <PendulumBall x={0} ballColor="#eeeef8" />
         </group>
 
-        <group position={[0.23, 0.38, 0]}>
-          <Ball x={0} color="#eef3ff" />
+        <group position={[0.23, 0.4, 0]}>
+          <PendulumBall x={0} ballColor="#e8ecf8" />
         </group>
 
-        <group ref={rightSwing} position={[0.46, 0.38, 0]}>
-          <Ball x={0} color="#eadcff" />
+        <group ref={rightSwingRef} position={[0.46, 0.4, 0]}>
+          <PendulumBall x={0} ballColor="#ddd0ff" wireColor="#a898cc" emit />
         </group>
 
-        <mesh position={[0, -0.02, -0.08]} rotation={[Math.PI / 2, 0, 0]}>
-          <torusGeometry args={[0.78, 0.018, 16, 90]} />
+        {/* 裝飾光環（在球後方） */}
+        <mesh position={[0, -0.02, -0.12]} rotation={[Math.PI / 2, 0, 0]}>
+          <torusGeometry args={[0.8, 0.016, 16, 90]} />
           <meshStandardMaterial
-            color="#c9b7ff"
-            emissive="#c9b7ff"
-            emissiveIntensity={active ? 0.75 : 0.16}
+            color="#b8a4f8"
+            emissive="#b8a4f8"
+            emissiveIntensity={active ? 0.85 : 0.18}
+          />
+        </mesh>
+
+        {/* 球底水平光圈 */}
+        <mesh position={[0, -0.62, 0]} rotation={[-Math.PI / 2, 0, 0]}>
+          <ringGeometry args={[0.62, 0.82, 48]} />
+          <meshBasicMaterial
+            color="#c8b8ff"
+            transparent
+            opacity={active ? 0.22 : 0.08}
+            side={THREE.DoubleSide}
           />
         </mesh>
       </group>
@@ -632,35 +1223,42 @@ function NewtonCradle({ active, color }) {
 }
 
 /* ============================================================
-   共用基座
+   共用基座 — 精緻版
 ============================================================ */
 function RoundBase({ color, accent }) {
   return (
     <group>
-      <mesh position={[0, 0.06, 0]} castShadow receiveShadow>
-        <cylinderGeometry args={[0.78, 0.9, 0.16, 48]} />
-        <meshStandardMaterial color={color} roughness={0.65} metalness={0.02} />
+      {/* 主底座 */}
+      <mesh position={[0, 0.07, 0]} castShadow receiveShadow>
+        <cylinderGeometry args={[0.8, 0.94, 0.16, 52]} />
+        <meshStandardMaterial color={color} roughness={0.6} metalness={0.04} />
       </mesh>
 
-      <mesh position={[0, 0.14, 0]} castShadow>
-        <cylinderGeometry args={[0.65, 0.75, 0.05, 48]} />
-        <meshStandardMaterial color={accent} roughness={0.86} />
+      {/* 上層平台 */}
+      <mesh position={[0, 0.15, 0]} castShadow>
+        <cylinderGeometry args={[0.68, 0.78, 0.05, 52]} />
+        <meshStandardMaterial color={accent} roughness={0.82} metalness={0.01} />
       </mesh>
 
-      <mesh position={[0, 0.155, 0.28]} rotation={[-Math.PI / 2, 0, 0]}>
-        <ringGeometry args={[0.3, 0.5, 24, 1, 0.5, Math.PI * 0.65]} />
-        <meshStandardMaterial color="#bfe8ff" transparent opacity={0.55} side={THREE.DoubleSide} />
+      {/* 頂面倒角環 */}
+      <mesh position={[0, 0.175, 0]}>
+        <torusGeometry args={[0.68, 0.015, 12, 60]} />
+        <meshStandardMaterial color={color} metalness={0.12} roughness={0.5} />
       </mesh>
 
-      <mesh position={[-0.38, 0.16, 0.12]} rotation={[-Math.PI / 2, 0, 0.2]}>
-        <circleGeometry args={[0.06, 18]} />
-        <meshBasicMaterial color="#d9c2a0" transparent opacity={0.42} />
+      {/* 沙地陰影紋路裝飾 */}
+      <mesh position={[0, 0.162, 0.3]} rotation={[-Math.PI / 2, 0, 0]}>
+        <ringGeometry args={[0.28, 0.52, 28, 1, 0.45, Math.PI * 0.7]} />
+        <meshStandardMaterial color="#b8e4ff" transparent opacity={0.5} side={THREE.DoubleSide} />
       </mesh>
 
-      <mesh position={[0.36, 0.16, 0.18]} rotation={[-Math.PI / 2, 0, -0.15]}>
-        <circleGeometry args={[0.07, 18]} />
-        <meshBasicMaterial color="#d9c2a0" transparent opacity={0.42} />
-      </mesh>
+      {/* 小鵝卵石裝飾 */}
+      {[[-0.38, 0.17, 0.12, 0.2], [0.36, 0.17, 0.18, -0.15], [-0.18, 0.17, 0.48, 0.1]].map(([x, y, z, rx], i) => (
+        <mesh key={i} position={[x, y, z]} rotation={[-Math.PI / 2, rx, 0]}>
+          <circleGeometry args={[0.055 + i * 0.008, 16]} />
+          <meshBasicMaterial color={i === 2 ? '#c8d8c0' : '#d8c8a8'} transparent opacity={0.48} />
+        </mesh>
+      ))}
     </group>
   )
 }
