@@ -313,8 +313,8 @@ function SandDetails() {
   return (
     <group position={[0, 0.005, 0]} rotation={[-Math.PI / 2, 0, 0]}>
       {ripples.map((r, i) => (
-        <mesh key={i} position={[r.x, r.z, 0]} rotation={[0, 0, r.rot]}>
-          <ellipseGeometry args={[r.scale * 1.8, r.scale * 0.35, 24]} />
+        <mesh key={i} position={[r.x, r.z, 0]} rotation={[0, 0, r.rot]} scale={[r.scale * 1.8, r.scale * 0.35, 1]}>
+          <circleGeometry args={[1, 24]} />
           <meshBasicMaterial color="#e8d8b0" transparent opacity={r.opacity} />
         </mesh>
       ))}
@@ -436,14 +436,14 @@ function Footsteps() {
   return (
     <group position={[0, 0.012, 4.2]} rotation={[-Math.PI / 2, 0, 0]}>
       {[-0.45, 0.45].map((x, i) => (
-        <mesh key={i} position={[x, 0, i * 0.65]}>
-          <ellipseGeometry args={[0.12, 0.18, 20]} />
+        <mesh key={i} position={[x, 0, i * 0.65]} scale={[0.12, 0.18, 1]}>
+          <circleGeometry args={[1, 20]} />
           <meshBasicMaterial color="#c8b08a" transparent opacity={0.5} />
         </mesh>
       ))}
       {[-0.38, 0.38].map((x, i) => (
-        <mesh key={`b${i}`} position={[x, -0.65, 0.85 + i * 0.68]}>
-          <ellipseGeometry args={[0.12, 0.18, 20]} />
+        <mesh key={`b${i}`} position={[x, -0.65, 0.85 + i * 0.68]} scale={[0.12, 0.18, 1]}>
+          <circleGeometry args={[1, 20]} />
           <meshBasicMaterial color="#c8b08a" transparent opacity={0.5} />
         </mesh>
       ))}
