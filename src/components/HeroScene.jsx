@@ -123,13 +123,13 @@ function BeachWorld({ activeKey, setActiveKey }) {
       <directionalLight position={[-4, 4, -4]} intensity={1.2} color="#90d5ff" />
       <hemisphereLight args={['#ffffff', '#87CEEB', 2]} />
 
-      {/* 優化：更晴朗、帶深藍色的天空 */}
+      {/* 優化：更晴朗的天空 */}
       <Sky
-        sunPosition={[8, 12, -10]} // 稍微提高太陽位置
-        turbidity={0.05}   // 大幅降低混濁度，天空更清澈
-        rayleigh={0.15}    // 降低散射，呈現深藍色的天空
-        mieCoefficient={0.001} // 降低霧氣
-        mieDirectionalG={0.95}
+        sunPosition={[8, 6, -10]}
+        turbidity={0.8}    // 降低混濁度，天空更乾淨
+        rayleigh={0.5}     // 降低散射，顏色更偏深藍
+        mieCoefficient={0.002}
+        mieDirectionalG={0.9}
       />
       <Stars radius={80} depth={40} count={500} factor={2} saturation={0} fade speed={0.5} />
       <Sparkles count={150} scale={[30, 10, 30]} size={2} speed={0.3} opacity={0.2} color="#ffffff" />
@@ -138,16 +138,10 @@ function BeachWorld({ activeKey, setActiveKey }) {
       <Clouds />
       <Sand />
       <SandDetails />
-      <BeachDecor /> {/* 新增：沙灘上的自然變化 (遮陽傘、沙雕、泳裝) */}
       <Sea />
       <SeaReflection />
-      <OceanDecor /> {/* 新增：海面遊艇 */}
-      
-      {/* 增強海浪層次 */}
       <WaveLayer offset={0} speed={1.2} opacity={0.6} color="#ffffff" z={-9.5} />
       <WaveLayer offset={Math.PI * 0.5} speed={0.9} opacity={0.4} color="#e0f7ff" z={-10.5} />
-      <WaveLayer offset={Math.PI} speed={1.5} opacity={0.3} color="#b3e5fc" z={-12.5} /> {/* 新增遠處海浪 */}
-      
       <ShoreFoam />
       <Footsteps />
       <SeashellDecor />
@@ -161,119 +155,6 @@ function BeachWorld({ activeKey, setActiveKey }) {
         />
       ))}
     </>
-  )
-}
-
-/* ============================================================
-   新增：沙灘裝飾物 (遮陽傘、沙雕、泳裝墊子、沙灘球)
-============================================================ */
-function BeachDecor() {
-  return (
-    <group position={[0, 0, 0]}>
-      {/* 沙雕 */}
-      <group position={[-5.5, 0.1, 2]} rotation={[0, Math.PI / 4, 0]}>
-        <mesh castShadow position={[0, 0.15, 0]}>
-          <cylinderGeometry args={[0.4, 0.5, 0.3, 16]} />
-          <meshStandardMaterial color="#e8d8b0" roughness={0.95} />
-        </mesh>
-        <mesh castShadow position={[0, 0.4, 0]}>
-          <cylinderGeometry args={[0.2, 0.3, 0.3, 16]} />
-          <meshStandardMaterial color="#e8d8b0" roughness={0.95} />
-        </mesh>
-        <mesh castShadow position={[0, 0.65, 0]}>
-          <coneGeometry args={[0.15, 0.3, 16]} />
-          <meshStandardMaterial color="#e8d8b0" roughness={0.95} />
-        </mesh>
-      </group>
-
-      {/* 遮陽傘 A 與沙灘墊(泳裝意象) */}
-      <group position={[6.5, 0, -1]}>
-        {/* 傘柄 */}
-        <mesh castShadow position={[0, 1.5, 0]}>
-          <cylinderGeometry args={[0.04, 0.04, 3, 8]} />
-          <meshStandardMaterial color="#eeeeee" metalness={0.5} />
-        </mesh>
-        {/* 傘面 */}
-        <mesh castShadow position={[0, 3, 0]}>
-          <coneGeometry args={[2.2, 0.8, 16]} />
-          <meshStandardMaterial color="#ff6b6b" roughness={0.7} />
-        </mesh>
-        {/* 鮮豔的沙灘巾/泳裝鋪墊 */}
-        <mesh receiveShadow position={[1.2, 0.02, 0.5]} rotation={[-Math.PI / 2, 0, 0.5]}>
-          <planeGeometry args={[1.5, 2.5]} />
-          <meshStandardMaterial color="#4ecdc4" roughness={0.9} />
-        </mesh>
-        {/* 海灘球 */}
-        <mesh castShadow position={[2, 0.15, 1.5]}>
-          <sphereGeometry args={[0.15, 16, 16]} />
-          <meshStandardMaterial color="#ffe66d" roughness={0.5} />
-        </mesh>
-      </group>
-
-      {/* 遮陽傘 B */}
-      <group position={[-7, 0, -4.5]} rotation={[0, -0.5, 0]}>
-        <mesh castShadow position={[0, 1.2, 0]}>
-          <cylinderGeometry args={[0.03, 0.03, 2.4, 8]} />
-          <meshStandardMaterial color="#eeeeee" metalness={0.5} />
-        </mesh>
-        <mesh castShadow position={[0, 2.4, 0]}>
-          <coneGeometry args={[1.8, 0.6, 16]} />
-          <meshStandardMaterial color="#feca57" roughness={0.7} />
-        </mesh>
-        <mesh receiveShadow position={[-1, 0.02, 0.2]} rotation={[-Math.PI / 2, 0, -0.2]}>
-          <planeGeometry args={[1.2, 2.2]} />
-          <meshStandardMaterial color="#ffffff" roughness={0.9} />
-        </mesh>
-      </group>
-    </group>
-  )
-}
-
-/* ============================================================
-   新增：海洋遊艇
-============================================================ */
-function OceanDecor() {
-  const yachtRef = useRef()
-
-  useFrame((state) => {
-    if (!yachtRef.current) return
-    const t = state.clock.elapsedTime
-    // 遊艇隨海浪浮動與搖擺
-    yachtRef.current.position.y = 0.05 + Math.sin(t * 1.5) * 0.15
-    yachtRef.current.rotation.z = Math.sin(t * 1.2) * 0.05
-    yachtRef.current.rotation.x = Math.sin(t * 0.8) * 0.03
-    // 緩慢在遠方海面航行
-    yachtRef.current.position.x = 20 - ((t * 0.8) % 40)
-  })
-
-  return (
-    <group ref={yachtRef} position={[15, 0.1, -22]}>
-      {/* 船體主結構 */}
-      <mesh castShadow position={[0, 0.3, 0]}>
-        <boxGeometry args={[3.5, 0.6, 1.2]} />
-        <meshStandardMaterial color="#ffffff" roughness={0.2} metalness={0.1} />
-      </mesh>
-      {/* 船首 */}
-      <mesh castShadow position={[-2.1, 0.3, 0]} rotation={[0, 0, Math.PI / 4]}>
-        <boxGeometry args={[1.2, 0.6, 1.2]} />
-        <meshStandardMaterial color="#ffffff" roughness={0.2} metalness={0.1} />
-      </mesh>
-      {/* 船艙 */}
-      <mesh castShadow position={[0.2, 0.9, 0]}>
-        <boxGeometry args={[1.8, 0.8, 0.9]} />
-        <meshStandardMaterial color="#f0f0f0" roughness={0.2} />
-      </mesh>
-      {/* 船艙深色玻璃窗 */}
-      <mesh position={[0.2, 0.9, 0.46]}>
-        <planeGeometry args={[1.4, 0.4]} />
-        <meshBasicMaterial color="#112233" />
-      </mesh>
-      {/* 雷達架/天線 */}
-      <mesh castShadow position={[0.2, 1.6, 0]}>
-        <cylinderGeometry args={[0.03, 0.03, 0.8, 8]} />
-        <meshStandardMaterial color="#aaaaaa" metalness={0.8} />
-      </mesh>
-    </group>
   )
 }
 
@@ -606,51 +487,35 @@ function SeashellDecor() {
   )
 }
 
-
 /* ============================================================
-   互動物件容器 (已優化：增強點選感與視覺提示)
+   互動物件容器
 ============================================================ */
 function InteractiveMenuObject({ item, active, setActiveKey }) {
   const ref = useRef()
   const haloRef = useRef()
   const [hovered, setHovered] = useState(false)
 
-  // 讓滑鼠游標在移上去時變成手指 (原有功能保留)
   useCursor(hovered)
 
-  useFrame((state, delta) => {
+  useFrame((state) => {
     if (!ref.current) return
     const t = state.clock.elapsedTime
-    
-    // 原本的呼吸起伏
+    // 增加一點整體的呼吸起伏
     ref.current.position.y = item.position[1] + Math.sin(t * 1.5 + item.position[0]) * 0.06
-
-    // 1. 優化：整體放大縮小 (使用 lerp 達成平滑過渡，增加「彈跳選中」感)
-    const targetScale = active || hovered ? 1.15 : 1
-    ref.current.scale.lerp(new THREE.Vector3(targetScale, targetScale, targetScale), delta * 6)
-
     if (haloRef.current) {
-      // 2. 優化：讓底部的光圈在 Hover 時變得更亮、範圍更大
-      const targetOpacity = active || hovered ? 0.7 : 0.2
-      haloRef.current.material.opacity = THREE.MathUtils.lerp(haloRef.current.material.opacity, targetOpacity, delta * 6)
+      haloRef.current.material.opacity = active || hovered ? 0.6 : 0.2
       haloRef.current.rotation.z += 0.01
-      
-      const targetHaloScale = active || hovered ? 1.5 : 1
-      haloRef.current.scale.lerp(new THREE.Vector3(targetHaloScale, targetHaloScale, targetHaloScale), delta * 6)
+      haloRef.current.scale.setScalar(active || hovered ? 1.2 : 1)
     }
   })
 
   const events = {
-    onPointerEnter: (e) => {
-      e.stopPropagation() // 防止觸發背後的海水或沙灘
+    onPointerEnter: () => {
       setHovered(true)
       setActiveKey(item.key)
     },
     onPointerLeave: () => setHovered(false),
-    onClick: (e) => {
-      e.stopPropagation()
-      window.location.href = item.route
-    }
+    onClick: () => { window.location.href = item.route }
   }
 
   return (
@@ -661,87 +526,29 @@ function InteractiveMenuObject({ item, active, setActiveKey }) {
         {item.key === 'ar' && <NewtonCradle active={active || hovered} color={item.accent} />}
       </Float>
 
-      {/* 外圍光圈 */}
+      {/* 光圈 */}
       <mesh ref={haloRef} position={[0, -0.75, 0]} rotation={[-Math.PI / 2, 0, 0]}>
         <ringGeometry args={[0.88, 1.32, 56]} />
         <meshBasicMaterial color={item.accent} transparent opacity={0.22} />
       </mesh>
-      
-      {/* 內光圈 (Hover 時也會稍微提亮) */}
+      {/* 內光圈 */}
       <mesh position={[0, -0.74, 0]} rotation={[-Math.PI / 2, 0, 0]}>
         <ringGeometry args={[0.5, 0.88, 56]} />
-        <meshBasicMaterial color={item.accent} transparent opacity={hovered || active ? 0.4 : 0.06} />
+        <meshBasicMaterial color={item.accent} transparent opacity={0.06} />
       </mesh>
 
-      {/* 3. 優化：加強標題字體，並加入指示箭頭 ▼ */}
       <Billboard position={[0, 2.38, 0]} follow>
-        <Text 
-          fontSize={active || hovered ? 0.32 : 0.27} // Hover 時字體稍微放大
-          color="#183b56" 
-          anchorX="center" 
-          anchorY="middle" 
-          maxWidth={3.2}
-          outlineWidth={0.015} // 加粗外框讓文字從背景跳出來
-          outlineColor="#ffffff"
-          fontWeight="bold"
-        >
+        <Text fontSize={0.27} color="#183b56" anchorX="center" anchorY="middle" maxWidth={3.2}
+          outlineWidth={0.008} outlineColor="#ffffff">
           {item.title}
-        </Text>
-        
-        {/* 動態小箭頭，視覺引導往下看模型 */}
-        <Text 
-          position={[0, -0.32, 0]} 
-          fontSize={0.18} 
-          color={item.accent} 
-          outlineWidth={0.01} 
-          outlineColor="#ffffff"
-        >
-          ▼
         </Text>
       </Billboard>
 
-      {/* 4. 優化：Tooltip 加上明確的「點擊進入」按鈕標籤 */}
-      <Html 
-        position={[0, active || hovered ? 3.15 : 2.85, 0]} // Hover 時浮上來一點
-        center 
-        distanceFactor={10}
-        style={{
-          transition: 'all 0.3s cubic-bezier(0.25, 0.8, 0.25, 1)',
-          opacity: hovered || active ? 1 : 0,
-          pointerEvents: 'none',
-          transform: `scale(${hovered || active ? 1 : 0.8})`, // 加入縮放進場動畫
-          zIndex: hovered || active ? 10 : 0
-        }}
-      >
-        <div className="floating-tooltip" style={{
-          display: 'flex',
-          flexDirection: 'column',
-          alignItems: 'center',
-          gap: '8px',
-          width: 'max-content',
-          maxWidth: '250px',
-          textAlign: 'center'
-        }}>
-          <span style={{ textShadow: '0px 2px 4px rgba(0,0,0,0.3)' }}>{item.hoverText}</span>
-          
-          {/* 明確的 Call to action (CTA) */}
-          <div style={{
-            backgroundColor: item.accent,
-            color: '#0b1b2b',
-            padding: '4px 12px',
-            borderRadius: '20px',
-            fontSize: '0.85rem',
-            fontWeight: 'bold',
-            boxShadow: '0 4px 12px rgba(0,0,0,0.15)',
-            display: 'flex',
-            alignItems: 'center',
-            gap: '4px',
-            border: '2px solid #ffffff'
-          }}>
-            👆 點擊進入
-          </div>
-        </div>
-      </Html>
+      {(hovered || active) && (
+        <Html position={[0, 2.95, 0]} center distanceFactor={10}>
+          <div className="floating-tooltip">{item.hoverText}</div>
+        </Html>
+      )}
     </group>
   )
 }
