@@ -106,36 +106,33 @@ export default function HeroScene() {
 function BeachWorld({ activeKey, setActiveKey }) {
   return (
     <>
-      <ambientLight intensity={1.2} />
+      <ambientLight intensity={1.5} />
       <directionalLight
-        position={[6, 10, 3]}
-        intensity={2.8}
+        position={[8, 12, 4]}
+        intensity={3.5}
         castShadow
         shadow-mapSize-width={2048}
         shadow-mapSize-height={2048}
         shadow-camera-near={0.5}
-        shadow-camera-far={35}
-        shadow-camera-left={-14}
-        shadow-camera-right={14}
-        shadow-camera-top={14}
-        shadow-camera-bottom={-14}
+        shadow-camera-far={40}
+        shadow-camera-left={-15}
+        shadow-camera-right={15}
+        shadow-camera-top={15}
+        shadow-camera-bottom={-15}
       />
-      {/* 補光：模擬天空反射 */}
-      <directionalLight position={[-4, 3, 8]} intensity={0.6} color="#a8d8f8" />
-      <hemisphereLight args={['#ffe8b0', '#7eceff', 1.5]} />
+      <directionalLight position={[-4, 4, -4]} intensity={1.2} color="#90d5ff" />
+      <hemisphereLight args={['#ffffff', '#87CEEB', 2]} />
 
-      {/* 晴天天空：加強太陽位置、清晰度 */}
+      {/* 優化：更晴朗的天空 */}
       <Sky
-        sunPosition={[6, 5, -8]}
-        turbidity={2.5}
-        rayleigh={1.2}
-        mieCoefficient={0.003}
-        mieDirectionalG={0.85}
-        inclination={0.48}
-        azimuth={0.25}
+        sunPosition={[8, 6, -10]}
+        turbidity={0.8}    // 降低混濁度，天空更乾淨
+        rayleigh={0.5}     // 降低散射，顏色更偏深藍
+        mieCoefficient={0.002}
+        mieDirectionalG={0.9}
       />
-      <Stars radius={80} depth={40} count={800} factor={1.8} saturation={0} fade speed={0.2} />
-      <Sparkles count={100} scale={[28, 10, 28]} size={1.8} speed={0.2} opacity={0.15} color="#fff8e0" />
+      <Stars radius={80} depth={40} count={500} factor={2} saturation={0} fade speed={0.5} />
+      <Sparkles count={150} scale={[30, 10, 30]} size={2} speed={0.3} opacity={0.2} color="#ffffff" />
 
       <SunGlare />
       <Clouds />
@@ -143,8 +140,8 @@ function BeachWorld({ activeKey, setActiveKey }) {
       <SandDetails />
       <Sea />
       <SeaReflection />
-      <WaveLayer offset={0} speed={1.4} opacity={0.55} color="#a8e4f8" z={-9.5} />
-      <WaveLayer offset={Math.PI * 0.5} speed={1.1} opacity={0.4} color="#c2eeff" z={-10.5} />
+      <WaveLayer offset={0} speed={1.2} opacity={0.6} color="#ffffff" z={-9.5} />
+      <WaveLayer offset={Math.PI * 0.5} speed={0.9} opacity={0.4} color="#e0f7ff" z={-10.5} />
       <ShoreFoam />
       <Footsteps />
       <SeashellDecor />
@@ -255,7 +252,6 @@ function Clouds() {
    沙灘 — 更細緻的沙質材質與漸層
 ============================================================ */
 function Sand() {
-  // 使用頂點色彩模擬沙紋顏色變化
   const geometry = useMemo(() => {
     const geo = new THREE.PlaneGeometry(90, 90, 80, 80)
     const positions = geo.attributes.position
@@ -263,33 +259,27 @@ function Sand() {
 
     for (let i = 0; i < positions.count; i++) {
       const x = positions.getX(i)
-      const y = positions.getY(i) // y in local plane coords = Z in world
+      const y = positions.getY(i)
 
-      // 越靠近海（y < 0 = world z < 0）越深色、越濕潤
       const wetness = Math.max(0, Math.min(1, (-y - 5) / 20))
-      // 加入細微雜訊
-      const noise = (Math.sin(x * 3.7 + y * 2.3) * 0.5 + 0.5) * 0.04
+      const noise = (Math.sin(x * 4.0 + y * 3.0) * 0.5 + 0.5) * 0.03
 
-      const r = THREE.MathUtils.lerp(0.972, 0.68, wetness) + noise
-      const g = THREE.MathUtils.lerp(0.952, 0.62, wetness) + noise * 0.8
-      const b = THREE.MathUtils.lerp(0.878, 0.52, wetness) + noise * 0.6
+      // 改為偏向純白的貝殼沙色系
+      const r = THREE.MathUtils.lerp(0.98, 0.82, wetness) + noise
+      const g = THREE.MathUtils.lerp(0.96, 0.80, wetness) + noise
+      const b = THREE.MathUtils.lerp(0.94, 0.78, wetness) + noise
 
       colors[i * 3] = r
       colors[i * 3 + 1] = g
       colors[i * 3 + 2] = b
     }
-
     geo.setAttribute('color', new THREE.BufferAttribute(colors, 3))
     return geo
   }, [])
 
   return (
     <mesh rotation={[-Math.PI / 2, 0, 0]} position={[0, -0.02, 0]} receiveShadow geometry={geometry}>
-      <meshStandardMaterial
-        vertexColors
-        roughness={0.96}
-        metalness={0.01}
-      />
+      <meshStandardMaterial vertexColors roughness={0.9} metalness={0.0} />
     </mesh>
   )
 }
@@ -327,27 +317,28 @@ function SandDetails() {
 ============================================================ */
 function Sea() {
   const ref = useRef()
-  const normalRef = useRef(0)
 
   useFrame((state) => {
     if (!ref.current) return
     const t = state.clock.elapsedTime
-    ref.current.material.opacity = 0.88 + Math.sin(t * 0.6) * 0.05
-    ref.current.position.z = -16 + Math.sin(t * 0.35) * 0.25
-    // 模擬水面起伏
-    ref.current.rotation.x = -Math.PI / 2 + Math.sin(t * 0.3) * 0.008
+    ref.current.position.z = -16 + Math.sin(t * 0.35) * 0.2
+    ref.current.rotation.x = -Math.PI / 2 + Math.sin(t * 0.3) * 0.01
   })
 
   return (
-    <mesh ref={ref} rotation={[-Math.PI / 2, 0, 0]} position={[0, 0.04, -16]}>
-      <planeGeometry args={[90, 32, 4, 4]} />
-      <meshStandardMaterial
-        color="#4ab8e8"
+    <mesh ref={ref} rotation={[-Math.PI / 2, 0, 0]} position={[0, 0.04, -16]} receiveShadow>
+      <planeGeometry args={[90, 32, 16, 16]} />
+      {/* 使用 PhysicalMaterial 打造清澈透水感 */}
+      <meshPhysicalMaterial
+        color="#00aaff"
+        transmission={0.8}
+        opacity={1}
         transparent
-        opacity={0.9}
-        roughness={0.08}
-        metalness={0.18}
-        envMapIntensity={1.2}
+        roughness={0.05}
+        metalness={0.1}
+        ior={1.33}
+        thickness={2}
+        envMapIntensity={1.5}
       />
     </mesh>
   )
@@ -509,14 +500,12 @@ function InteractiveMenuObject({ item, active, setActiveKey }) {
   useFrame((state) => {
     if (!ref.current) return
     const t = state.clock.elapsedTime
-
-    ref.current.position.y = item.position[1] + Math.sin(t * 1.4 + item.position[0]) * 0.08
-    ref.current.rotation.y = Math.sin(t * 0.5 + item.position[0]) * 0.18
-
+    // 增加一點整體的呼吸起伏
+    ref.current.position.y = item.position[1] + Math.sin(t * 1.5 + item.position[0]) * 0.06
     if (haloRef.current) {
-      haloRef.current.material.opacity = active || hovered ? 0.48 : 0.2
-      haloRef.current.rotation.z += 0.008
-      haloRef.current.scale.setScalar(active || hovered ? 1.18 : 1)
+      haloRef.current.material.opacity = active || hovered ? 0.6 : 0.2
+      haloRef.current.rotation.z += 0.01
+      haloRef.current.scale.setScalar(active || hovered ? 1.2 : 1)
     }
   })
 
@@ -571,114 +560,49 @@ function EyesGuide({ active, color }) {
   const groupRef = useRef()
   const leftPupil = useRef()
   const rightPupil = useRef()
-  const blinkRef = useRef()
-  const glowRef = useRef()
 
   useFrame((state) => {
     const t = state.clock.elapsedTime
-
     if (groupRef.current) {
-      groupRef.current.position.y = 1.08 + Math.sin(t * 1.6) * 0.045
-      groupRef.current.rotation.y = Math.sin(t * 0.8) * 0.18
+      groupRef.current.rotation.y = Math.sin(t * 1.5) * 0.15
+      // 加入呼吸縮放
+      const scale = active ? 1.05 + Math.sin(t * 4) * 0.02 : 1
+      groupRef.current.scale.setScalar(scale)
     }
-
-    const lookX = Math.sin(t * 1.3) * 0.045
-    const lookY = Math.cos(t * 1.1) * 0.025
-
-    if (leftPupil.current) {
-      leftPupil.current.position.x = -0.28 + lookX
-      leftPupil.current.position.y = lookY
-    }
-
-    if (rightPupil.current) {
-      rightPupil.current.position.x = 0.28 + lookX
-      rightPupil.current.position.y = lookY
-    }
-
-    if (blinkRef.current) {
-      const blink = active ? 1 : 0.92 + Math.sin(t * 2.2) * 0.04
-      blinkRef.current.scale.y = blink
-    }
-
-    if (glowRef.current) {
-      glowRef.current.material.opacity = active ? 0.36 + Math.sin(t * 3) * 0.06 : 0.18
-      glowRef.current.scale.setScalar(active ? 1.08 + Math.sin(t * 2.4) * 0.04 : 1)
-    }
+    const lookX = Math.sin(t * 2) * 0.05
+    const lookY = Math.cos(t * 1.5) * 0.03
+    if (leftPupil.current) leftPupil.current.position.set(-0.28 + lookX, lookY, 0.24)
+    if (rightPupil.current) rightPupil.current.position.set(0.28 + lookX, lookY, 0.24)
   })
 
   return (
     <group>
       <RoundBase color={color} accent="#eefaff" />
-
-      <mesh ref={glowRef} position={[0, 1.08, -0.04]}>
-        <cylinderGeometry args={[0.86, 0.86, 0.035, 56]} />
-        <meshBasicMaterial color="#dff7ff" transparent opacity={0.2} />
-      </mesh>
-
-      <group ref={groupRef}>
-        <group ref={blinkRef} position={[0, 1.08, 0]}>
-          <mesh position={[-0.28, 0, 0]} castShadow>
-            <sphereGeometry args={[0.28, 32, 32]} />
-            <meshStandardMaterial color="#ffffff" roughness={0.28} metalness={0.02} />
-          </mesh>
-
-          <mesh position={[0.28, 0, 0]} castShadow>
-            <sphereGeometry args={[0.28, 32, 32]} />
-            <meshStandardMaterial color="#ffffff" roughness={0.28} metalness={0.02} />
-          </mesh>
-
-          <mesh ref={leftPupil} position={[-0.28, 0, 0.23]}>
-            <sphereGeometry args={[0.105, 24, 24]} />
-            <meshStandardMaterial
-              color="#15324a"
-              emissive={active ? '#244f6f' : '#000000'}
-              emissiveIntensity={active ? 0.45 : 0.08}
-              roughness={0.2}
-            />
-          </mesh>
-
-          <mesh ref={rightPupil} position={[0.28, 0, 0.23]}>
-            <sphereGeometry args={[0.105, 24, 24]} />
-            <meshStandardMaterial
-              color="#15324a"
-              emissive={active ? '#244f6f' : '#000000'}
-              emissiveIntensity={active ? 0.45 : 0.08}
-              roughness={0.2}
-            />
-          </mesh>
-
-          <mesh position={[-0.32, 0.12, 0.31]}>
-            <sphereGeometry args={[0.035, 12, 12]} />
-            <meshBasicMaterial color="#ffffff" />
-          </mesh>
-
-          <mesh position={[0.24, 0.12, 0.31]}>
-            <sphereGeometry args={[0.035, 12, 12]} />
-            <meshBasicMaterial color="#ffffff" />
-          </mesh>
-        </group>
-
-        <mesh position={[0, 0.72, 0]}>
-          <torusGeometry args={[0.7, 0.025, 16, 90]} />
-          <meshStandardMaterial
-            color="#8fd3ff"
-            emissive="#8fd3ff"
-            emissiveIntensity={active ? 0.8 : 0.18}
-            roughness={0.35}
-          />
+      <group ref={groupRef} position={[0, 1.08, 0]}>
+        {/* 眼白 */}
+        <mesh position={[-0.28, 0, 0]} castShadow>
+          <sphereGeometry args={[0.28, 32, 32]} />
+          <meshPhysicalMaterial color="#ffffff" roughness={0.1} clearcoat={1} />
+        </mesh>
+        <mesh position={[0.28, 0, 0]} castShadow>
+          <sphereGeometry args={[0.28, 32, 32]} />
+          <meshPhysicalMaterial color="#ffffff" roughness={0.1} clearcoat={1} />
+        </mesh>
+        {/* 瞳孔 */}
+        <mesh ref={leftPupil} position={[-0.28, 0, 0.24]}>
+          <sphereGeometry args={[0.12, 32, 32]} />
+          <meshStandardMaterial color="#0b1b2b" roughness={0.1} metalness={0.5} />
+        </mesh>
+        <mesh ref={rightPupil} position={[0.28, 0, 0.24]}>
+          <sphereGeometry args={[0.12, 32, 32]} />
+          <meshStandardMaterial color="#0b1b2b" roughness={0.1} metalness={0.5} />
+        </mesh>
+        {/* 外框 */}
+        <mesh position={[0, 0.0, 0]}>
+          <torusGeometry args={[0.65, 0.03, 16, 64]} />
+          <meshStandardMaterial color={color} emissive={color} emissiveIntensity={active ? 1.5 : 0.5} />
         </mesh>
       </group>
-
-      {[[-0.62, 1.42, 0.1], [0.62, 1.38, 0.1], [0, 1.63, -0.12]].map((pos, i) => (
-        <mesh key={i} position={pos}>
-          <sphereGeometry args={[0.045, 14, 14]} />
-          <meshStandardMaterial
-            color={i === 2 ? '#fff4b8' : '#dff8ff'}
-            emissive={i === 2 ? '#fff4b8' : '#dff8ff'}
-            emissiveIntensity={active ? 1 : 0.35}
-          />
-        </mesh>
-      ))}
     </group>
   )
 }
@@ -689,123 +613,56 @@ function EyesGuide({ active, color }) {
 function FriendlyFish({ active, color }) {
   const fishRef = useRef()
   const tailRef = useRef()
-  const finRef = useRef()
-  const bubbleRef = useRef()
 
+  // 簡化的尾巴形狀
   const tailShape = useMemo(() => {
     const shape = new THREE.Shape()
-    shape.moveTo(0.02, 0)
-    shape.lineTo(-0.46, 0.34)
-    shape.lineTo(-0.38, 0)
-    shape.lineTo(-0.46, -0.34)
-    shape.lineTo(0.02, 0)
-    shape.closePath()
+    shape.moveTo(0, 0); shape.lineTo(-0.4, 0.3); shape.lineTo(-0.3, 0); shape.lineTo(-0.4, -0.3); shape.closePath()
     return shape
   }, [])
 
-  const tailExtrude = useMemo(
-    () => ({
-      depth: 0.08,
-      bevelEnabled: true,
-      bevelSegments: 2,
-      steps: 1,
-      bevelSize: 0.015,
-      bevelThickness: 0.015
-    }),
-    []
-  )
-
   useFrame((state) => {
     const t = state.clock.elapsedTime
-
     if (fishRef.current) {
-      fishRef.current.position.y = 1.08 + Math.sin(t * 1.6) * 0.06
-      fishRef.current.rotation.y = Math.sin(t * 0.75) * 0.22
-      fishRef.current.rotation.z = Math.sin(t * 1.2) * 0.04
+      // 魚體 S 型搖擺
+      fishRef.current.rotation.y = Math.sin(t * (active ? 4 : 2)) * 0.3
+      fishRef.current.position.x = Math.sin(t * (active ? 4 : 2)) * 0.05
     }
-
     if (tailRef.current) {
-      tailRef.current.rotation.y = Math.sin(t * (active ? 6 : 3.2)) * 0.42
-    }
-
-    if (finRef.current) {
-      finRef.current.rotation.z = -0.4 + Math.sin(t * 2.8) * 0.18
-    }
-
-    if (bubbleRef.current) {
-      bubbleRef.current.children.forEach((child, index) => {
-        child.position.y = 0.75 + index * 0.23 + Math.sin(t * 1.4 + index) * 0.06
-        child.material.opacity = active ? 0.55 : 0.28
-      })
+      // 尾巴反向搖擺疊加
+      tailRef.current.rotation.y = Math.sin(t * (active ? 6 : 3) - 1) * 0.5
     }
   })
 
   return (
     <group>
       <RoundBase color={color} accent="#e9fff9" />
-
-      <group ref={fishRef} position={[0, 1.08, 0]}>
-        <mesh castShadow scale={[1.15, 0.62, 0.48]}>
-          <sphereGeometry args={[0.42, 36, 36]} />
-          <meshStandardMaterial
-            color="#47d6c7"
-            emissive={active ? '#4ee7d8' : '#1aaea0'}
-            emissiveIntensity={active ? 0.55 : 0.14}
-            roughness={0.38}
-            metalness={0.03}
-          />
+      <group ref={fishRef} position={[0, 1.1, 0]}>
+        {/* 魚身：亮眼橘/黃系熱帶魚 */}
+        <mesh castShadow scale={[1.2, 0.7, 0.5]}>
+          <sphereGeometry args={[0.4, 32, 32]} />
+          <meshStandardMaterial color="#FF5722" roughness={0.2} metalness={0.1} />
         </mesh>
-
-        <group ref={tailRef} position={[-0.55, 0, -0.04]}>
+        {/* 魚尾 */}
+        <group ref={tailRef} position={[-0.45, 0, 0]}>
           <mesh castShadow>
-            <extrudeGeometry args={[tailShape, tailExtrude]} />
-            <meshStandardMaterial
-              color="#ffca7a"
-              emissive={active ? '#ffd89b' : '#e7a94d'}
-              emissiveIntensity={active ? 0.45 : 0.12}
-              roughness={0.42}
-            />
+            <extrudeGeometry args={[tailShape, { depth: 0.05, bevelEnabled: true, bevelSize: 0.02 }]} />
+            <meshStandardMaterial color="#FFC107" roughness={0.3} />
           </mesh>
         </group>
-
-        <mesh ref={finRef} position={[0.05, 0.36, 0.03]} rotation={[0, 0, -0.45]}>
-          <coneGeometry args={[0.16, 0.35, 3]} />
-          <meshStandardMaterial color="#ffdf9c" roughness={0.45} />
+        {/* 魚眼 */}
+        <mesh position={[0.35, 0.1, 0.2]}>
+          <sphereGeometry args={[0.06, 16, 16]} />
+          <meshBasicMaterial color="white" />
         </mesh>
-
-        <mesh position={[0.12, -0.36, 0.03]} rotation={[0, 0, Math.PI]}>
-          <coneGeometry args={[0.13, 0.28, 3]} />
-          <meshStandardMaterial color="#ffdf9c" roughness={0.45} />
+        <mesh position={[0.38, 0.1, 0.23]}>
+          <sphereGeometry args={[0.03, 16, 16]} />
+          <meshBasicMaterial color="black" />
         </mesh>
-
-        <mesh position={[0.36, 0.1, 0.35]}>
-          <sphereGeometry args={[0.055, 16, 16]} />
-          <meshStandardMaterial color="#ffffff" roughness={0.2} />
-        </mesh>
-
-        <mesh position={[0.385, 0.1, 0.39]}>
-          <sphereGeometry args={[0.024, 12, 12]} />
-          <meshStandardMaterial color="#123345" roughness={0.25} />
-        </mesh>
-
-        <mesh position={[0.5, -0.08, 0.34]} rotation={[0, 0, -0.15]}>
-          <torusGeometry args={[0.085, 0.012, 8, 24, Math.PI]} />
-          <meshStandardMaterial color="#15515d" roughness={0.4} />
-        </mesh>
-      </group>
-
-      <group ref={bubbleRef}>
-        {[0, 1, 2, 3].map((_, i) => (
-          <mesh key={i} position={[0.68 + i * 0.12, 0.75 + i * 0.22, 0.18]}>
-            <sphereGeometry args={[0.045 + i * 0.01, 12, 12]} />
-            <meshBasicMaterial color="#dffaff" transparent opacity={0.3} />
-          </mesh>
-        ))}
       </group>
     </group>
   )
 }
-
 /* ============================================================
    3. NewtonCradle —— 牛頓擺球組，適合「AR 互動與永續標籤」
 ============================================================ */
@@ -813,47 +670,32 @@ function NewtonCradle({ active, color }) {
   const frameRef = useRef()
   const leftSwing = useRef()
   const rightSwing = useRef()
-  const glowRef = useRef()
 
   useFrame((state) => {
     const t = state.clock.elapsedTime
+    const swing = Math.sin(t * 3.5)
+    const power = active ? 0.6 : 0.3
 
-    if (frameRef.current) {
-      frameRef.current.position.y = 1.02 + Math.sin(t * 1.25) * 0.035
-      frameRef.current.rotation.y = Math.sin(t * 0.55) * 0.16
-    }
-
-    const swing = Math.sin(t * 2.4)
-    const power = active ? 0.46 : 0.25
-
-    if (leftSwing.current) {
-      leftSwing.current.rotation.z = swing > 0 ? swing * power : 0
-    }
-
-    if (rightSwing.current) {
-      rightSwing.current.rotation.z = swing < 0 ? swing * power : 0
-    }
-
-    if (glowRef.current) {
-      glowRef.current.material.opacity = active ? 0.32 + Math.sin(t * 2.6) * 0.05 : 0.16
-      glowRef.current.scale.setScalar(active ? 1.06 + Math.sin(t * 2.2) * 0.04 : 1)
-    }
+    // 模擬物理碰撞的急停感
+    if (leftSwing.current) leftSwing.current.rotation.z = swing > 0 ? swing * power : 0
+    if (rightSwing.current) rightSwing.current.rotation.z = swing < 0 ? swing * power : 0
   })
 
-  const Ball = ({ x, color = '#eef3ff' }) => (
+  const Ball = ({ x }) => (
     <group position={[x, 0, 0]}>
-      <mesh position={[0, -0.28, 0]}>
-        <cylinderGeometry args={[0.01, 0.01, 0.58, 8]} />
-        <meshStandardMaterial color="#9aa9bd" roughness={0.38} metalness={0.35} />
+      {/* 釣線/金屬絲 (新增) */}
+      <mesh position={[0, -0.3, 0]}>
+        <cylinderGeometry args={[0.003, 0.003, 0.6, 8]} />
+        <meshBasicMaterial color="#ffffff" transparent opacity={0.6} />
       </mesh>
-      <mesh position={[0, -0.62, 0]} castShadow>
-        <sphereGeometry args={[0.13, 24, 24]} />
-        <meshStandardMaterial
-          color={color}
-          metalness={0.35}
-          roughness={0.22}
-          emissive={active ? '#dfe8ff' : '#000000'}
-          emissiveIntensity={active ? 0.2 : 0}
+      {/* 金屬球 (極高反射率) */}
+      <mesh position={[0, -0.65, 0]} castShadow>
+        <sphereGeometry args={[0.14, 32, 32]} />
+        <meshStandardMaterial 
+          color="#ffffff" 
+          metalness={0.95} 
+          roughness={0.05} 
+          envMapIntensity={2} 
         />
       </mesh>
     </group>
@@ -862,61 +704,26 @@ function NewtonCradle({ active, color }) {
   return (
     <group>
       <RoundBase color={color} accent="#f7efff" />
-
-      <mesh ref={glowRef} position={[0, 1.05, -0.06]}>
-        <cylinderGeometry args={[0.82, 0.82, 0.035, 56]} />
-        <meshBasicMaterial color="#ece2ff" transparent opacity={0.18} />
-      </mesh>
-
-      <group ref={frameRef} position={[0, 1.02, 0]}>
-        <mesh position={[0, 0.42, 0]} castShadow>
-          <boxGeometry args={[1.35, 0.08, 0.08]} />
-          <meshStandardMaterial color="#d7def0" metalness={0.25} roughness={0.35} />
+      <group ref={frameRef} position={[0, 1.2, 0]}>
+        {/* 頂部支架 */}
+        <mesh position={[0, 0.1, 0]} castShadow>
+          <boxGeometry args={[1.4, 0.05, 0.05]} />
+          <meshStandardMaterial color="#8892b0" metalness={0.6} roughness={0.3} />
+        </mesh>
+        {/* 兩側立柱 */}
+        <mesh position={[-0.7, -0.4, 0]} castShadow>
+          <boxGeometry args={[0.05, 1.0, 0.05]} />
+          <meshStandardMaterial color="#8892b0" metalness={0.6} roughness={0.3} />
+        </mesh>
+        <mesh position={[0.7, -0.4, 0]} castShadow>
+          <boxGeometry args={[0.05, 1.0, 0.05]} />
+          <meshStandardMaterial color="#8892b0" metalness={0.6} roughness={0.3} />
         </mesh>
 
-        <mesh position={[-0.72, -0.12, 0]} castShadow>
-          <boxGeometry args={[0.08, 1.12, 0.08]} />
-          <meshStandardMaterial color="#d7def0" metalness={0.25} roughness={0.35} />
-        </mesh>
-
-        <mesh position={[0.72, -0.12, 0]} castShadow>
-          <boxGeometry args={[0.08, 1.12, 0.08]} />
-          <meshStandardMaterial color="#d7def0" metalness={0.25} roughness={0.35} />
-        </mesh>
-
-        <mesh position={[0, -0.7, 0]} castShadow>
-          <boxGeometry args={[1.55, 0.08, 0.12]} />
-          <meshStandardMaterial color="#f3f0fb" roughness={0.45} />
-        </mesh>
-
-        <group ref={leftSwing} position={[-0.46, 0.38, 0]}>
-          <Ball x={0} color="#cfefff" />
-        </group>
-
-        <group position={[-0.23, 0.38, 0]}>
-          <Ball x={0} color="#eef3ff" />
-        </group>
-
-        <group position={[0, 0.38, 0]}>
-          <Ball x={0} color="#eef3ff" />
-        </group>
-
-        <group position={[0.23, 0.38, 0]}>
-          <Ball x={0} color="#eef3ff" />
-        </group>
-
-        <group ref={rightSwing} position={[0.46, 0.38, 0]}>
-          <Ball x={0} color="#eadcff" />
-        </group>
-
-        <mesh position={[0, -0.02, -0.08]} rotation={[Math.PI / 2, 0, 0]}>
-          <torusGeometry args={[0.78, 0.018, 16, 90]} />
-          <meshStandardMaterial
-            color="#c9b7ff"
-            emissive="#c9b7ff"
-            emissiveIntensity={active ? 0.75 : 0.16}
-          />
-        </mesh>
+        <group ref={leftSwing} position={[-0.42, 0.1, 0]}><Ball x={0} /></group>
+        <group position={[-0.14, 0.1, 0]}><Ball x={0} /></group>
+        <group position={[0.14, 0.1, 0]}><Ball x={0} /></group>
+        <group ref={rightSwing} position={[0.42, 0.1, 0]}><Ball x={0} /></group>
       </group>
     </group>
   )
