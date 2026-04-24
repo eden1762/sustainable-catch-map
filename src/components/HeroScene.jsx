@@ -17,29 +17,29 @@ const MENU_ITEMS = [
   {
     key: 'guide',
     title: '網站導覽',
-    subtitle: '3D 星星',
+    subtitle: '3D 眼睛導覽',
     position: [-4.2, 1.2, -3.4],
     accent: '#8fd3ff',
     route: '/guide',
-    hoverText: '跟著星星指引，快速找到網站功能、入口與探索方向。'
+    hoverText: '用一雙明亮的眼睛帶你快速看見網站功能、入口與探索方向。'
   },
   {
     key: 'map',
     title: '附近的友善海鮮地圖',
-    subtitle: '3D 太陽',
+    subtitle: '3D 友善小魚',
     position: [0, 1, -6],
-    accent: '#ffe29a',
+    accent: '#7ee7d4',
     route: '/map',
-    hoverText: '像太陽照亮地圖一樣，查看附近友善海鮮據點、推薦路線與在地探索資訊。'
+    hoverText: '跟著小魚游向附近友善海鮮據點，探索推薦路線與在地永續資訊。'
   },
   {
     key: 'ar',
     title: 'AR 互動與永續標籤',
-    subtitle: '3D 月亮',
+    subtitle: '3D 牛頓擺球組',
     position: [4.2, 1.2, -3.4],
     accent: '#d4b3ff',
     route: '/sustainability',
-    hoverText: '透過月亮般柔和的互動體驗，理解海鮮來源與永續價值。'
+    hoverText: '透過像牛頓擺一樣有節奏的互動，理解海鮮來源、標籤與永續價值。'
   }
 ]
 
@@ -248,9 +248,9 @@ function InteractiveMenuObject({ item, active, setActiveKey }) {
   return (
     <group ref={ref} position={item.position} {...events}>
       <Float speed={active ? 2.3 : 1.4} rotationIntensity={0.25} floatIntensity={0.3}>
-        {item.key === 'guide' && <StarGuide active={active || hovered} color={item.accent} />}
-        {item.key === 'map' && <SunMap active={active || hovered} color={item.accent} />}
-        {item.key === 'ar' && <MoonBadge active={active || hovered} color={item.accent} />}
+        {item.key === 'guide' && <EyesGuide active={active || hovered} color={item.accent} />}
+        {item.key === 'map' && <FriendlyFish active={active || hovered} color={item.accent} />}
+        {item.key === 'ar' && <NewtonCradle active={active || hovered} color={item.accent} />}
       </Float>
 
       <mesh ref={haloRef} position={[0, -0.75, 0]} rotation={[-Math.PI / 2, 0, 0]}>
@@ -274,97 +274,116 @@ function InteractiveMenuObject({ item, active, setActiveKey }) {
 }
 
 /* ============================================================
-   1. StarGuide —— 一顆星星
+   1. EyesGuide —— 一雙眼睛，適合「網站導覽」
 ============================================================ */
-function StarGuide({ active, color }) {
-  const starRef = useRef()
+function EyesGuide({ active, color }) {
+  const groupRef = useRef()
+  const leftPupil = useRef()
+  const rightPupil = useRef()
+  const blinkRef = useRef()
   const glowRef = useRef()
-  const orbitRef = useRef()
-
-  const starShape = useMemo(() => {
-    const shape = new THREE.Shape()
-    const outer = 0.4
-    const inner = 0.18
-    for (let i = 0; i < 10; i++) {
-      const angle = (i / 10) * Math.PI * 2 - Math.PI / 2
-      const radius = i % 2 === 0 ? outer : inner
-      const x = Math.cos(angle) * radius
-      const y = Math.sin(angle) * radius
-      if (i === 0) shape.moveTo(x, y)
-      else shape.lineTo(x, y)
-    }
-    shape.closePath()
-    return shape
-  }, [])
-
-  const starExtrude = useMemo(
-    () => ({
-      depth: 0.12,
-      bevelEnabled: true,
-      bevelSegments: 3,
-      steps: 1,
-      bevelSize: 0.025,
-      bevelThickness: 0.025
-    }),
-    []
-  )
 
   useFrame((state) => {
     const t = state.clock.elapsedTime
 
-    if (starRef.current) {
-      starRef.current.rotation.y += active ? 0.03 : 0.012
-      starRef.current.rotation.z = active ? Math.sin(t * 1.8) * 0.08 : Math.sin(t * 0.8) * 0.03
-      starRef.current.position.y = 1.08 + Math.sin(t * 1.9) * 0.06
+    if (groupRef.current) {
+      groupRef.current.position.y = 1.08 + Math.sin(t * 1.6) * 0.045
+      groupRef.current.rotation.y = Math.sin(t * 0.8) * 0.18
+    }
+
+    const lookX = Math.sin(t * 1.3) * 0.045
+    const lookY = Math.cos(t * 1.1) * 0.025
+
+    if (leftPupil.current) {
+      leftPupil.current.position.x = -0.28 + lookX
+      leftPupil.current.position.y = lookY
+    }
+
+    if (rightPupil.current) {
+      rightPupil.current.position.x = 0.28 + lookX
+      rightPupil.current.position.y = lookY
+    }
+
+    if (blinkRef.current) {
+      const blink = active ? 1 : 0.92 + Math.sin(t * 2.2) * 0.04
+      blinkRef.current.scale.y = blink
     }
 
     if (glowRef.current) {
-      glowRef.current.scale.setScalar(active ? 1.08 + Math.sin(t * 3.2) * 0.06 : 1)
-      glowRef.current.material.opacity = active ? 0.42 : 0.22
-    }
-
-    if (orbitRef.current) {
-      orbitRef.current.rotation.z += active ? 0.03 : 0.012
+      glowRef.current.material.opacity = active ? 0.36 + Math.sin(t * 3) * 0.06 : 0.18
+      glowRef.current.scale.setScalar(active ? 1.08 + Math.sin(t * 2.4) * 0.04 : 1)
     }
   })
 
   return (
     <group>
-      <RoundBase color={color} accent="#fff7df" />
+      <RoundBase color={color} accent="#eefaff" />
 
-      <group ref={starRef} position={[0, 1.08, 0]}>
-        <mesh castShadow rotation={[0, 0, 0.08]}>
-          <extrudeGeometry args={[starShape, starExtrude]} />
+      <mesh ref={glowRef} position={[0, 1.08, -0.04]}>
+        <cylinderGeometry args={[0.86, 0.86, 0.035, 56]} />
+        <meshBasicMaterial color="#dff7ff" transparent opacity={0.2} />
+      </mesh>
+
+      <group ref={groupRef}>
+        <group ref={blinkRef} position={[0, 1.08, 0]}>
+          <mesh position={[-0.28, 0, 0]} castShadow>
+            <sphereGeometry args={[0.28, 32, 32]} />
+            <meshStandardMaterial color="#ffffff" roughness={0.28} metalness={0.02} />
+          </mesh>
+
+          <mesh position={[0.28, 0, 0]} castShadow>
+            <sphereGeometry args={[0.28, 32, 32]} />
+            <meshStandardMaterial color="#ffffff" roughness={0.28} metalness={0.02} />
+          </mesh>
+
+          <mesh ref={leftPupil} position={[-0.28, 0, 0.23]}>
+            <sphereGeometry args={[0.105, 24, 24]} />
+            <meshStandardMaterial
+              color="#15324a"
+              emissive={active ? '#244f6f' : '#000000'}
+              emissiveIntensity={active ? 0.45 : 0.08}
+              roughness={0.2}
+            />
+          </mesh>
+
+          <mesh ref={rightPupil} position={[0.28, 0, 0.23]}>
+            <sphereGeometry args={[0.105, 24, 24]} />
+            <meshStandardMaterial
+              color="#15324a"
+              emissive={active ? '#244f6f' : '#000000'}
+              emissiveIntensity={active ? 0.45 : 0.08}
+              roughness={0.2}
+            />
+          </mesh>
+
+          <mesh position={[-0.32, 0.12, 0.31]}>
+            <sphereGeometry args={[0.035, 12, 12]} />
+            <meshBasicMaterial color="#ffffff" />
+          </mesh>
+
+          <mesh position={[0.24, 0.12, 0.31]}>
+            <sphereGeometry args={[0.035, 12, 12]} />
+            <meshBasicMaterial color="#ffffff" />
+          </mesh>
+        </group>
+
+        <mesh position={[0, 0.72, 0]}>
+          <torusGeometry args={[0.7, 0.025, 16, 90]} />
           <meshStandardMaterial
-            color="#ffd86a"
-            emissive={active ? '#ffd86a' : '#f2c84d'}
-            emissiveIntensity={active ? 1 : 0.28}
+            color="#8fd3ff"
+            emissive="#8fd3ff"
+            emissiveIntensity={active ? 0.8 : 0.18}
             roughness={0.35}
-            metalness={0.1}
           />
-        </mesh>
-
-        <mesh ref={glowRef} position={[0, 0, -0.02]}>
-          <cylinderGeometry args={[0.42, 0.42, 0.04, 40]} />
-          <meshBasicMaterial color="#fff4b0" transparent opacity={0.24} />
         </mesh>
       </group>
 
-      <mesh ref={orbitRef} position={[0, 1.08, 0]} rotation={[Math.PI / 2, 0, 0]}>
-        <torusGeometry args={[0.62, 0.025, 16, 80]} />
-        <meshStandardMaterial color="#9fe3ff" emissive="#9fe3ff" emissiveIntensity={active ? 0.9 : 0.2} />
-      </mesh>
-
-      {[
-        [0.58, 1.34, 0.1],
-        [-0.5, 1.2, 0.16],
-        [0.12, 1.58, -0.18]
-      ].map((pos, i) => (
+      {[[-0.62, 1.42, 0.1], [0.62, 1.38, 0.1], [0, 1.63, -0.12]].map((pos, i) => (
         <mesh key={i} position={pos}>
           <sphereGeometry args={[0.045, 14, 14]} />
           <meshStandardMaterial
-            color={i === 0 ? '#ffffff' : i === 1 ? '#dff6ff' : '#ffe9a8'}
-            emissive={i === 0 ? '#ffffff' : i === 1 ? '#dff6ff' : '#ffe9a8'}
+            color={i === 2 ? '#fff4b8' : '#dff8ff'}
+            emissive={i === 2 ? '#fff4b8' : '#dff8ff'}
             emissiveIntensity={active ? 1 : 0.35}
           />
         </mesh>
@@ -374,131 +393,33 @@ function StarGuide({ active, color }) {
 }
 
 /* ============================================================
-   2. SunMap —— 一顆太陽
+   2. FriendlyFish —— 一條魚，適合「附近的友善海鮮地圖」
 ============================================================ */
-function SunMap({ active, color }) {
-  const sunRef = useRef()
-  const coreRef = useRef()
-  const rayRef = useRef()
-  const pulseRef = useRef()
+function FriendlyFish({ active, color }) {
+  const fishRef = useRef()
+  const tailRef = useRef()
+  const finRef = useRef()
+  const bubbleRef = useRef()
 
-  useFrame((state) => {
-    const t = state.clock.elapsedTime
-
-    if (sunRef.current) {
-      sunRef.current.rotation.z += active ? 0.02 : 0.008
-      sunRef.current.position.y = 1.08 + Math.sin(t * 1.7) * 0.05
-    }
-
-    if (coreRef.current) {
-      const s = active ? 1 + Math.sin(t * 3.4) * 0.06 : 1 + Math.sin(t * 1.5) * 0.025
-      coreRef.current.scale.set(s, s, s)
-    }
-
-    if (rayRef.current) {
-      rayRef.current.rotation.z -= active ? 0.018 : 0.006
-    }
-
-    if (pulseRef.current) {
-      const s = active ? 1.05 + Math.sin(t * 2.8) * 0.06 : 1
-      pulseRef.current.scale.set(s, s, s)
-      pulseRef.current.material.opacity = active ? 0.3 : 0.16
-    }
-  })
-
-  return (
-    <group>
-      <RoundBase color={color} accent="#fff4d6" />
-
-      <mesh ref={pulseRef} position={[0, 1.08, -0.02]}>
-        <cylinderGeometry args={[0.72, 0.72, 0.03, 48]} />
-        <meshBasicMaterial color="#ffe49b" transparent opacity={0.18} />
-      </mesh>
-
-      <group ref={sunRef} position={[0, 1.08, 0]}>
-        <group ref={rayRef}>
-          {Array.from({ length: 12 }).map((_, i) => {
-            const angle = (i / 12) * Math.PI * 2
-            const x = Math.cos(angle) * 0.62
-            const y = Math.sin(angle) * 0.62
-            return (
-              <mesh key={i} position={[x, y, 0]} rotation={[0, 0, angle]}>
-                <boxGeometry args={[0.12, 0.36, 0.06]} />
-                <meshStandardMaterial
-                  color="#ffd972"
-                  emissive={active ? '#ffd972' : '#f4c957'}
-                  emissiveIntensity={active ? 0.85 : 0.2}
-                  roughness={0.45}
-                />
-              </mesh>
-            )
-          })}
-        </group>
-
-        <group ref={coreRef}>
-          <mesh castShadow>
-            <sphereGeometry args={[0.34, 28, 28]} />
-            <meshStandardMaterial
-              color="#ffcf5f"
-              emissive={active ? '#ffd56d' : '#ffbf47'}
-              emissiveIntensity={active ? 1.1 : 0.35}
-              roughness={0.35}
-            />
-          </mesh>
-
-          <mesh position={[0, 0, 0.26]}>
-            <sphereGeometry args={[0.11, 18, 18]} />
-            <meshStandardMaterial color="#fff2b6" emissive="#fff2b6" emissiveIntensity={active ? 1 : 0.3} />
-          </mesh>
-        </group>
-      </group>
-
-      {[
-        [-0.54, 1.46, 0.1],
-        [0.56, 1.26, 0.16],
-        [0.08, 1.68, -0.14]
-      ].map((pos, i) => (
-        <mesh key={i} position={pos}>
-          <sphereGeometry args={[0.04, 12, 12]} />
-          <meshStandardMaterial
-            color={i === 0 ? '#fff8de' : i === 1 ? '#ffd899' : '#fff0a3'}
-            emissive={i === 0 ? '#fff8de' : i === 1 ? '#ffd899' : '#fff0a3'}
-            emissiveIntensity={active ? 1 : 0.3}
-          />
-        </mesh>
-      ))}
-    </group>
-  )
-}
-
-/* ============================================================
-   3. MoonBadge —— 一枚月亮
-============================================================ */
-function MoonBadge({ active, color }) {
-  const moonRef = useRef()
-  const halo1 = useRef()
-  const halo2 = useRef()
-  const starDots = useRef()
-
-  const crescentShape = useMemo(() => {
+  const tailShape = useMemo(() => {
     const shape = new THREE.Shape()
-    shape.absarc(0, 0, 0.42, 0, Math.PI * 2, false)
-
-    const hole = new THREE.Path()
-    hole.absarc(0.18, 0.06, 0.34, 0, Math.PI * 2, true)
-    shape.holes.push(hole)
-
+    shape.moveTo(0.02, 0)
+    shape.lineTo(-0.46, 0.34)
+    shape.lineTo(-0.38, 0)
+    shape.lineTo(-0.46, -0.34)
+    shape.lineTo(0.02, 0)
+    shape.closePath()
     return shape
   }, [])
 
-  const moonExtrude = useMemo(
+  const tailExtrude = useMemo(
     () => ({
-      depth: 0.1,
+      depth: 0.08,
       bevelEnabled: true,
-      bevelSegments: 3,
+      bevelSegments: 2,
       steps: 1,
-      bevelSize: 0.018,
-      bevelThickness: 0.02
+      bevelSize: 0.015,
+      bevelThickness: 0.015
     }),
     []
   )
@@ -506,75 +427,205 @@ function MoonBadge({ active, color }) {
   useFrame((state) => {
     const t = state.clock.elapsedTime
 
-    if (moonRef.current) {
-      moonRef.current.rotation.y += active ? 0.025 : 0.01
-      moonRef.current.rotation.z = active ? Math.sin(t * 1.6) * 0.06 : Math.sin(t * 0.7) * 0.025
-      moonRef.current.position.y = 1.12 + Math.sin(t * 1.8) * 0.055
+    if (fishRef.current) {
+      fishRef.current.position.y = 1.08 + Math.sin(t * 1.6) * 0.06
+      fishRef.current.rotation.y = Math.sin(t * 0.75) * 0.22
+      fishRef.current.rotation.z = Math.sin(t * 1.2) * 0.04
     }
 
-    if (halo1.current) {
-      halo1.current.rotation.z += active ? 0.02 : 0.008
+    if (tailRef.current) {
+      tailRef.current.rotation.y = Math.sin(t * (active ? 6 : 3.2)) * 0.42
     }
 
-    if (halo2.current) {
-      halo2.current.rotation.z -= active ? 0.016 : 0.006
+    if (finRef.current) {
+      finRef.current.rotation.z = -0.4 + Math.sin(t * 2.8) * 0.18
     }
 
-    if (starDots.current) {
-      starDots.current.children.forEach((child, index) => {
-        child.position.y += Math.sin(t * 2 + index) * 0.0009
+    if (bubbleRef.current) {
+      bubbleRef.current.children.forEach((child, index) => {
+        child.position.y = 0.75 + index * 0.23 + Math.sin(t * 1.4 + index) * 0.06
+        child.material.opacity = active ? 0.55 : 0.28
       })
     }
   })
 
   return (
     <group>
-      <RoundBase color={color} accent="#f7efff" />
+      <RoundBase color={color} accent="#e9fff9" />
 
-      <mesh position={[0, 0.42, 0]} castShadow>
-        <cylinderGeometry args={[0.26, 0.34, 0.72, 28]} />
-        <meshStandardMaterial color="#f7f4fb" roughness={0.72} />
-      </mesh>
-
-      <group ref={moonRef} position={[0, 1.12, 0]}>
-        <mesh castShadow rotation={[0, 0, 0.08]}>
-          <extrudeGeometry args={[crescentShape, moonExtrude]} />
+      <group ref={fishRef} position={[0, 1.08, 0]}>
+        <mesh castShadow scale={[1.15, 0.62, 0.48]}>
+          <sphereGeometry args={[0.42, 36, 36]} />
           <meshStandardMaterial
-            color="#f5edff"
-            emissive={active ? '#e9dcff' : '#cdb8f5'}
-            emissiveIntensity={active ? 0.95 : 0.25}
-            roughness={0.32}
-            metalness={0.08}
+            color="#47d6c7"
+            emissive={active ? '#4ee7d8' : '#1aaea0'}
+            emissiveIntensity={active ? 0.55 : 0.14}
+            roughness={0.38}
+            metalness={0.03}
           />
+        </mesh>
+
+        <group ref={tailRef} position={[-0.55, 0, -0.04]}>
+          <mesh castShadow>
+            <extrudeGeometry args={[tailShape, tailExtrude]} />
+            <meshStandardMaterial
+              color="#ffca7a"
+              emissive={active ? '#ffd89b' : '#e7a94d'}
+              emissiveIntensity={active ? 0.45 : 0.12}
+              roughness={0.42}
+            />
+          </mesh>
+        </group>
+
+        <mesh ref={finRef} position={[0.05, 0.36, 0.03]} rotation={[0, 0, -0.45]}>
+          <coneGeometry args={[0.16, 0.35, 3]} />
+          <meshStandardMaterial color="#ffdf9c" roughness={0.45} />
+        </mesh>
+
+        <mesh position={[0.12, -0.36, 0.03]} rotation={[0, 0, Math.PI]}>
+          <coneGeometry args={[0.13, 0.28, 3]} />
+          <meshStandardMaterial color="#ffdf9c" roughness={0.45} />
+        </mesh>
+
+        <mesh position={[0.36, 0.1, 0.35]}>
+          <sphereGeometry args={[0.055, 16, 16]} />
+          <meshStandardMaterial color="#ffffff" roughness={0.2} />
+        </mesh>
+
+        <mesh position={[0.385, 0.1, 0.39]}>
+          <sphereGeometry args={[0.024, 12, 12]} />
+          <meshStandardMaterial color="#123345" roughness={0.25} />
+        </mesh>
+
+        <mesh position={[0.5, -0.08, 0.34]} rotation={[0, 0, -0.15]}>
+          <torusGeometry args={[0.085, 0.012, 8, 24, Math.PI]} />
+          <meshStandardMaterial color="#15515d" roughness={0.4} />
         </mesh>
       </group>
 
-      <mesh ref={halo1} position={[0, 1.12, 0]} rotation={[Math.PI / 2, 0, 0]}>
-        <torusGeometry args={[0.55, 0.018, 16, 80]} />
-        <meshStandardMaterial color="#cbb7ff" emissive="#cbb7ff" emissiveIntensity={active ? 0.85 : 0.22} />
-      </mesh>
-
-      <mesh ref={halo2} position={[0, 1.12, 0]} rotation={[0.8, 0.5, 0]}>
-        <torusGeometry args={[0.38, 0.014, 16, 80]} />
-        <meshStandardMaterial color="#9fe3ff" emissive="#9fe3ff" emissiveIntensity={active ? 0.8 : 0.18} />
-      </mesh>
-
-      <group ref={starDots}>
-        {[
-          [0.48, 1.46, 0.08],
-          [-0.4, 1.28, 0.12],
-          [0.12, 1.62, -0.18],
-          [-0.14, 0.96, 0.18]
-        ].map((pos, i) => (
-          <mesh key={i} position={pos}>
-            <sphereGeometry args={[0.04, 12, 12]} />
-            <meshStandardMaterial
-              color={i % 2 === 0 ? '#fff8d8' : '#d8f2ff'}
-              emissive={i % 2 === 0 ? '#fff8d8' : '#d8f2ff'}
-              emissiveIntensity={active ? 1 : 0.35}
-            />
+      <group ref={bubbleRef}>
+        {[0, 1, 2, 3].map((_, i) => (
+          <mesh key={i} position={[0.68 + i * 0.12, 0.75 + i * 0.22, 0.18]}>
+            <sphereGeometry args={[0.045 + i * 0.01, 12, 12]} />
+            <meshBasicMaterial color="#dffaff" transparent opacity={0.3} />
           </mesh>
         ))}
+      </group>
+    </group>
+  )
+}
+
+/* ============================================================
+   3. NewtonCradle —— 牛頓擺球組，適合「AR 互動與永續標籤」
+============================================================ */
+function NewtonCradle({ active, color }) {
+  const frameRef = useRef()
+  const leftSwing = useRef()
+  const rightSwing = useRef()
+  const glowRef = useRef()
+
+  useFrame((state) => {
+    const t = state.clock.elapsedTime
+
+    if (frameRef.current) {
+      frameRef.current.position.y = 1.02 + Math.sin(t * 1.25) * 0.035
+      frameRef.current.rotation.y = Math.sin(t * 0.55) * 0.16
+    }
+
+    const swing = Math.sin(t * 2.4)
+    const power = active ? 0.46 : 0.25
+
+    if (leftSwing.current) {
+      leftSwing.current.rotation.z = swing > 0 ? swing * power : 0
+    }
+
+    if (rightSwing.current) {
+      rightSwing.current.rotation.z = swing < 0 ? swing * power : 0
+    }
+
+    if (glowRef.current) {
+      glowRef.current.material.opacity = active ? 0.32 + Math.sin(t * 2.6) * 0.05 : 0.16
+      glowRef.current.scale.setScalar(active ? 1.06 + Math.sin(t * 2.2) * 0.04 : 1)
+    }
+  })
+
+  const Ball = ({ x, color = '#eef3ff' }) => (
+    <group position={[x, 0, 0]}>
+      <mesh position={[0, -0.28, 0]}>
+        <cylinderGeometry args={[0.01, 0.01, 0.58, 8]} />
+        <meshStandardMaterial color="#9aa9bd" roughness={0.38} metalness={0.35} />
+      </mesh>
+      <mesh position={[0, -0.62, 0]} castShadow>
+        <sphereGeometry args={[0.13, 24, 24]} />
+        <meshStandardMaterial
+          color={color}
+          metalness={0.35}
+          roughness={0.22}
+          emissive={active ? '#dfe8ff' : '#000000'}
+          emissiveIntensity={active ? 0.2 : 0}
+        />
+      </mesh>
+    </group>
+  )
+
+  return (
+    <group>
+      <RoundBase color={color} accent="#f7efff" />
+
+      <mesh ref={glowRef} position={[0, 1.05, -0.06]}>
+        <cylinderGeometry args={[0.82, 0.82, 0.035, 56]} />
+        <meshBasicMaterial color="#ece2ff" transparent opacity={0.18} />
+      </mesh>
+
+      <group ref={frameRef} position={[0, 1.02, 0]}>
+        <mesh position={[0, 0.42, 0]} castShadow>
+          <boxGeometry args={[1.35, 0.08, 0.08]} />
+          <meshStandardMaterial color="#d7def0" metalness={0.25} roughness={0.35} />
+        </mesh>
+
+        <mesh position={[-0.72, -0.12, 0]} castShadow>
+          <boxGeometry args={[0.08, 1.12, 0.08]} />
+          <meshStandardMaterial color="#d7def0" metalness={0.25} roughness={0.35} />
+        </mesh>
+
+        <mesh position={[0.72, -0.12, 0]} castShadow>
+          <boxGeometry args={[0.08, 1.12, 0.08]} />
+          <meshStandardMaterial color="#d7def0" metalness={0.25} roughness={0.35} />
+        </mesh>
+
+        <mesh position={[0, -0.7, 0]} castShadow>
+          <boxGeometry args={[1.55, 0.08, 0.12]} />
+          <meshStandardMaterial color="#f3f0fb" roughness={0.45} />
+        </mesh>
+
+        <group ref={leftSwing} position={[-0.46, 0.38, 0]}>
+          <Ball x={0} color="#cfefff" />
+        </group>
+
+        <group position={[-0.23, 0.38, 0]}>
+          <Ball x={0} color="#eef3ff" />
+        </group>
+
+        <group position={[0, 0.38, 0]}>
+          <Ball x={0} color="#eef3ff" />
+        </group>
+
+        <group position={[0.23, 0.38, 0]}>
+          <Ball x={0} color="#eef3ff" />
+        </group>
+
+        <group ref={rightSwing} position={[0.46, 0.38, 0]}>
+          <Ball x={0} color="#eadcff" />
+        </group>
+
+        <mesh position={[0, -0.02, -0.08]} rotation={[Math.PI / 2, 0, 0]}>
+          <torusGeometry args={[0.78, 0.018, 16, 90]} />
+          <meshStandardMaterial
+            color="#c9b7ff"
+            emissive="#c9b7ff"
+            emissiveIntensity={active ? 0.75 : 0.16}
+          />
+        </mesh>
       </group>
     </group>
   )
