@@ -123,13 +123,13 @@ function BeachWorld({ activeKey, setActiveKey }) {
       <directionalLight position={[-4, 4, -4]} intensity={1.2} color="#90d5ff" />
       <hemisphereLight args={['#ffffff', '#87CEEB', 2]} />
 
-      {/* 優化：更晴朗的天空 */}
+      {/* 優化：更晴朗、帶深藍色的天空 */}
       <Sky
-        sunPosition={[8, 6, -10]}
-        turbidity={0.8}    // 降低混濁度，天空更乾淨
-        rayleigh={0.5}     // 降低散射，顏色更偏深藍
-        mieCoefficient={0.002}
-        mieDirectionalG={0.9}
+        sunPosition={[8, 12, -10]} // 稍微提高太陽位置
+        turbidity={0.05}   // 大幅降低混濁度，天空更清澈
+        rayleigh={0.15}    // 降低散射，呈現深藍色的天空
+        mieCoefficient={0.001} // 降低霧氣
+        mieDirectionalG={0.95}
       />
       <Stars radius={80} depth={40} count={500} factor={2} saturation={0} fade speed={0.5} />
       <Sparkles count={150} scale={[30, 10, 30]} size={2} speed={0.3} opacity={0.2} color="#ffffff" />
@@ -138,10 +138,16 @@ function BeachWorld({ activeKey, setActiveKey }) {
       <Clouds />
       <Sand />
       <SandDetails />
+      <BeachDecor /> {/* 新增：沙灘上的自然變化 (遮陽傘、沙雕、泳裝) */}
       <Sea />
       <SeaReflection />
+      <OceanDecor /> {/* 新增：海面遊艇 */}
+      
+      {/* 增強海浪層次 */}
       <WaveLayer offset={0} speed={1.2} opacity={0.6} color="#ffffff" z={-9.5} />
       <WaveLayer offset={Math.PI * 0.5} speed={0.9} opacity={0.4} color="#e0f7ff" z={-10.5} />
+      <WaveLayer offset={Math.PI} speed={1.5} opacity={0.3} color="#b3e5fc" z={-12.5} /> {/* 新增遠處海浪 */}
+      
       <ShoreFoam />
       <Footsteps />
       <SeashellDecor />
@@ -155,6 +161,119 @@ function BeachWorld({ activeKey, setActiveKey }) {
         />
       ))}
     </>
+  )
+}
+
+/* ============================================================
+   新增：沙灘裝飾物 (遮陽傘、沙雕、泳裝墊子、沙灘球)
+============================================================ */
+function BeachDecor() {
+  return (
+    <group position={[0, 0, 0]}>
+      {/* 沙雕 */}
+      <group position={[-5.5, 0.1, 2]} rotation={[0, Math.PI / 4, 0]}>
+        <mesh castShadow position={[0, 0.15, 0]}>
+          <cylinderGeometry args={[0.4, 0.5, 0.3, 16]} />
+          <meshStandardMaterial color="#e8d8b0" roughness={0.95} />
+        </mesh>
+        <mesh castShadow position={[0, 0.4, 0]}>
+          <cylinderGeometry args={[0.2, 0.3, 0.3, 16]} />
+          <meshStandardMaterial color="#e8d8b0" roughness={0.95} />
+        </mesh>
+        <mesh castShadow position={[0, 0.65, 0]}>
+          <coneGeometry args={[0.15, 0.3, 16]} />
+          <meshStandardMaterial color="#e8d8b0" roughness={0.95} />
+        </mesh>
+      </group>
+
+      {/* 遮陽傘 A 與沙灘墊(泳裝意象) */}
+      <group position={[6.5, 0, -1]}>
+        {/* 傘柄 */}
+        <mesh castShadow position={[0, 1.5, 0]}>
+          <cylinderGeometry args={[0.04, 0.04, 3, 8]} />
+          <meshStandardMaterial color="#eeeeee" metalness={0.5} />
+        </mesh>
+        {/* 傘面 */}
+        <mesh castShadow position={[0, 3, 0]}>
+          <coneGeometry args={[2.2, 0.8, 16]} />
+          <meshStandardMaterial color="#ff6b6b" roughness={0.7} />
+        </mesh>
+        {/* 鮮豔的沙灘巾/泳裝鋪墊 */}
+        <mesh receiveShadow position={[1.2, 0.02, 0.5]} rotation={[-Math.PI / 2, 0, 0.5]}>
+          <planeGeometry args={[1.5, 2.5]} />
+          <meshStandardMaterial color="#4ecdc4" roughness={0.9} />
+        </mesh>
+        {/* 海灘球 */}
+        <mesh castShadow position={[2, 0.15, 1.5]}>
+          <sphereGeometry args={[0.15, 16, 16]} />
+          <meshStandardMaterial color="#ffe66d" roughness={0.5} />
+        </mesh>
+      </group>
+
+      {/* 遮陽傘 B */}
+      <group position={[-7, 0, -4.5]} rotation={[0, -0.5, 0]}>
+        <mesh castShadow position={[0, 1.2, 0]}>
+          <cylinderGeometry args={[0.03, 0.03, 2.4, 8]} />
+          <meshStandardMaterial color="#eeeeee" metalness={0.5} />
+        </mesh>
+        <mesh castShadow position={[0, 2.4, 0]}>
+          <coneGeometry args={[1.8, 0.6, 16]} />
+          <meshStandardMaterial color="#feca57" roughness={0.7} />
+        </mesh>
+        <mesh receiveShadow position={[-1, 0.02, 0.2]} rotation={[-Math.PI / 2, 0, -0.2]}>
+          <planeGeometry args={[1.2, 2.2]} />
+          <meshStandardMaterial color="#ffffff" roughness={0.9} />
+        </mesh>
+      </group>
+    </group>
+  )
+}
+
+/* ============================================================
+   新增：海洋遊艇
+============================================================ */
+function OceanDecor() {
+  const yachtRef = useRef()
+
+  useFrame((state) => {
+    if (!yachtRef.current) return
+    const t = state.clock.elapsedTime
+    // 遊艇隨海浪浮動與搖擺
+    yachtRef.current.position.y = 0.05 + Math.sin(t * 1.5) * 0.15
+    yachtRef.current.rotation.z = Math.sin(t * 1.2) * 0.05
+    yachtRef.current.rotation.x = Math.sin(t * 0.8) * 0.03
+    // 緩慢在遠方海面航行
+    yachtRef.current.position.x = 20 - ((t * 0.8) % 40)
+  })
+
+  return (
+    <group ref={yachtRef} position={[15, 0.1, -22]}>
+      {/* 船體主結構 */}
+      <mesh castShadow position={[0, 0.3, 0]}>
+        <boxGeometry args={[3.5, 0.6, 1.2]} />
+        <meshStandardMaterial color="#ffffff" roughness={0.2} metalness={0.1} />
+      </mesh>
+      {/* 船首 */}
+      <mesh castShadow position={[-2.1, 0.3, 0]} rotation={[0, 0, Math.PI / 4]}>
+        <boxGeometry args={[1.2, 0.6, 1.2]} />
+        <meshStandardMaterial color="#ffffff" roughness={0.2} metalness={0.1} />
+      </mesh>
+      {/* 船艙 */}
+      <mesh castShadow position={[0.2, 0.9, 0]}>
+        <boxGeometry args={[1.8, 0.8, 0.9]} />
+        <meshStandardMaterial color="#f0f0f0" roughness={0.2} />
+      </mesh>
+      {/* 船艙深色玻璃窗 */}
+      <mesh position={[0.2, 0.9, 0.46]}>
+        <planeGeometry args={[1.4, 0.4]} />
+        <meshBasicMaterial color="#112233" />
+      </mesh>
+      {/* 雷達架/天線 */}
+      <mesh castShadow position={[0.2, 1.6, 0]}>
+        <cylinderGeometry args={[0.03, 0.03, 0.8, 8]} />
+        <meshStandardMaterial color="#aaaaaa" metalness={0.8} />
+      </mesh>
+    </group>
   )
 }
 
