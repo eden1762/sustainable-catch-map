@@ -1,5 +1,5 @@
 import React, { Suspense, useMemo, useRef, useState } from 'react'
-import { Canvas, useFrame } from '@react-three/fiber'
+import { Canvas, useFrame, useThree } from '@react-three/fiber'
 import {
   Billboard,
   Float,
@@ -18,7 +18,9 @@ const MENU_ITEMS = [
     key: 'guide',
     title: '網站導覽',
     subtitle: '3D 眼睛導覽',
-    position: [-4.2, 1.2, -3.4],
+    desktopPosition: [-3.2, 2.15, -3.6],
+    tabletPosition: [-2.3, 2.35, -3.7],
+    mobilePosition: [-1.25, 2.75, -3.9],
     accent: '#8fd3ff',
     route: '/guide',
     hoverText: '用一雙明亮的眼睛帶你快速看見網站功能、入口與探索方向。'
@@ -27,7 +29,9 @@ const MENU_ITEMS = [
     key: 'map',
     title: '附近的友善海鮮地圖',
     subtitle: '3D 友善小魚',
-    position: [0, 1, -6],
+    desktopPosition: [0, 2.05, -4.8],
+    tabletPosition: [0, 2.25, -4.7],
+    mobilePosition: [0, 2.15, -4.2],
     accent: '#7ee7d4',
     route: '/map',
     hoverText: '跟著小魚游向附近友善海鮮據點，探索推薦路線與在地永續資訊。'
@@ -36,7 +40,9 @@ const MENU_ITEMS = [
     key: 'ar',
     title: 'AR 互動與永續標籤',
     subtitle: '3D 牛頓擺球組',
-    position: [4.2, 1.2, -3.4],
+    desktopPosition: [3.2, 2.15, -3.6],
+    tabletPosition: [2.3, 2.35, -3.7],
+    mobilePosition: [1.25, 2.75, -3.9],
     accent: '#d4b3ff',
     route: '/sustainability',
     hoverText: '透過像牛頓擺一樣有節奏的互動，理解海鮮來源、標籤與永續價值。'
@@ -49,7 +55,7 @@ export default function HeroScene() {
 
   return (
     <div className="hero-shell">
-      <Canvas camera={{ position: [0, 1.7, 8], fov: 55 }} dpr={[1, 2]} shadows>
+      <Canvas camera={{ position: [0, 2.15, 8.2], fov: 50 }} dpr={[1, 2]} shadows>
         <color attach="background" args={['#d6eeff']} />
         <fog attach="fog" args={['#c8e8ff', 18, 42]} />
         <Suspense fallback={null}>
@@ -84,7 +90,6 @@ export default function HeroScene() {
               onClick={() => { window.location.href = item.route }}
             >
               <span className="hero-menu-title">{item.title}</span>
-              <span className="hero-menu-subtitle">{item.subtitle}</span>
             </button>
           ))}
         </div>
@@ -146,10 +151,28 @@ function BeachWorld({ activeKey, setActiveKey }) {
       <Footsteps />
       <SeashellDecor />
 
+      <ResponsiveMenuObjects activeKey={activeKey} setActiveKey={setActiveKey} />
+    </>
+  )
+}
+function ResponsiveMenuObjects({ activeKey, setActiveKey }) {
+  const { size } = useThree()
+
+  const getPosition = (item) => {
+    if (size.width <= 600) return item.mobilePosition
+    if (size.width <= 1024) return item.tabletPosition
+    return item.desktopPosition
+  }
+
+  return (
+    <>
       {MENU_ITEMS.map(item => (
         <InteractiveMenuObject
           key={item.key}
-          item={item}
+          item={{
+            ...item,
+            position: getPosition(item)
+          }}
           active={item.key === activeKey}
           setActiveKey={setActiveKey}
         />
@@ -537,12 +560,19 @@ function InteractiveMenuObject({ item, active, setActiveKey }) {
         <meshBasicMaterial color={item.accent} transparent opacity={0.06} />
       </mesh>
 
-      <Billboard position={[0, 2.38, 0]} follow>
-        <Text fontSize={0.27} color="#183b56" anchorX="center" anchorY="middle" maxWidth={3.2}
-          outlineWidth={0.008} outlineColor="#ffffff">
-          {item.title}
-        </Text>
-      </Billboard>
+    <Billboard position={[0, 2.08, 0]} follow>
+      <Text
+        fontSize={0.22}
+        color="#183b56"
+        anchorX="center"
+        anchorY="middle"
+        maxWidth={2.4}
+        outlineWidth={0.01}
+        outlineColor="#ffffff"
+      >
+        {item.title}
+      </Text>
+    </Billboard>
 
       {(hovered || active) && (
         <Html position={[0, 2.95, 0]} center distanceFactor={10}>
