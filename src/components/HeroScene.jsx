@@ -18,9 +18,13 @@ const MENU_ITEMS = [
     key: 'guide',
     title: '網站導覽',
     subtitle: '3D 眼睛導覽',
-    desktopPosition: [-3.2, 2.15, -3.6],
-    tabletPosition: [-2.3, 2.35, -3.7],
-    mobilePosition: [-1.25, 2.75, -3.9],
+    desktopPosition: [-2.65, 1.35, -3.25],
+    tabletPosition: [-1.95, 1.35, -3.35],
+    mobilePosition: [-1.22, 1.28, -3.15],
+    desktopScale: 1,
+    tabletScale: 0.9,
+    mobileScale: 0.68,
+    shortLabel: '看懂網站入口',
     accent: '#8fd3ff',
     route: '/guide',
     hoverText: '用一雙明亮的眼睛帶你快速看見網站功能、入口與探索方向。'
@@ -29,9 +33,13 @@ const MENU_ITEMS = [
     key: 'map',
     title: '附近的友善海鮮地圖',
     subtitle: '3D 友善小魚',
-    desktopPosition: [0, 2.05, -4.8],
-    tabletPosition: [0, 2.25, -4.7],
-    mobilePosition: [0, 2.15, -4.2],
+    desktopPosition: [0, 1.32, -3.55],
+    tabletPosition: [0, 1.32, -3.55],
+    mobilePosition: [0, 1.22, -3.22],
+    desktopScale: 1.05,
+    tabletScale: 0.92,
+    mobileScale: 0.7,
+    shortLabel: '找附近友善海鮮',
     accent: '#7ee7d4',
     route: '/map',
     hoverText: '跟著小魚游向附近友善海鮮據點，探索推薦路線與在地永續資訊。'
@@ -40,9 +48,13 @@ const MENU_ITEMS = [
     key: 'ar',
     title: 'AR 互動與永續標籤',
     subtitle: '3D 牛頓擺球組',
-    desktopPosition: [3.2, 2.15, -3.6],
-    tabletPosition: [2.3, 2.35, -3.7],
-    mobilePosition: [1.25, 2.75, -3.9],
+    desktopPosition: [2.65, 1.35, -3.25],
+    tabletPosition: [1.95, 1.35, -3.35],
+    mobilePosition: [1.22, 1.28, -3.15],
+    desktopScale: 1,
+    tabletScale: 0.9,
+    mobileScale: 0.68,
+    shortLabel: '理解永續標籤',
     accent: '#d4b3ff',
     route: '/sustainability',
     hoverText: '透過像牛頓擺一樣有節奏的互動，理解海鮮來源、標籤與永續價值。'
@@ -55,7 +67,7 @@ export default function HeroScene() {
 
   return (
     <div className="hero-shell">
-      <Canvas camera={{ position: [0, 2.15, 8.2], fov: 50 }} dpr={[1, 2]} shadows>
+      <Canvas camera={{ position: [0, 1.9, 7.2], fov: 48 }} dpr={[1, 2]} shadows>
         <color attach="background" args={['#d6eeff']} />
         <fog attach="fog" args={['#c8e8ff', 18, 42]} />
         <Suspense fallback={null}>
@@ -158,25 +170,34 @@ function BeachWorld({ activeKey, setActiveKey }) {
 function ResponsiveMenuObjects({ activeKey, setActiveKey }) {
   const { size } = useThree()
 
-  const getPosition = (item) => {
-    if (size.width <= 600) return item.mobilePosition
-    if (size.width <= 1024) return item.tabletPosition
-    return item.desktopPosition
+  const getLayout = (item) => {
+    if (size.width <= 600) {
+      return { position: item.mobilePosition, scale: item.mobileScale }
+    }
+    if (size.width <= 1024) {
+      return { position: item.tabletPosition, scale: item.tabletScale }
+    }
+    return { position: item.desktopPosition, scale: item.desktopScale }
   }
 
   return (
     <>
-      {MENU_ITEMS.map(item => (
-        <InteractiveMenuObject
-          key={item.key}
-          item={{
-            ...item,
-            position: getPosition(item)
-          }}
-          active={item.key === activeKey}
-          setActiveKey={setActiveKey}
-        />
-      ))}
+      {/* 中央三入口：桌機/平板/手機都固定在視覺中央附近，並用 scale 避免小螢幕互相重疊 */}
+      {MENU_ITEMS.map(item => {
+        const layout = getLayout(item)
+        return (
+          <InteractiveMenuObject
+            key={item.key}
+            item={{
+              ...item,
+              position: layout.position,
+              objectScale: layout.scale
+            }}
+            active={item.key === activeKey}
+            setActiveKey={setActiveKey}
+          />
+        )
+      })}
     </>
   )
 }
@@ -542,7 +563,7 @@ function InteractiveMenuObject({ item, active, setActiveKey }) {
   }
 
   return (
-    <group ref={ref} position={item.position} {...events}>
+    <group ref={ref} position={item.position} scale={item.objectScale || 1} {...events}>
       <Float speed={active ? 2.3 : 1.4} rotationIntensity={0.25} floatIntensity={0.3}>
         {item.key === 'guide' && <EyesGuide active={active || hovered} color={item.accent} />}
         {item.key === 'map' && <FriendlyFish active={active || hovered} color={item.accent} />}
@@ -560,19 +581,39 @@ function InteractiveMenuObject({ item, active, setActiveKey }) {
         <meshBasicMaterial color={item.accent} transparent opacity={0.06} />
       </mesh>
 
-    <Billboard position={[0, 2.08, 0]} follow>
-      <Text
-        fontSize={0.22}
-        color="#183b56"
-        anchorX="center"
-        anchorY="middle"
-        maxWidth={2.4}
-        outlineWidth={0.01}
-        outlineColor="#ffffff"
-      >
-        {item.title}
-      </Text>
-    </Billboard>
+      <Billboard position={[0, 2.05, 0]} follow>
+        <Text
+          fontSize={0.22}
+          color="#183b56"
+          anchorX="center"
+          anchorY="middle"
+          maxWidth={2.6}
+          textAlign="center"
+          outlineWidth={0.012}
+          outlineColor="#ffffff"
+        >
+          {item.title}
+        </Text>
+        <Text
+          position={[0, -0.32, 0]}
+          fontSize={0.13}
+          color="#2c6f97"
+          anchorX="center"
+          anchorY="middle"
+          maxWidth={2.5}
+          textAlign="center"
+          outlineWidth={0.01}
+          outlineColor="#ffffff"
+        >
+          {item.shortLabel}
+        </Text>
+      </Billboard>
+
+      <Html position={[0, -1.15, 0]} center distanceFactor={9}>
+        <div className={`model-purpose-badge ${active || hovered ? 'active' : ''}`}>
+          永續漁獲地圖
+        </div>
+      </Html>
 
       {(hovered || active) && (
         <Html position={[0, 2.95, 0]} center distanceFactor={10}>

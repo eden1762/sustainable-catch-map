@@ -644,3 +644,198 @@ button { font: inherit; }
     letter-spacing: 0.18em;
   }
 }
+
+
+/* ============================================================
+   首頁三個 3D 入口 RWD 中央配置修正版
+   目標：模型永遠優先出現在畫面中央附近，文字退到上下/左右，不遮住眼睛、小魚、牛頓擺。
+============================================================ */
+.model-purpose-badge {
+  white-space: nowrap;
+  padding: 6px 12px;
+  border-radius: 999px;
+  color: #0d6f9f;
+  font-size: 12px;
+  font-weight: 800;
+  letter-spacing: 0.04em;
+  background: rgba(255, 255, 255, 0.78);
+  border: 1px solid rgba(255, 255, 255, 0.72);
+  box-shadow: 0 10px 22px rgba(8, 39, 61, 0.12);
+  backdrop-filter: blur(10px);
+  -webkit-backdrop-filter: blur(10px);
+  transform: translateY(0);
+  transition: transform .22s ease, background .22s ease, box-shadow .22s ease;
+  pointer-events: none;
+}
+
+.model-purpose-badge.active {
+  transform: translateY(-3px) scale(1.04);
+  background: rgba(255, 255, 255, 0.96);
+  box-shadow: 0 14px 30px rgba(8, 39, 61, 0.18);
+}
+
+.floating-tooltip {
+  max-width: min(360px, 80vw);
+  white-space: normal;
+  text-align: center;
+  font-weight: 700;
+}
+
+.hero-copy {
+  top: 96px;
+  left: 24px;
+  width: min(31vw, 540px);
+  max-width: 540px;
+  padding: 20px 22px;
+}
+
+.hero-copy h1 {
+  font-size: clamp(28px, 3vw, 44px);
+}
+
+.hero-copy p {
+  font-size: 15px;
+}
+
+.hero-menu {
+  left: 24px;
+  bottom: 24px;
+  width: min(30vw, 440px);
+}
+
+.hero-status {
+  right: 24px;
+  bottom: 24px;
+  width: min(28vw, 430px);
+}
+
+/* 平板：文字壓到左右下角，中間保留給三個 3D 模型 */
+@media (max-width: 1024px) {
+  .hero-copy {
+    top: 118px;
+    left: 18px;
+    width: min(43vw, 430px);
+    padding: 18px;
+  }
+
+  .hero-copy h1 {
+    font-size: clamp(28px, 4.8vw, 42px);
+  }
+
+  .hero-copy p {
+    font-size: 15px;
+    line-height: 1.65;
+  }
+
+  .hero-menu {
+    left: 18px;
+    bottom: 18px;
+    width: min(44vw, 410px);
+  }
+
+  .hero-status {
+    right: 18px;
+    bottom: 18px;
+    width: min(43vw, 390px);
+  }
+}
+
+/* 手機：上方保留選單，中間完整顯示三個 3D 模型，下方才放簡介 */
+@media (max-width: 600px) {
+  .site-nav {
+    padding: 10px 12px;
+  }
+
+  .brand-kicker {
+    font-size: 9px;
+  }
+
+  .brand-mark strong {
+    font-size: 17px;
+  }
+
+  .nav-links {
+    display: none;
+  }
+
+  .hero-menu {
+    top: 74px;
+    left: 8px;
+    right: 8px;
+    padding: 8px;
+    gap: 8px;
+    background: rgba(255,255,255,0.36);
+    border: 1px solid rgba(255,255,255,0.42);
+    box-shadow: 0 12px 28px rgba(8, 39, 61, 0.08);
+    backdrop-filter: blur(12px);
+    -webkit-backdrop-filter: blur(12px);
+  }
+
+  .hero-menu-item {
+    min-width: 112px;
+    padding: 10px 12px;
+  }
+
+  .hero-menu-title {
+    font-size: 14px;
+  }
+
+  .hero-copy {
+    top: auto;
+    left: 12px;
+    right: 12px;
+    bottom: 18px;
+    width: auto;
+    max-width: none;
+    padding: 14px 16px;
+    border-radius: 20px;
+  }
+
+  .hero-copy .eyebrow {
+    font-size: 9px;
+  }
+
+  .hero-copy h1 {
+    margin: 6px 0 6px;
+    font-size: clamp(21px, 7vw, 30px);
+    line-height: 1.12;
+  }
+
+  .hero-copy p {
+    margin: 0;
+    font-size: 13px;
+    line-height: 1.55;
+  }
+
+  .hero-status {
+    display: none;
+  }
+
+  .floating-tooltip {
+    display: none;
+  }
+
+  .model-purpose-badge {
+    font-size: 10px;
+    padding: 5px 9px;
+  }
+}
+
+@media (max-width: 380px) {
+  .hero-menu-title {
+    font-size: 13px;
+  }
+
+  .hero-menu-item {
+    min-width: 104px;
+    padding: 9px 10px;
+  }
+
+  .hero-copy h1 {
+    font-size: 20px;
+  }
+
+  .hero-copy p {
+    font-size: 12px;
+  }
+}
