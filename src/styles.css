@@ -839,3 +839,131 @@ button { font: inherit; }
     font-size: 12px;
   }
 }
+
+/* ============================================================
+   2026-04 RWD 修正：首頁三個 3D 模型置中、不重疊、網站名稱只保留導覽列一次
+============================================================ */
+.hero-copy h1 {
+  word-break: keep-all;
+}
+
+@media (min-width: 1025px) {
+  .hero-copy {
+    top: 92px;
+    left: 24px;
+    width: min(28vw, 500px);
+    padding: 18px 20px;
+  }
+
+  .hero-copy h1 {
+    font-size: clamp(25px, 2.45vw, 38px);
+    line-height: 1.14;
+  }
+
+  .hero-copy p {
+    font-size: 14px;
+    line-height: 1.65;
+  }
+
+  .hero-menu {
+    left: 24px;
+    bottom: 22px;
+    width: min(28vw, 420px);
+  }
+
+  .hero-status {
+    right: 24px;
+    bottom: 22px;
+    width: min(27vw, 410px);
+  }
+}
+
+@media (min-width: 601px) and (max-width: 1024px) {
+  .hero-copy {
+    top: 94px;
+    left: 16px;
+    width: min(38vw, 380px);
+    padding: 15px 16px;
+  }
+
+  .hero-copy h1 {
+    font-size: clamp(23px, 3.6vw, 34px);
+    line-height: 1.15;
+  }
+
+  .hero-copy p {
+    font-size: 13px;
+    line-height: 1.55;
+  }
+
+  .hero-menu {
+    left: 16px;
+    bottom: 16px;
+    width: min(40vw, 380px);
+    padding: 12px;
+  }
+
+  .hero-menu-item {
+    padding: 12px 14px;
+  }
+
+  .hero-menu-title {
+    font-size: 15px;
+  }
+
+  .hero-status {
+    right: 16px;
+    bottom: 16px;
+    width: min(38vw, 360px);
+    padding: 14px 16px;
+  }
+
+  .hero-status h2 {
+    font-size: 20px;
+  }
+}
+
+@media (max-width: 600px) {
+  .hero-shell {
+    min-height: 100svh;
+  }
+
+  .hero-menu {
+    top: 64px;
+    left: 8px;
+    right: 8px;
+    padding: 7px;
+    gap: 7px;
+  }
+
+  .hero-menu-item {
+    min-width: 100px;
+    padding: 9px 10px;
+  }
+
+  .hero-menu-title {
+    font-size: 13px;
+    line-height: 1.2;
+  }
+
+  .hero-copy {
+    left: 10px;
+    right: 10px;
+    bottom: 10px;
+    padding: 11px 13px;
+  }
+
+  .hero-copy h1 {
+    font-size: clamp(18px, 5.9vw, 24px);
+    line-height: 1.13;
+  }
+
+  .hero-copy p {
+    font-size: 12px;
+    line-height: 1.45;
+  }
+
+  .model-purpose-badge {
+    display: none !important;
+  }
+}

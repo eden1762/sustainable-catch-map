@@ -18,12 +18,13 @@ const MENU_ITEMS = [
     key: 'guide',
     title: '網站導覽',
     subtitle: '3D 眼睛導覽',
-    desktopPosition: [-2.65, 1.35, -3.25],
-    tabletPosition: [-1.95, 1.35, -3.35],
-    mobilePosition: [-1.22, 1.28, -3.15],
-    desktopScale: 1,
-    tabletScale: 0.9,
-    mobileScale: 0.68,
+    // 桌機/平板：水平排在畫面垂直高度約 1/2；手機：垂直排列
+    desktopPosition: [-2.85, 0.22, -3.35],
+    tabletPosition: [-2.05, 0.2, -3.4],
+    mobilePosition: [0, 1.55, -3.15],
+    desktopScale: 0.92,
+    tabletScale: 0.76,
+    mobileScale: 0.52,
     shortLabel: '看懂網站入口',
     accent: '#8fd3ff',
     route: '/guide',
@@ -33,12 +34,12 @@ const MENU_ITEMS = [
     key: 'map',
     title: '附近的友善海鮮地圖',
     subtitle: '3D 友善小魚',
-    desktopPosition: [0, 1.32, -3.55],
-    tabletPosition: [0, 1.32, -3.55],
-    mobilePosition: [0, 1.22, -3.22],
-    desktopScale: 1.05,
-    tabletScale: 0.92,
-    mobileScale: 0.7,
+    desktopPosition: [0, 0.22, -3.6],
+    tabletPosition: [0, 0.2, -3.6],
+    mobilePosition: [0, 0.05, -3.25],
+    desktopScale: 0.98,
+    tabletScale: 0.78,
+    mobileScale: 0.54,
     shortLabel: '找附近友善海鮮',
     accent: '#7ee7d4',
     route: '/map',
@@ -48,12 +49,12 @@ const MENU_ITEMS = [
     key: 'ar',
     title: 'AR 互動與永續標籤',
     subtitle: '3D 牛頓擺球組',
-    desktopPosition: [2.65, 1.35, -3.25],
-    tabletPosition: [1.95, 1.35, -3.35],
-    mobilePosition: [1.22, 1.28, -3.15],
-    desktopScale: 1,
-    tabletScale: 0.9,
-    mobileScale: 0.68,
+    desktopPosition: [2.85, 0.22, -3.35],
+    tabletPosition: [2.05, 0.2, -3.4],
+    mobilePosition: [0, -1.45, -3.15],
+    desktopScale: 0.92,
+    tabletScale: 0.76,
+    mobileScale: 0.52,
     shortLabel: '理解永續標籤',
     accent: '#d4b3ff',
     route: '/sustainability',
@@ -85,10 +86,10 @@ export default function HeroScene() {
       <div className="hero-overlay">
         <div className="hero-copy glass-card">
           <div className="eyebrow">IMMERSIVE BEACH EXPERIENCE</div>
-          <h1>像走進白色沙灘一樣，開始探索永續漁獲世界</h1>
+          <h1>從白色沙灘出發，探索友善海鮮、網站導覽與 AR 永續標籤</h1>
           <p>
-            這不是一般首頁，而是一個可以拖曳環視的沉浸式入口。抬頭看天空、低頭看腳下沙灘，
-            在陽光、海浪、粒子與互動物件之間進入地圖、導覽與 AR 標籤。
+            進入首頁即可看見三個中央 3D 入口：眼睛代表網站導覽，小魚代表附近友善海鮮地圖，
+            牛頓擺球組代表 AR 互動與永續標籤。
           </p>
         </div>
 
@@ -608,12 +609,6 @@ function InteractiveMenuObject({ item, active, setActiveKey }) {
           {item.shortLabel}
         </Text>
       </Billboard>
-
-      <Html position={[0, -1.15, 0]} center distanceFactor={9}>
-        <div className={`model-purpose-badge ${active || hovered ? 'active' : ''}`}>
-          永續漁獲地圖
-        </div>
-      </Html>
 
       {(hovered || active) && (
         <Html position={[0, 2.95, 0]} center distanceFactor={10}>
