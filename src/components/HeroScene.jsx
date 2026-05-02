@@ -323,7 +323,7 @@ function Sand() {
   }, [])
 
   return (
-    <mesh rotation={[-Math.PI / 2, 0, 0]} position={[0, -0.02, 0]} receiveShadow geometry={geometry}>
+    <mesh rotation={[-Math.PI / 2, 0, 0]} position={[0,-0.1, 0]} receiveShadow geometry={geometry}>
       <meshStandardMaterial vertexColors roughness={0.9} metalness={0.0} />
     </mesh>
   )
@@ -346,7 +346,7 @@ function SandDetails() {
   }, [])
 
   return (
-    <group position={[0, 0.005, 0]} rotation={[-Math.PI / 2, 0, 0]}>
+    <group position={[0, -0.005, 0]} rotation={[-Math.PI / 2, 0, 0]}>
       {ripples.map((r, i) => (
         <mesh key={i} position={[r.x, r.z, 0]} rotation={[0, 0, r.rot]} scale={[r.scale * 1.8, r.scale * 0.35, 1]}>
           <circleGeometry args={[1, 24]} />
