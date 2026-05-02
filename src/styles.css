@@ -967,3 +967,55 @@ button { font: inherit; }
     display: none !important;
   }
 }
+
+
+/* ============================================================
+   2026-05 首頁修正：避免選單重複、hoverText 固定在模型下方、手機模型不被沙灘/海浪遮住
+============================================================ */
+.page-home .nav-links,
+.page-home .hero-menu,
+.page-home .hero-status {
+  display: none !important;
+}
+
+.model-description {
+  width: 250px;
+  max-width: 250px;
+  white-space: normal;
+  text-align: center;
+  line-height: 1.45;
+  font-weight: 700;
+  border-radius: 18px;
+  padding: 9px 12px;
+  pointer-events: none;
+}
+
+@media (min-width: 601px) and (max-width: 1024px) {
+  .model-description {
+    width: 220px;
+    max-width: 220px;
+    font-size: 12px;
+    padding: 8px 10px;
+  }
+}
+
+@media (max-width: 600px) {
+  .hero-copy {
+    bottom: 8px;
+    padding: 10px 12px;
+    background: rgba(255,255,255,0.48);
+  }
+
+  .hero-copy h1 {
+    font-size: clamp(17px, 5.4vw, 22px);
+  }
+
+  .hero-copy p {
+    font-size: 11px;
+    line-height: 1.42;
+  }
+
+  .model-description {
+    display: none !important;
+  }
+}

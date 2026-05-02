@@ -21,10 +21,10 @@ const MENU_ITEMS = [
     // 桌機/平板：水平排在畫面垂直高度約 1/2；手機：垂直排列
     desktopPosition: [-2.85, 0.22, -3.35],
     tabletPosition: [-2.05, 0.2, -3.4],
-    mobilePosition: [0, 1.55, -3.15],
+    mobilePosition: [0, 1.78, -3.05],
     desktopScale: 0.92,
     tabletScale: 0.76,
-    mobileScale: 0.52,
+    mobileScale: 0.46,
     shortLabel: '看懂網站入口',
     accent: '#8fd3ff',
     route: '/guide',
@@ -36,10 +36,10 @@ const MENU_ITEMS = [
     subtitle: '3D 友善小魚',
     desktopPosition: [0, 0.22, -3.6],
     tabletPosition: [0, 0.2, -3.6],
-    mobilePosition: [0, 0.05, -3.25],
+    mobilePosition: [0, 0.82, -3.12],
     desktopScale: 0.98,
     tabletScale: 0.78,
-    mobileScale: 0.54,
+    mobileScale: 0.47,
     shortLabel: '找附近友善海鮮',
     accent: '#7ee7d4',
     route: '/map',
@@ -51,10 +51,10 @@ const MENU_ITEMS = [
     subtitle: '3D 牛頓擺球組',
     desktopPosition: [2.85, 0.22, -3.35],
     tabletPosition: [2.05, 0.2, -3.4],
-    mobilePosition: [0, -1.45, -3.15],
+    mobilePosition: [0, -0.12, -3.02],
     desktopScale: 0.92,
     tabletScale: 0.76,
-    mobileScale: 0.52,
+    mobileScale: 0.46,
     shortLabel: '理解永續標籤',
     accent: '#d4b3ff',
     route: '/sustainability',
@@ -610,11 +610,9 @@ function InteractiveMenuObject({ item, active, setActiveKey }) {
         </Text>
       </Billboard>
 
-      {(hovered || active) && (
-        <Html position={[0, 2.95, 0]} center distanceFactor={10}>
-          <div className="floating-tooltip">{item.hoverText}</div>
-        </Html>
-      )}
+      <Html position={[0, -1.52, 0]} center distanceFactor={10}>
+        <div className="floating-tooltip model-description">{item.hoverText}</div>
+      </Html>
     </group>
   )
 }
