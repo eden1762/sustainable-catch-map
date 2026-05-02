@@ -27,6 +27,8 @@ const MENU_ITEMS = [
     mobileScale: 0.46,
     shortLabel: '看懂網站入口',
     accent: '#8fd3ff',
+    // 手機版專用色暈：眼睛導覽使用清爽天空藍，平板 / 電腦版不受影響
+    mobileHalo: { core: '#8fd3ff', glow: '#4fc3ff', rim: '#e8f8ff' },
     route: '/guide',
     hoverText: '用一雙明亮的眼睛帶你快速看見網站功能、入口與探索方向。'
   },
@@ -42,6 +44,8 @@ const MENU_ITEMS = [
     mobileScale: 0.47,
     shortLabel: '找附近友善海鮮',
     accent: '#7ee7d4',
+    // 手機版專用色暈：友善小魚使用海洋薄荷綠，柔和不搶主體
+    mobileHalo: { core: '#7ee7d4', glow: '#27d7bd', rim: '#effffb' },
     route: '/map',
     hoverText: '跟著小魚游向附近友善海鮮據點，探索推薦路線與在地永續資訊。'
   },
@@ -57,6 +61,8 @@ const MENU_ITEMS = [
     mobileScale: 0.46,
     shortLabel: '理解永續標籤',
     accent: '#d4b3ff',
+    // 手機版專用色暈：牛頓擺球組使用柔紫色，呼應 AR / 永續標籤科技感
+    mobileHalo: { core: '#d4b3ff', glow: '#a979ff', rim: '#fff1d8' },
     route: '/sustainability',
     hoverText: '透過像牛頓擺一樣有節奏的互動，理解海鮮來源、標籤與永續價值。'
   }
@@ -203,7 +209,8 @@ function ResponsiveMenuObjects({ activeKey, setActiveKey }) {
               position: layout.position,
               objectScale: layout.scale,
               showBase: layout.showBase,
-              haloVertical: layout.haloVertical
+              haloVertical: layout.haloVertical,
+              mobileHalo: item.mobileHalo
             }}
             active={item.key === activeKey}
             setActiveKey={setActiveKey}
@@ -549,83 +556,96 @@ function SeashellDecor() {
    - 只在 item.haloVertical = true 時使用
    - 多層透明 ring 疊出柔和 halo，不影響桌機 / 平板原本水平光圈
 ============================================================ */
-function MobileObjectHalo({ accent, active }) {
+function MobileObjectHalo({ colors, active }) {
   const groupRef = useRef()
   const coreRef = useRef()
   const softRef = useRef()
   const outerRef = useRef()
-  const thinRef = useRef()
+  const rimRef = useRef()
+
+  const haloColors = colors || { core: '#8fd3ff', glow: '#4fc3ff', rim: '#ffffff' }
 
   useFrame((state) => {
     const t = state.clock.elapsedTime
-    const pulse = 1 + Math.sin(t * 1.15) * 0.025
+    // 很輕微的呼吸感即可，避免色暈搶走 3D 模型本體注意力
+    const pulse = 1 + Math.sin(t * 1.05) * 0.018
 
     if (groupRef.current) {
-      groupRef.current.rotation.z += 0.004
-      groupRef.current.scale.setScalar((active ? 1.08 : 1) * pulse)
+      groupRef.current.rotation.z += 0.0025
+      groupRef.current.scale.setScalar((active ? 1.045 : 1) * pulse)
     }
 
-    if (coreRef.current) coreRef.current.material.opacity = active ? 0.48 : 0.34
-    if (softRef.current) softRef.current.material.opacity = active ? 0.18 : 0.12
-    if (outerRef.current) outerRef.current.material.opacity = active ? 0.10 : 0.065
-    if (thinRef.current) thinRef.current.material.opacity = active ? 0.32 : 0.22
+    if (coreRef.current) coreRef.current.material.opacity = active ? 0.30 : 0.22
+    if (softRef.current) softRef.current.material.opacity = active ? 0.13 : 0.09
+    if (outerRef.current) outerRef.current.material.opacity = active ? 0.075 : 0.052
+    if (rimRef.current) rimRef.current.material.opacity = active ? 0.20 : 0.13
   })
 
   return (
-    <group ref={groupRef} position={[0, 0.82, -0.08]} rotation={[0, 0, 0]}>
-      {/* 外層大光暈：半徑較大、透明度低，讓 O 型圈像發光而不是硬線條 */}
-      <mesh ref={outerRef} renderOrder={1}>
-        <ringGeometry args={[0.46, 1.58, 96]} />
+    <group
+      ref={groupRef}
+      // 手機版專用：放在模型後方，並略低於標題文字，避免遮擋模型與說明文字
+      position={[0, 0.76, -0.26]}
+      scale={[0.86, 1.02, 1]}
+      rotation={[0, 0, 0]}
+    >
+      {/* 外層色暈：範圍保守、透明度低，只形成柔和 O 型氛圍 */}
+      <mesh ref={outerRef} renderOrder={0}>
+        <ringGeometry args={[0.72, 1.26, 96]} />
         <meshBasicMaterial
-          color={accent}
+          color={haloColors.glow}
           transparent
-          opacity={0.065}
+          opacity={0.052}
           side={THREE.DoubleSide}
           depthWrite={false}
+          depthTest={true}
           blending={THREE.AdditiveBlending}
         />
       </mesh>
 
-      {/* 中層光暈：包住模型主體 */}
-      <mesh ref={softRef} position={[0, 0, 0.01]} renderOrder={2}>
-        <ringGeometry args={[0.68, 1.36, 96]} />
+      {/* 中層色暈：讓三個模型各自有不同色系，但不會蓋住 3D 模型 */}
+      <mesh ref={softRef} position={[0, 0, 0.01]} renderOrder={1}>
+        <ringGeometry args={[0.58, 1.16, 96]} />
         <meshBasicMaterial
-          color={accent}
+          color={haloColors.core}
           transparent
-          opacity={0.12}
+          opacity={0.09}
           side={THREE.DoubleSide}
           depthWrite={false}
+          depthTest={true}
           blending={THREE.AdditiveBlending}
         />
       </mesh>
 
-      {/* 核心亮圈：保留清楚的 O 型輪廓 */}
-      <mesh ref={coreRef} position={[0, 0, 0.02]} renderOrder={3}>
-        <ringGeometry args={[0.96, 1.1, 128]} />
+      {/* 核心 O 型色圈：細、淡、清楚，但不喧賓奪主 */}
+      <mesh ref={coreRef} position={[0, 0, 0.02]} renderOrder={2}>
+        <ringGeometry args={[0.89, 0.99, 128]} />
         <meshBasicMaterial
-          color={accent}
-          transparent
-          opacity={0.34}
-          side={THREE.DoubleSide}
-          depthWrite={false}
-          blending={THREE.AdditiveBlending}
-        />
-      </mesh>
-
-      {/* 內側淡白高光：讓光暈更像柔光，不只是單色圓環 */}
-      <mesh ref={thinRef} position={[0, 0, 0.03]} renderOrder={4}>
-        <ringGeometry args={[1.08, 1.13, 128]} />
-        <meshBasicMaterial
-          color="#ffffff"
+          color={haloColors.core}
           transparent
           opacity={0.22}
           side={THREE.DoubleSide}
           depthWrite={false}
+          depthTest={true}
           blending={THREE.AdditiveBlending}
         />
       </mesh>
 
-      <pointLight color={accent} intensity={active ? 0.75 : 0.42} distance={2.8} decay={2} />
+      {/* 內側高光：用極淡亮邊增加質感，避免看起來像粗色框 */}
+      <mesh ref={rimRef} position={[0, 0, 0.03]} renderOrder={3}>
+        <ringGeometry args={[0.99, 1.035, 128]} />
+        <meshBasicMaterial
+          color={haloColors.rim}
+          transparent
+          opacity={0.13}
+          side={THREE.DoubleSide}
+          depthWrite={false}
+          depthTest={true}
+          blending={THREE.AdditiveBlending}
+        />
+      </mesh>
+
+      <pointLight color={haloColors.glow} intensity={active ? 0.42 : 0.26} distance={2.35} decay={2} />
     </group>
   )
 }
@@ -673,7 +693,7 @@ function InteractiveMenuObject({ item, active, setActiveKey }) {
           桌機、平板：完全維持原本水平光圈。
           手機版：改成直立 O 型柔光光暈，第一次進入畫面就像 3D 模型外圍被光暈包住。 */}
       {item.haloVertical ? (
-        <MobileObjectHalo accent={item.accent} active={active || hovered} />
+        <MobileObjectHalo colors={item.mobileHalo} active={active || hovered} />
       ) : (
         <>
           <mesh
