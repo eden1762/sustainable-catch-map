@@ -173,12 +173,12 @@ function ResponsiveMenuObjects({ activeKey, setActiveKey }) {
 
   const getLayout = (item) => {
     if (size.width <= 600) {
-      return { position: item.mobilePosition, scale: item.mobileScale }
+      return { position: item.mobilePosition, scale: item.mobileScale, showBase: false }
     }
     if (size.width <= 1024) {
-      return { position: item.tabletPosition, scale: item.tabletScale }
+      return { position: item.tabletPosition, scale: item.tabletScale, showBase: true }
     }
-    return { position: item.desktopPosition, scale: item.desktopScale }
+    return { position: item.desktopPosition, scale: item.desktopScale, showBase: true }
   }
 
   return (
@@ -192,7 +192,8 @@ function ResponsiveMenuObjects({ activeKey, setActiveKey }) {
             item={{
               ...item,
               position: layout.position,
-              objectScale: layout.scale
+              objectScale: layout.scale,
+              showBase: layout.showBase
             }}
             active={item.key === activeKey}
             setActiveKey={setActiveKey}
@@ -566,9 +567,9 @@ function InteractiveMenuObject({ item, active, setActiveKey }) {
   return (
     <group ref={ref} position={item.position} scale={item.objectScale || 1} {...events}>
       <Float speed={active ? 2.3 : 1.4} rotationIntensity={0.25} floatIntensity={0.3}>
-        {item.key === 'guide' && <EyesGuide active={active || hovered} color={item.accent} />}
-        {item.key === 'map' && <FriendlyFish active={active || hovered} color={item.accent} />}
-        {item.key === 'ar' && <NewtonCradle active={active || hovered} color={item.accent} />}
+        {item.key === 'guide' && <EyesGuide active={active || hovered} color={item.accent} showBase={item.showBase} />}
+        {item.key === 'map' && <FriendlyFish active={active || hovered} color={item.accent} showBase={item.showBase} />}
+        {item.key === 'ar' && <NewtonCradle active={active || hovered} color={item.accent} showBase={item.showBase} />}
       </Float>
 
       {/* 光圈 */}
@@ -620,7 +621,7 @@ function InteractiveMenuObject({ item, active, setActiveKey }) {
 /* ============================================================
    1. EyesGuide —— 一雙眼睛，適合「網站導覽」
 ============================================================ */
-function EyesGuide({ active, color }) {
+function EyesGuide({ active, color, showBase = true }) {
   const groupRef = useRef()
   const leftPupil = useRef()
   const rightPupil = useRef()
@@ -641,7 +642,7 @@ function EyesGuide({ active, color }) {
 
   return (
     <group>
-      <RoundBase color={color} accent="#eefaff" />
+      {showBase && <RoundBase color={color} accent="#eefaff" />}
       <group ref={groupRef} position={[0, 1.08, 0]}>
         {/* 眼白 */}
         <mesh position={[-0.28, 0, 0]} castShadow>
@@ -674,7 +675,7 @@ function EyesGuide({ active, color }) {
 /* ============================================================
    2. FriendlyFish —— 一條魚，適合「附近的友善海鮮地圖」
 ============================================================ */
-function FriendlyFish({ active, color }) {
+function FriendlyFish({ active, color, showBase = true }) {
   const fishRef = useRef()
   const tailRef = useRef()
 
@@ -700,7 +701,7 @@ function FriendlyFish({ active, color }) {
 
   return (
     <group>
-      <RoundBase color={color} accent="#e9fff9" />
+      {showBase && <RoundBase color={color} accent="#e9fff9" />}
       <group ref={fishRef} position={[0, 1.1, 0]}>
         {/* 魚身：亮眼橘/黃系熱帶魚 */}
         <mesh castShadow scale={[1.2, 0.7, 0.5]}>
@@ -730,7 +731,7 @@ function FriendlyFish({ active, color }) {
 /* ============================================================
    3. NewtonCradle —— 牛頓擺球組，適合「AR 互動與永續標籤」
 ============================================================ */
-function NewtonCradle({ active, color }) {
+function NewtonCradle({ active, color, showBase = true }) {
   const frameRef = useRef()
   const leftSwing = useRef()
   const rightSwing = useRef()
@@ -767,7 +768,7 @@ function NewtonCradle({ active, color }) {
 
   return (
     <group>
-      <RoundBase color={color} accent="#f7efff" />
+      {showBase && <RoundBase color={color} accent="#f7efff" />}
       <group ref={frameRef} position={[0, 1.2, 0]}>
         {/* 頂部支架 */}
         <mesh position={[0, 0.1, 0]} castShadow>
