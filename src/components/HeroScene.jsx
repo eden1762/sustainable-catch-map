@@ -324,7 +324,7 @@ function Sand() {
   }, [])
 
   return (
-    <mesh rotation={[-Math.PI / 2, 0, 0]} position={[0,-0.2, 0]} receiveShadow geometry={geometry}>
+    <mesh rotation={[-Math.PI / 2, 0, 0]} position={[0,-0.4, 0]} receiveShadow geometry={geometry}>
       <meshStandardMaterial vertexColors roughness={0.9} metalness={0.0} />
     </mesh>
   )
@@ -347,7 +347,7 @@ function SandDetails() {
   }, [])
 
   return (
-    <group position={[0, -0.175, 0]} rotation={[-Math.PI / 2, 0, 0]}>
+    <group position={[0, -0.375, 0]} rotation={[-Math.PI / 2, 0, 0]}>
       {ripples.map((r, i) => (
         <mesh key={i} position={[r.x, r.z, 0]} rotation={[0, 0, r.rot]} scale={[r.scale * 1.8, r.scale * 0.35, 1]}>
           <circleGeometry args={[1, 24]} />
@@ -372,7 +372,7 @@ function Sea() {
   })
 
   return (
-    <mesh ref={ref} rotation={[-Math.PI / 2, 0, 0]} position={[0, -0.14, -16]} receiveShadow>
+    <mesh ref={ref} rotation={[-Math.PI / 2, 0, 0]} position={[0, -0.34, -16]} receiveShadow>
       <planeGeometry args={[90, 32, 16, 16]} />
       {/* 使用 PhysicalMaterial 打造清澈透水感 */}
       <meshPhysicalMaterial
@@ -403,7 +403,7 @@ function SeaReflection() {
   })
 
   return (
-    <mesh ref={ref} rotation={[-Math.PI / 2, 0, 0]} position={[2, 0.125, -14]}>
+    <mesh ref={ref} rotation={[-Math.PI / 2, 0, 0]} position={[2, -0.075, -14]}>
       <planeGeometry args={[18, 8, 1, 1]} />
       <meshBasicMaterial color="#e8f8ff" transparent opacity={0.15} />
     </mesh>
@@ -424,7 +424,7 @@ function WaveLayer({ offset, speed, opacity, color, z }) {
   })
 
   return (
-    <mesh ref={ref} rotation={[-Math.PI / 2, 0, 0]} position={[0, -0.13, z]}>
+    <mesh ref={ref} rotation={[-Math.PI / 2, 0, 0]} position={[0, -0.33, z]}>
       <planeGeometry args={[90, 3.5, 1, 1]} />
       <meshBasicMaterial color={color} transparent opacity={opacity} />
     </mesh>
@@ -455,12 +455,12 @@ function ShoreFoam() {
   return (
     <>
       {/* 主泡沫帶 */}
-      <mesh ref={foam1Ref} rotation={[-Math.PI / 2, 0, 0]} position={[0, -0.125, -9.0]}>
+      <mesh ref={foam1Ref} rotation={[-Math.PI / 2, 0, 0]} position={[0, -0.325, -9.0]}>
         <planeGeometry args={[90, 4.5]} />
         <meshBasicMaterial color="#f0faff" transparent opacity={0.55} />
       </mesh>
       {/* 次泡沫帶（退潮尾跡） */}
-      <mesh ref={foam2Ref} rotation={[-Math.PI / 2, 0, 0]} position={[0, -0.125, -8.2]}>
+      <mesh ref={foam2Ref} rotation={[-Math.PI / 2, 0, 0]} position={[0, -0.325, -8.2]}>
         <planeGeometry args={[90, 2.5]} />
         <meshBasicMaterial color="#ffffff" transparent opacity={0.3} />
       </mesh>
@@ -471,7 +471,7 @@ function ShoreFoam() {
 /* 腳印 */
 function Footsteps() {
   return (
-    <group position={[0, -0.168, 4.2]} rotation={[-Math.PI / 2, 0, 0]}>
+    <group position={[0, -0.368, 4.2]} rotation={[-Math.PI / 2, 0, 0]}>
       {[-0.45, 0.45].map((x, i) => (
         <mesh key={i} position={[x, 0, i * 0.65]} scale={[0.12, 0.18, 1]}>
           <circleGeometry args={[1, 20]} />
@@ -512,7 +512,7 @@ function SeashellDecor() {
   ], [])
 
   return (
-    <group position={[0, -0.17, 0]}>
+    <group position={[0, -0.37, 0]}>
       {shells.map((s, i) => (
         <group key={i} position={[s.x, 0, s.z]} rotation={[-Math.PI / 2, s.rot, 0]} scale={[s.scale, s.scale, s.scale * 0.4]}>
           {/* 貝殼主體（扁橢圓） */}
