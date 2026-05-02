@@ -27,8 +27,8 @@ const MENU_ITEMS = [
     mobileScale: 0.46,
     shortLabel: '看懂網站入口',
     accent: '#8fd3ff',
-    // 手機版專用色暈：眼睛導覽使用清爽天空藍，平板 / 電腦版不受影響
-    mobileHalo: { core: '#8fd3ff', glow: '#4fc3ff', rim: '#e8f8ff' },
+    // 手機版專用色暈：眼睛本體偏天空藍，色暈改用對比的柔橘金；平板 / 電腦版不受影響
+    mobileHalo: { core: '#ffb15c', glow: '#ff7a3d', rim: '#fff3dc' },
     route: '/guide',
     hoverText: '用一雙明亮的眼睛帶你快速看見網站功能、入口與探索方向。'
   },
@@ -44,8 +44,8 @@ const MENU_ITEMS = [
     mobileScale: 0.47,
     shortLabel: '找附近友善海鮮',
     accent: '#7ee7d4',
-    // 手機版專用色暈：友善小魚使用海洋薄荷綠，柔和不搶主體
-    mobileHalo: { core: '#7ee7d4', glow: '#27d7bd', rim: '#effffb' },
+    // 手機版專用色暈：小魚本體偏薄荷綠，色暈改用對比的珊瑚粉橘；柔和不搶主體
+    mobileHalo: { core: '#ff8f86', glow: '#ff5f73', rim: '#fff0ec' },
     route: '/map',
     hoverText: '跟著小魚游向附近友善海鮮據點，探索推薦路線與在地永續資訊。'
   },
@@ -61,8 +61,8 @@ const MENU_ITEMS = [
     mobileScale: 0.46,
     shortLabel: '理解永續標籤',
     accent: '#d4b3ff',
-    // 手機版專用色暈：牛頓擺球組使用柔紫色，呼應 AR / 永續標籤科技感
-    mobileHalo: { core: '#d4b3ff', glow: '#a979ff', rim: '#fff1d8' },
+    // 手機版專用色暈：牛頓擺球組本體偏柔紫，色暈改用對比的暖黃金；保留科技感但不刺眼
+    mobileHalo: { core: '#ffe06a', glow: '#ffb72f', rim: '#fff8d6' },
     route: '/sustainability',
     hoverText: '透過像牛頓擺一樣有節奏的互動，理解海鮮來源、標籤與永續價值。'
   }
@@ -575,18 +575,18 @@ function MobileObjectHalo({ colors, active }) {
       groupRef.current.scale.setScalar((active ? 1.045 : 1) * pulse)
     }
 
-    if (coreRef.current) coreRef.current.material.opacity = active ? 0.30 : 0.22
-    if (softRef.current) softRef.current.material.opacity = active ? 0.13 : 0.09
-    if (outerRef.current) outerRef.current.material.opacity = active ? 0.075 : 0.052
-    if (rimRef.current) rimRef.current.material.opacity = active ? 0.20 : 0.13
+    if (coreRef.current) coreRef.current.material.opacity = active ? 0.24 : 0.18
+    if (softRef.current) softRef.current.material.opacity = active ? 0.105 : 0.075
+    if (outerRef.current) outerRef.current.material.opacity = active ? 0.06 : 0.042
+    if (rimRef.current) rimRef.current.material.opacity = active ? 0.16 : 0.105
   })
 
   return (
     <group
       ref={groupRef}
       // 手機版專用：放在模型後方，並略低於標題文字，避免遮擋模型與說明文字
-      position={[0, 0.76, -0.26]}
-      scale={[0.86, 1.02, 1]}
+      position={[0, 0.74, -0.32]}
+      scale={[0.82, 0.98, 1]}
       rotation={[0, 0, 0]}
     >
       {/* 外層色暈：範圍保守、透明度低，只形成柔和 O 型氛圍 */}
@@ -645,7 +645,7 @@ function MobileObjectHalo({ colors, active }) {
         />
       </mesh>
 
-      <pointLight color={haloColors.glow} intensity={active ? 0.42 : 0.26} distance={2.35} decay={2} />
+      <pointLight color={haloColors.glow} intensity={active ? 0.32 : 0.2} distance={2.1} decay={2} />
     </group>
   )
 }
