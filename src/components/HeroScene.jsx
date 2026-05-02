@@ -543,6 +543,93 @@ function SeashellDecor() {
   )
 }
 
+
+/* ============================================================
+   手機版 O 型光暈
+   - 只在 item.haloVertical = true 時使用
+   - 多層透明 ring 疊出柔和 halo，不影響桌機 / 平板原本水平光圈
+============================================================ */
+function MobileObjectHalo({ accent, active }) {
+  const groupRef = useRef()
+  const coreRef = useRef()
+  const softRef = useRef()
+  const outerRef = useRef()
+  const thinRef = useRef()
+
+  useFrame((state) => {
+    const t = state.clock.elapsedTime
+    const pulse = 1 + Math.sin(t * 1.15) * 0.025
+
+    if (groupRef.current) {
+      groupRef.current.rotation.z += 0.004
+      groupRef.current.scale.setScalar((active ? 1.08 : 1) * pulse)
+    }
+
+    if (coreRef.current) coreRef.current.material.opacity = active ? 0.48 : 0.34
+    if (softRef.current) softRef.current.material.opacity = active ? 0.18 : 0.12
+    if (outerRef.current) outerRef.current.material.opacity = active ? 0.10 : 0.065
+    if (thinRef.current) thinRef.current.material.opacity = active ? 0.32 : 0.22
+  })
+
+  return (
+    <group ref={groupRef} position={[0, 0.82, -0.08]} rotation={[0, 0, 0]}>
+      {/* 外層大光暈：半徑較大、透明度低，讓 O 型圈像發光而不是硬線條 */}
+      <mesh ref={outerRef} renderOrder={1}>
+        <ringGeometry args={[0.46, 1.58, 96]} />
+        <meshBasicMaterial
+          color={accent}
+          transparent
+          opacity={0.065}
+          side={THREE.DoubleSide}
+          depthWrite={false}
+          blending={THREE.AdditiveBlending}
+        />
+      </mesh>
+
+      {/* 中層光暈：包住模型主體 */}
+      <mesh ref={softRef} position={[0, 0, 0.01]} renderOrder={2}>
+        <ringGeometry args={[0.68, 1.36, 96]} />
+        <meshBasicMaterial
+          color={accent}
+          transparent
+          opacity={0.12}
+          side={THREE.DoubleSide}
+          depthWrite={false}
+          blending={THREE.AdditiveBlending}
+        />
+      </mesh>
+
+      {/* 核心亮圈：保留清楚的 O 型輪廓 */}
+      <mesh ref={coreRef} position={[0, 0, 0.02]} renderOrder={3}>
+        <ringGeometry args={[0.96, 1.1, 128]} />
+        <meshBasicMaterial
+          color={accent}
+          transparent
+          opacity={0.34}
+          side={THREE.DoubleSide}
+          depthWrite={false}
+          blending={THREE.AdditiveBlending}
+        />
+      </mesh>
+
+      {/* 內側淡白高光：讓光暈更像柔光，不只是單色圓環 */}
+      <mesh ref={thinRef} position={[0, 0, 0.03]} renderOrder={4}>
+        <ringGeometry args={[1.08, 1.13, 128]} />
+        <meshBasicMaterial
+          color="#ffffff"
+          transparent
+          opacity={0.22}
+          side={THREE.DoubleSide}
+          depthWrite={false}
+          blending={THREE.AdditiveBlending}
+        />
+      </mesh>
+
+      <pointLight color={accent} intensity={active ? 0.75 : 0.42} distance={2.8} decay={2} />
+    </group>
+  )
+}
+
 /* ============================================================
    互動物件容器
 ============================================================ */
@@ -582,25 +669,31 @@ function InteractiveMenuObject({ item, active, setActiveKey }) {
         {item.key === 'ar' && <NewtonCradle active={active || hovered} color={item.accent} showBase={item.showBase} />}
       </Float>
 
-      {/* 光圈
-          桌機/平板：維持原本水平落在模型下方。
-          手機版：改成直立 O 型光圈，讓第一次進入畫面時看起來是模型外圍被圈住。 */}
-      <mesh
-        ref={haloRef}
-        position={item.haloVertical ? [0, 0.82, -0.04] : [0, -0.75, 0]}
-        rotation={item.haloVertical ? [0, 0, 0] : [-Math.PI / 2, 0, 0]}
-      >
-        <ringGeometry args={item.haloVertical ? [1.02, 1.14, 64] : [0.88, 1.32, 56]} />
-        <meshBasicMaterial color={item.accent} transparent opacity={0.22} side={THREE.DoubleSide} />
-      </mesh>
-      {/* 內光圈 */}
-      <mesh
-        position={item.haloVertical ? [0, 0.82, -0.05] : [0, -0.74, 0]}
-        rotation={item.haloVertical ? [0, 0, 0] : [-Math.PI / 2, 0, 0]}
-      >
-        <ringGeometry args={item.haloVertical ? [0.7, 1.0, 64] : [0.5, 0.88, 56]} />
-        <meshBasicMaterial color={item.accent} transparent opacity={0.06} side={THREE.DoubleSide} />
-      </mesh>
+      {/* 光圈 / 光暈
+          桌機、平板：完全維持原本水平光圈。
+          手機版：改成直立 O 型柔光光暈，第一次進入畫面就像 3D 模型外圍被光暈包住。 */}
+      {item.haloVertical ? (
+        <MobileObjectHalo accent={item.accent} active={active || hovered} />
+      ) : (
+        <>
+          <mesh
+            ref={haloRef}
+            position={[0, -0.75, 0]}
+            rotation={[-Math.PI / 2, 0, 0]}
+          >
+            <ringGeometry args={[0.88, 1.32, 56]} />
+            <meshBasicMaterial color={item.accent} transparent opacity={0.22} side={THREE.DoubleSide} />
+          </mesh>
+          {/* 內光圈 */}
+          <mesh
+            position={[0, -0.74, 0]}
+            rotation={[-Math.PI / 2, 0, 0]}
+          >
+            <ringGeometry args={[0.5, 0.88, 56]} />
+            <meshBasicMaterial color={item.accent} transparent opacity={0.06} side={THREE.DoubleSide} />
+          </mesh>
+        </>
+      )}
 
       <Billboard position={[0, 2.05, 0]} follow>
         <Text
