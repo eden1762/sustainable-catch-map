@@ -172,13 +172,22 @@ function ResponsiveMenuObjects({ activeKey, setActiveKey }) {
   const { size } = useThree()
 
   const getLayout = (item) => {
-    if (size.width <= 600) {
-      return { position: item.mobilePosition, scale: item.mobileScale, showBase: false }
+    const isMobile = size.width <= 600
+
+    if (isMobile) {
+      return {
+        position: item.mobilePosition,
+        scale: item.mobileScale,
+        // 手機版：眼睛與小魚不顯示基座；牛頓擺球組保留基座
+        showBase: item.key === 'ar',
+        // 手機版：光圈改成直立 O 型，第一次進入畫面就像把 3D 模型圈起來
+        haloVertical: true
+      }
     }
     if (size.width <= 1024) {
-      return { position: item.tabletPosition, scale: item.tabletScale, showBase: true }
+      return { position: item.tabletPosition, scale: item.tabletScale, showBase: true, haloVertical: false }
     }
-    return { position: item.desktopPosition, scale: item.desktopScale, showBase: true }
+    return { position: item.desktopPosition, scale: item.desktopScale, showBase: true, haloVertical: false }
   }
 
   return (
@@ -193,7 +202,8 @@ function ResponsiveMenuObjects({ activeKey, setActiveKey }) {
               ...item,
               position: layout.position,
               objectScale: layout.scale,
-              showBase: layout.showBase
+              showBase: layout.showBase,
+              haloVertical: layout.haloVertical
             }}
             active={item.key === activeKey}
             setActiveKey={setActiveKey}
@@ -572,15 +582,24 @@ function InteractiveMenuObject({ item, active, setActiveKey }) {
         {item.key === 'ar' && <NewtonCradle active={active || hovered} color={item.accent} showBase={item.showBase} />}
       </Float>
 
-      {/* 光圈 */}
-      <mesh ref={haloRef} position={[0, -0.75, 0]} rotation={[-Math.PI / 2, 0, 0]}>
-        <ringGeometry args={[0.88, 1.32, 56]} />
-        <meshBasicMaterial color={item.accent} transparent opacity={0.22} />
+      {/* 光圈
+          桌機/平板：維持原本水平落在模型下方。
+          手機版：改成直立 O 型光圈，讓第一次進入畫面時看起來是模型外圍被圈住。 */}
+      <mesh
+        ref={haloRef}
+        position={item.haloVertical ? [0, 0.82, -0.04] : [0, -0.75, 0]}
+        rotation={item.haloVertical ? [0, 0, 0] : [-Math.PI / 2, 0, 0]}
+      >
+        <ringGeometry args={item.haloVertical ? [1.02, 1.14, 64] : [0.88, 1.32, 56]} />
+        <meshBasicMaterial color={item.accent} transparent opacity={0.22} side={THREE.DoubleSide} />
       </mesh>
       {/* 內光圈 */}
-      <mesh position={[0, -0.74, 0]} rotation={[-Math.PI / 2, 0, 0]}>
-        <ringGeometry args={[0.5, 0.88, 56]} />
-        <meshBasicMaterial color={item.accent} transparent opacity={0.06} />
+      <mesh
+        position={item.haloVertical ? [0, 0.82, -0.05] : [0, -0.74, 0]}
+        rotation={item.haloVertical ? [0, 0, 0] : [-Math.PI / 2, 0, 0]}
+      >
+        <ringGeometry args={item.haloVertical ? [0.7, 1.0, 64] : [0.5, 0.88, 56]} />
+        <meshBasicMaterial color={item.accent} transparent opacity={0.06} side={THREE.DoubleSide} />
       </mesh>
 
       <Billboard position={[0, 2.05, 0]} follow>
