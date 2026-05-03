@@ -24,7 +24,7 @@ export default function GuidePage() {
       <main className="content-shell guide-layout">
         <section className="intro-panel glass-card">
           <div className="eyebrow">GUIDED TOUR</div>
-          <h1>網站導覽</h1>
+          <h1>關於我們</h1>
           <p>
             這一頁像你的數位導遊手冊，幫第一次進站的使用者快速理解整體動線。
             你之後也可以把這裡改成真正的角色導覽頁，接上 3D 帥哥導遊 GLB 模型與語音招呼。

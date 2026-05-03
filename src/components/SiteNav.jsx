@@ -10,7 +10,7 @@ export default function SiteNav({ solid = false }) {
       </Link>
 
       <nav className="nav-links">
-        <NavLink to="/guide">網站導覽</NavLink>
+        <NavLink to="/guide">關於我們</NavLink>
         <NavLink to="/map">友善海鮮地圖</NavLink>
         <NavLink to="/sustainability">AR 與永續標籤</NavLink>
       </nav>

@@ -16,7 +16,7 @@ import * as THREE from 'three'
 const MENU_ITEMS = [
   {
     key: 'guide',
-    title: '網站導覽',
+    title: '關於我們',
     subtitle: '3D 眼睛導覽',
     // 桌機/平板：水平排在畫面垂直高度約 1/2；手機：垂直排列
     desktopPosition: [-2.85, 0.22, -3.35],
@@ -92,9 +92,9 @@ export default function HeroScene() {
       <div className="hero-overlay">
         <div className="hero-copy glass-card">
           <div className="eyebrow">IMMERSIVE BEACH EXPERIENCE</div>
-          <h1>從白色沙灘出發，探索友善海鮮、網站導覽與 AR 永續標籤</h1>
+          <h1>從白色沙灘出發，探索友善海鮮、關於我們與 AR 永續標籤</h1>
           <p>
-            進入首頁即可看見三個中央 3D 入口：眼睛代表網站導覽，小魚代表附近友善海鮮地圖，
+            進入首頁即可看見三個中央 3D 入口：眼睛代表關於我們，小魚代表附近友善海鮮地圖，
             牛頓擺球組代表 AR 互動與永續標籤。
           </p>
         </div>
@@ -751,7 +751,7 @@ function InteractiveMenuObject({ item, active, setActiveKey }) {
 }
 
 /* ============================================================
-   1. EyesGuide —— 一雙眼睛，適合「網站導覽」
+   1. EyesGuide —— 一雙眼睛，適合「關於我們」
 ============================================================ */
 function EyesGuide({ active, color, showBase = true }) {
   const groupRef = useRef()
