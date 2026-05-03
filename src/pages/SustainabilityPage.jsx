@@ -24,9 +24,7 @@ export default function SustainabilityPage() {
         <section className="sustainability-copy glass-card">
           <div className="eyebrow">AR & SUSTAINABILITY LABELS</div>
           <h1>AR 互動與永續標籤</h1>
-          <p>
-            這一頁保留你原本想要的 3D / AR 魚模型展示，並補上永續標籤卡片與教育說明。
-            在手機支援的環境裡，可透過 model-viewer 右下角按鈕開啟 AR 模式。
+          <p>掃描永續標籤，開啟專屬 AR 海洋互動任務！玩家可透過手機探索漁獲故事、解鎖知識徽章、完成永續挑戰，讓海鮮選購不只是消費，更像一場有趣的海洋冒險。用遊戲化體驗提升參與感，讓永續觀念自然被看見、被分享。
           </p>
 
           <div className="label-grid">
