@@ -71,7 +71,7 @@ export default function MapPage() {
         <aside className="map-sidebar glass-card">
           <div className="eyebrow">FRIENDLY SEAFOOD MAP</div>
           <h1>附近的友善海鮮地圖</h1>
-          <p>這一頁已經補成可直接展示的地圖頁。之後你可以再把真實店家資料換進來。</p>
+          <p>透過地圖快速找到身邊支持永續漁法、友善養殖與產地透明的海鮮店家。從漁獲來源、販售品項到店家位置一目了然，讓你安心選購新鮮海味，也用每一次消費支持海洋永續與在地漁民。</p>
 
           <div className="filter-group">
             {['全部', '餐廳', '超市', '市場'].map(type => (
