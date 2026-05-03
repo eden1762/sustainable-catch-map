@@ -30,7 +30,7 @@ const MENU_ITEMS = [
     // 手機版專用色暈：眼睛本體偏天空藍，色暈改用對比的柔橘金；平板 / 電腦版不受影響
     mobileHalo: { core: '#ffb15c', glow: '#ff7a3d', rim: '#fff3dc' },
     route: '/guide',
-    hoverText: '用一雙明亮的眼睛帶你快速看見網站功能、入口與探索方向。'
+    hoverText: '認識永續漁人地圖的理念：用 AI、資料與互動教育，讓每一次海鮮選擇更透明、更友善海洋。'
   },
   {
     key: 'map',
@@ -92,10 +92,10 @@ export default function HeroScene() {
       <div className="hero-overlay">
         <div className="hero-copy glass-card">
           <div className="eyebrow">IMMERSIVE BEACH EXPERIENCE</div>
-          <h1>從白色沙灘出發，探索友善海鮮、關於我們與 AR 永續標籤</h1>
+          <h1>從白色沙灘出發，看見海鮮選擇與海洋永續的連結</h1>
           <p>
-            進入首頁即可看見三個中央 3D 入口：眼睛代表關於我們，小魚代表附近友善海鮮地圖，
-            牛頓擺球組代表 AR 互動與永續標籤。
+            Sustainable Catch Map 希望整合 AI 推薦、漁獲資訊與永續標籤，
+            幫助消費者找到友善海鮮，也讓漁業、餐飲與教育場域一起支持海洋資源管理。
           </p>
         </div>
 
