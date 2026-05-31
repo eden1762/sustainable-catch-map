@@ -248,7 +248,7 @@
     if (lang === 'en') {
       brand.classList.add('poster-brand-title');
       brand.setAttribute('aria-label', 'Sustainable Catch Map');
-      brand.innerHTML = '<span class="poster-word">Sustain</span><span class="poster-word">-able</span><span class="poster-word">Catch</span><span class="poster-word">Map</span>';
+      brand.innerHTML = '<span class="poster-word">Sus</span><span class="poster-word">-tain</span><span class="poster-word">-able</span><span class="poster-word">Catch</span><span class="poster-word">Map</span>';
     } else {
       brand.classList.remove('poster-brand-title');
       brand.removeAttribute('aria-label');

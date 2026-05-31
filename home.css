@@ -486,7 +486,7 @@
 }
 
 
-/* 2026-05-31 request: remove Facebook icons, keep two fixed actions (Instagram + language), and use 4-line mobile English poster brand. */
+/* 2026-05-31 request: remove Facebook icons, keep two fixed actions (Instagram + language), and use 5-line mobile English poster brand. */
 .social-facebook {
   display: none !important;
 }
@@ -532,7 +532,8 @@
     display: block;
   }
 
-  html[lang="en"] .page-home .brand-mark strong.poster-brand-title .poster-word:nth-child(2) {
+  html[lang="en"] .page-home .brand-mark strong.poster-brand-title .poster-word:nth-child(2),
+  html[lang="en"] .page-home .brand-mark strong.poster-brand-title .poster-word:nth-child(3) {
     letter-spacing: -.095em;
   }
 
