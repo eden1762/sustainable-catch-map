@@ -13,10 +13,20 @@ import {
 } from '@react-three/drei'
 import * as THREE from 'three'
 
+
+function getStoredLanguage() {
+  if (typeof window === 'undefined') return 'zh'
+  return window.localStorage.getItem('scm-language') === 'en' ? 'en' : 'zh'
+}
+
+function tText(lang, zh, en) {
+  return lang === 'en' ? en : zh
+}
+
 const MENU_ITEMS = [
   {
     key: 'guide',
-    title: '我們的理念',
+    title: getStoredLanguage() === 'en' ? 'Our Philosophy' : '我們的理念',
     subtitle: '3D 理念導覽',
     // 桌機/平板：水平排在畫面垂直高度約 1/2；手機：垂直排列
     desktopPosition: [-2.85, 0.22, -3.35],
@@ -25,7 +35,7 @@ const MENU_ITEMS = [
     desktopScale: 0.92,
     tabletScale: 0.76,
     mobileScale: 0.46,
-    shortLabel: '看見永續初衷',
+    shortLabel: getStoredLanguage() === 'en' ? 'See the purpose of sustainability' : '看見永續初衷',
     accent: '#8fd3ff',
     // 手機版專用色暈：眼睛本體偏天空藍，色暈改用對比的柔橘金；平板 / 電腦版不受影響
     mobileHalo: { core: '#ffb15c', glow: '#ff7a3d', rim: '#fff3dc' },
@@ -34,7 +44,7 @@ const MENU_ITEMS = [
   },
   {
     key: 'map',
-    title: '附近的友善海鮮地圖',
+    title: getStoredLanguage() === 'en' ? 'Nearby Friendly Seafood Restaurants' : '附近的友善海鮮地圖',
     subtitle: '3D 友善小魚',
     desktopPosition: [0, 0.22, -3.6],
     tabletPosition: [0, 0.2, -3.6],
@@ -42,7 +52,7 @@ const MENU_ITEMS = [
     desktopScale: 0.98,
     tabletScale: 0.78,
     mobileScale: 0.47,
-    shortLabel: '找附近友善海鮮',
+    shortLabel: getStoredLanguage() === 'en' ? 'Find nearby friendly seafood' : '找附近友善海鮮',
     accent: '#7ee7d4',
     // 手機版專用色暈：小魚本體偏薄荷綠，色暈改用對比的珊瑚粉橘；柔和不搶主體
     mobileHalo: { core: '#ff8f86', glow: '#ff5f73', rim: '#fff0ec' },
@@ -51,7 +61,7 @@ const MENU_ITEMS = [
   },
   {
     key: 'ar',
-    title: 'AR 互動與永續標籤',
+    title: getStoredLanguage() === 'en' ? 'AR Interaction & Sustainability Labels' : 'AR 互動與永續標籤',
     subtitle: '3D 牛頓擺球組',
     desktopPosition: [2.85, 0.22, -3.35],
     tabletPosition: [2.05, 0.2, -3.4],
@@ -59,7 +69,7 @@ const MENU_ITEMS = [
     desktopScale: 0.92,
     tabletScale: 0.76,
     mobileScale: 0.46,
-    shortLabel: '理解永續標籤',
+    shortLabel: getStoredLanguage() === 'en' ? 'Understand sustainability labels' : '理解永續標籤',
     accent: '#d4b3ff',
     // 手機版專用色暈：牛頓擺球組本體偏柔紫，色暈改用對比的暖黃金；保留科技感但不刺眼
     mobileHalo: { core: '#ffe06a', glow: '#ffb72f', rim: '#fff8d6' },
@@ -69,6 +79,7 @@ const MENU_ITEMS = [
 ]
 
 export default function HeroScene() {
+  const [lang] = useState(getStoredLanguage())
   const [activeKey, setActiveKey] = useState('guide')
   const activeItem = MENU_ITEMS.find(item => item.key === activeKey) || MENU_ITEMS[0]
 

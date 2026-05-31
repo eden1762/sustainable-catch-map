@@ -453,3 +453,34 @@
     line-height: 1.55;
   }
 }
+
+
+/* 2026-05 i18n update: mobile English homepage brand as poster-style 3-line title. */
+@media (max-width: 600px) {
+  html[lang="en"] .page-home .site-nav {
+    align-items: flex-start;
+    padding-left: 10px;
+    padding-right: 10px;
+  }
+
+  html[lang="en"] .page-home .brand-mark {
+    align-items: flex-start;
+    text-align: left;
+    max-width: 96vw;
+  }
+
+  html[lang="en"] .page-home .brand-mark strong {
+    display: block;
+    max-width: 96vw;
+    margin-top: 2px;
+    color: #123047;
+    font-size: clamp(38px, 12.5vw, 58px);
+    line-height: .86;
+    font-weight: 1000;
+    letter-spacing: -.07em;
+    word-spacing: 100vw;
+    white-space: normal;
+    text-align: left;
+    text-transform: none;
+  }
+}

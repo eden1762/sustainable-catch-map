@@ -6,13 +6,14 @@
     '永續漁獲地圖': 'Sustainable Catch Map',
     '我們的理念': 'Our Philosophy',
     '友善海鮮地圖': 'Friendly Seafood Map',
-    '附近的友善海鮮地圖': 'Nearby Friendly Seafood Map',
+    '附近的友善海鮮地圖': 'Nearby Friendly Seafood Restaurants',
     'AR 與永續標籤': 'AR & Sustainability Labels',
     'AR互動與永續標籤': 'AR Interaction & Sustainability Labels',
     '從白色沙灘出發，看見海鮮選擇與海洋永續的連結': 'Start from the white beach and see how seafood choices connect with ocean sustainability',
     'Sustainable Catch Map 希望整合 AI 推薦、漁獲資訊與永續標籤， 幫助消費者找到友善海鮮，也讓漁業、餐飲與教育場域一起支持海洋資源管理。': 'Sustainable Catch Map brings together AI recommendations, seafood information, and sustainability labels to help consumers find ocean-friendly seafood while connecting fisheries, restaurants, and education with better resource stewardship.',
-    '看見永續初衷': 'Discover our purpose',
-    '找附近友善海鮮': 'Find friendly seafood nearby',
+    '看見永續初衷': 'See the purpose of sustainability',
+    '看見永續的初衷': 'See the purpose of sustainability',
+    '找附近友善海鮮': 'Find nearby friendly seafood',
     '理解永續標籤': 'Understand sustainability labels',
     '3D 理念導覽': '3D philosophy guide',
     '3D 友善小魚': '3D friendly fish',
@@ -262,6 +263,12 @@
       event.preventDefault();
       var next = currentLang() === 'en' ? 'zh' : 'en';
       localStorage.setItem(STORAGE_KEY, next);
+      // The 3D homepage labels are rendered inside WebGL/Three.js, not normal DOM text.
+      // Reload only on the homepage so those Canvas labels can be recreated in the selected language.
+      if (document.querySelector('.page-home')) {
+        window.location.reload();
+        return;
+      }
       applyLanguage(next);
     });
   }
