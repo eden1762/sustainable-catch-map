@@ -46,6 +46,46 @@
     '透過地圖快速找到身邊支持永續漁法、友善養殖與產地透明的海鮮店家。從漁獲來源、販售品項到店家位置一目了然，讓你安心選購新鮮海味，也用每一次消費支持海洋永續與在地漁民。': 'Quickly find nearby seafood stores that support sustainable fishing, responsible aquaculture, and transparent origins. See seafood sources, product types, and store locations at a glance, so every purchase can support ocean sustainability and local fishers.',
     '掃描永續標籤，開啟專屬 AR 海洋互動任務！玩家可透過手機探索漁獲故事、解鎖知識徽章、完成永續挑戰，讓海鮮選購不只是消費，更像一場有趣的海洋冒險。用遊戲化體驗提升參與感，讓永續觀念自然被看見、被分享。': 'Scan sustainability labels to start your own AR ocean mission. Players can use their phones to explore seafood stories, unlock knowledge badges, and complete sustainability challenges, turning seafood shopping into an engaging ocean adventure.',
     '提示：滑鼠拖曳可 720° 環視，移到 3D 物件上會觸發動態效果。': 'Tip: drag to view the scene in 720 degrees. Hover over 3D objects to trigger animations.',
+    'AR 互動與永續標籤': 'AR Interaction & Sustainability Labels',
+    'AR 與永續標籤': 'AR & Sustainability Labels',
+    '資源狀態': 'Resource status',
+    '確認是否為非過度捕撈、恢復中或季節性適合食用的魚種。': 'Check whether the species is not overfished, recovering, or suitable to eat in the current season.',
+    '漁法資訊': 'Fishing method',
+    '標示延繩釣、定置網、養殖等方式，協助使用者理解環境影響。': 'Shows methods such as longline fishing, set nets, and aquaculture to help users understand environmental impact.',
+    '產地與足跡': 'Origin and footprint',
+    '顯示產地、運輸距離與在地採購指標，讓購買更透明。': 'Shows origin, transport distance, and local sourcing indicators to make purchases more transparent.',
+    '大稻埕永續海鮮示範店': 'Dadaocheng Sustainable Seafood Demo Store',
+    '信義永續超市專區': 'Xinyi Sustainable Supermarket Section',
+    '板橋友善漁獲市場': 'Banqiao Friendly Seafood Market',
+    '淡水海風小食堂': 'Tamsui Sea Breeze Eatery',
+    '餐廳': 'Restaurant',
+    '超市': 'Supermarket',
+    '市場': 'Market',
+    '全部': 'All',
+    '秋刀魚': 'Pacific saury',
+    '鬼頭刀': 'Mahi-mahi',
+    '鯖魚': 'Mackerel',
+    '虱目魚': 'Milkfish',
+    '白帶魚': 'Cutlassfish',
+    '小卷': 'Small squid',
+    '透抽': 'Neritic squid',
+    'MSC / 在地友善採購': 'MSC / Local friendly sourcing',
+    'ASC / 產銷履歷': 'ASC / Traceable production',
+    '在地小漁支持': 'Local small-scale fisher support',
+    '季節性採購': 'Seasonal sourcing',
+    '台北市大同區': 'Datong District, Taipei',
+    '台北市信義區': 'Xinyi District, Taipei',
+    '新北市板橋區': 'Banqiao District, New Taipei',
+    '新北市淡水區': 'Tamsui District, New Taipei',
+    '主打低碳海鮮料理與季節漁獲菜單。': 'Features low-carbon seafood dishes and seasonal catch menus.',
+    '可查詢漁法與來源，適合家庭採買。': 'Lets shoppers check fishing methods and origins, suitable for family grocery trips.',
+    '假日可見產地直送與教育展示。': 'Offers direct-from-origin seafood and educational displays on weekends.',
+    '面海餐桌體驗，提供永續捕撈資訊。': 'Offers seaside dining with sustainable fishing information.',
+    '類型：': 'Type: ',
+    '魚種：': 'Species: ',
+    '標籤：': 'Label: ',
+    '區域：': 'Area: ',
+    '備註：': 'Note: ',
   };
 
   var enToZh = Object.keys(zhToEn).reduce(function (acc, key) {
@@ -65,7 +105,34 @@
     var translated = dict[trimmed];
     if (translated && translated !== trimmed) {
       node.nodeValue = raw.replace(trimmed, translated);
+      return;
     }
+
+    // Some UI strings are composed from smaller React text nodes or Leaflet popup fragments.
+    // Replace known phrases inside the node as a fallback so the whole site follows the selected language.
+    var nextRaw = raw;
+    Object.keys(dict)
+      .filter(function (key) { return key.length >= 2 && nextRaw.indexOf(key) !== -1; })
+      .sort(function (a, b) { return b.length - a.length; })
+      .forEach(function (key) {
+        nextRaw = nextRaw.split(key).join(dict[key]);
+      });
+    if (nextRaw !== raw) node.nodeValue = nextRaw;
+  }
+
+  function translateAttributes(root, lang) {
+    var dict = lang === 'en' ? zhToEn : enToZh;
+    var attrs = ['title', 'aria-label', 'alt', 'placeholder'];
+    var elements = [root].concat(Array.prototype.slice.call(root.querySelectorAll ? root.querySelectorAll('*') : []));
+    elements.forEach(function (el) {
+      if (!el.getAttribute) return;
+      attrs.forEach(function (attr) {
+        var value = el.getAttribute(attr);
+        if (!value) return;
+        var translated = dict[normalizeText(value)];
+        if (translated) el.setAttribute(attr, translated);
+      });
+    });
   }
 
   function walkTextNodes(root, lang) {
@@ -126,6 +193,7 @@
     try {
       setDocumentMeta(lang);
       walkTextNodes(document.body, lang);
+      translateAttributes(document.body, lang);
       updateLanguageButtons(lang);
       removeAboutHomeButton();
     } finally {

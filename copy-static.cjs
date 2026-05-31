@@ -33,5 +33,6 @@ copyDir(path.join(root, "pages"), path.join(dist, "pages"));
 
 copyFile(path.join(root, "home.js"), path.join(dist, "home.js"));
 copyFile(path.join(root, "home.css"), path.join(dist, "home.css"));
+copyFile(path.join(root, "site-i18n.js"), path.join(dist, "site-i18n.js"));
 
 console.log("Static files copied to dist.");
