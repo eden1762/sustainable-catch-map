@@ -238,6 +238,24 @@
     });
   }
 
+
+
+  function updateHomePosterBrand(lang) {
+    var isHome = !!document.querySelector('.page-home');
+    var brand = document.querySelector('.page-home .brand-mark strong');
+    if (!isHome || !brand) return;
+
+    if (lang === 'en') {
+      brand.classList.add('poster-brand-title');
+      brand.setAttribute('aria-label', 'Sustainable Catch Map');
+      brand.innerHTML = '<span class="poster-word">Sustain</span><span class="poster-word">-able</span><span class="poster-word">Catch</span><span class="poster-word">Map</span>';
+    } else {
+      brand.classList.remove('poster-brand-title');
+      brand.removeAttribute('aria-label');
+      brand.textContent = '永續漁獲地圖';
+    }
+  }
+
   function applyLanguage(lang) {
     if (isApplying) return;
     isApplying = true;
@@ -247,6 +265,7 @@
       translateAttributes(document.body, lang);
       updateLanguageButtons(lang);
       removeAboutHomeButton();
+      updateHomePosterBrand(lang);
     } finally {
       isApplying = false;
     }
