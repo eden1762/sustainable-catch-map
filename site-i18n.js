@@ -81,6 +81,19 @@
     '可查詢漁法與來源，適合家庭採買。': 'Lets shoppers check fishing methods and origins, suitable for family grocery trips.',
     '假日可見產地直送與教育展示。': 'Offers direct-from-origin seafood and educational displays on weekends.',
     '面海餐桌體驗，提供永續捕撈資訊。': 'Offers seaside dining with sustainable fishing information.',
+    '首頁': 'Home',
+    '沉浸式 3D 永續漁獲地圖首頁。': 'Immersive 3D Sustainable Catch Map home page.',
+    'Sustainable Catch Map 的核心理念、永續問題意識與實踐方向。': 'The core philosophy, sustainability problem awareness, and practice direction of Sustainable Catch Map.',
+    '社群連結': 'Social links',
+    '切換成英文': 'Switch to English',
+    '中文': 'Chinese',
+    'English': 'English',
+    '永續魚種 3D 模型': '3D model of a sustainable fish species',
+    'SUSTAINABLE CATCH MAP': 'SUSTAINABLE CATCH MAP',
+    'IMMERSIVE BEACH EXPERIENCE': 'IMMERSIVE BEACH EXPERIENCE',
+    'OUR PHILOSOPHY': 'OUR PHILOSOPHY',
+    'FRIENDLY SEAFOOD MAP': 'FRIENDLY SEAFOOD MAP',
+    'AR & SUSTAINABILITY LABELS': 'AR & SUSTAINABILITY LABELS',
     '類型：': 'Type: ',
     '魚種：': 'Species: ',
     '標籤：': 'Label: ',
@@ -152,19 +165,56 @@
 
   function setDocumentMeta(lang) {
     document.documentElement.lang = lang === 'en' ? 'en' : 'zh-Hant';
-    if (lang === 'en') {
-      document.title = document.title
-        .replace('永續漁獲地圖', 'Sustainable Catch Map')
-        .replace('我們的理念', 'Our Philosophy')
-        .replace('附近的友善海鮮地圖', 'Nearby Friendly Seafood Map')
-        .replace('AR互動與永續標籤', 'AR Interaction & Sustainability Labels');
-    } else {
-      document.title = document.title
-        .replace('Sustainable Catch Map', '永續漁獲地圖')
-        .replace('Our Philosophy', '我們的理念')
-        .replace('Nearby Friendly Seafood Map', '附近的友善海鮮地圖')
-        .replace('AR Interaction & Sustainability Labels', 'AR互動與永續標籤');
-    }
+
+    var path = location.pathname;
+    var page = 'home';
+    if (/\/pages\/about\.html$/.test(path)) page = 'about';
+    if (/\/pages\/map\.html$/.test(path)) page = 'map';
+    if (/\/pages\/sustainability\.html$/.test(path)) page = 'sustainability';
+
+    var meta = {
+      zh: {
+        home: {
+          title: '永續漁獲地圖 | 首頁',
+          description: '沉浸式 3D 永續漁獲地圖首頁。'
+        },
+        about: {
+          title: '永續漁獲地圖 | 我們的理念',
+          description: 'Sustainable Catch Map 的核心理念、永續問題意識與實踐方向。'
+        },
+        map: {
+          title: '永續漁獲地圖 | 附近的友善海鮮地圖',
+          description: '用互動地圖探索附近友善海鮮據點。'
+        },
+        sustainability: {
+          title: '永續漁獲地圖 | AR互動與永續標籤',
+          description: '透過 AR 互動與 3D 模型理解永續標籤。'
+        }
+      },
+      en: {
+        home: {
+          title: 'Sustainable Catch Map | Home',
+          description: 'An immersive 3D beach experience that connects seafood choices with ocean sustainability.'
+        },
+        about: {
+          title: 'Sustainable Catch Map | Our Philosophy',
+          description: 'The core philosophy, sustainability challenges, and practical direction behind Sustainable Catch Map.'
+        },
+        map: {
+          title: 'Sustainable Catch Map | Nearby Friendly Seafood Map',
+          description: 'Explore nearby ocean-friendly seafood locations with an interactive map.'
+        },
+        sustainability: {
+          title: 'Sustainable Catch Map | AR Interaction & Sustainability Labels',
+          description: 'Use AR interaction and 3D models to understand seafood sustainability labels.'
+        }
+      }
+    };
+
+    var selected = meta[lang === 'en' ? 'en' : 'zh'][page];
+    document.title = selected.title;
+    var desc = document.querySelector('meta[name="description"]');
+    if (desc) desc.setAttribute('content', selected.description);
   }
 
   function updateLanguageButtons(lang) {

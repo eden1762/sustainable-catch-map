@@ -16,8 +16,8 @@ import * as THREE from 'three'
 const MENU_ITEMS = [
   {
     key: 'guide',
-    title: '關於我們',
-    subtitle: '3D 眼睛導覽',
+    title: '我們的理念',
+    subtitle: '3D 理念導覽',
     // 桌機/平板：水平排在畫面垂直高度約 1/2；手機：垂直排列
     desktopPosition: [-2.85, 0.22, -3.35],
     tabletPosition: [-2.05, 0.2, -3.4],
@@ -25,12 +25,12 @@ const MENU_ITEMS = [
     desktopScale: 0.92,
     tabletScale: 0.76,
     mobileScale: 0.46,
-    shortLabel: '看懂網站入口',
+    shortLabel: '看見永續初衷',
     accent: '#8fd3ff',
     // 手機版專用色暈：眼睛本體偏天空藍，色暈改用對比的柔橘金；平板 / 電腦版不受影響
     mobileHalo: { core: '#ffb15c', glow: '#ff7a3d', rim: '#fff3dc' },
-    route: '/guide',
-    hoverText: '認識永續漁人地圖的理念：用 AI、資料與互動教育，讓每一次海鮮選擇更透明、更友善海洋。'
+    route: '/pages/about.html',
+    hoverText: '了解我們的理念：以 AI、資料地圖與互動教育，讓每一次海鮮選擇更透明、更友善海洋。'
   },
   {
     key: 'map',
@@ -46,7 +46,7 @@ const MENU_ITEMS = [
     accent: '#7ee7d4',
     // 手機版專用色暈：小魚本體偏薄荷綠，色暈改用對比的珊瑚粉橘；柔和不搶主體
     mobileHalo: { core: '#ff8f86', glow: '#ff5f73', rim: '#fff0ec' },
-    route: '/map',
+    route: '/pages/map.html',
     hoverText: '跟著小魚游向附近友善海鮮據點，探索推薦路線與在地永續資訊。'
   },
   {
@@ -63,7 +63,7 @@ const MENU_ITEMS = [
     accent: '#d4b3ff',
     // 手機版專用色暈：牛頓擺球組本體偏柔紫，色暈改用對比的暖黃金；保留科技感但不刺眼
     mobileHalo: { core: '#ffe06a', glow: '#ffb72f', rim: '#fff8d6' },
-    route: '/sustainability',
+    route: '/pages/sustainability.html',
     hoverText: '透過像牛頓擺一樣有節奏的互動，理解海鮮來源、標籤與永續價值。'
   }
 ]
