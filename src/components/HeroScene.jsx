@@ -4,6 +4,7 @@ import {
   Billboard,
   Float,
   Html,
+  RoundedBox,
   OrbitControls,
   Sky,
   Sparkles,
@@ -27,14 +28,14 @@ const MENU_ITEMS = [
   {
     key: 'guide',
     title: getStoredLanguage() === 'en' ? 'Our Philosophy' : '我們的理念',
-    subtitle: '3D 理念導覽',
+    subtitle: '3D 眼睛導覽',
     // 桌機/平板：水平排在畫面垂直高度約 1/2；手機：垂直排列
     desktopPosition: [-2.85, 0.22, -3.35],
     tabletPosition: [-2.05, 0.2, -3.4],
-    mobilePosition: [0, 1.78, -3.05],
+    mobilePosition: [0, 2.15, -3.05],
     desktopScale: 0.92,
     tabletScale: 0.76,
-    mobileScale: 0.46,
+    mobileScale: 0.58,
     shortLabel: getStoredLanguage() === 'en' ? 'See the purpose of sustainability' : '看見永續初衷',
     accent: '#8eddf2',
     // 網站導覽：粉藍色粉圈，降低亮度但清楚標示可點選範圍
@@ -49,10 +50,10 @@ const MENU_ITEMS = [
     subtitle: '3D 友善小魚',
     desktopPosition: [0, 0.22, -3.6],
     tabletPosition: [0, 0.2, -3.6],
-    mobilePosition: [0, 0.82, -3.12],
+    mobilePosition: [0, 0.62, -3.12],
     desktopScale: 0.98,
     tabletScale: 0.78,
-    mobileScale: 0.47,
+    mobileScale: 0.61,
     shortLabel: getStoredLanguage() === 'en' ? 'Find nearby friendly seafood' : '找附近友善海鮮',
     accent: '#f2ad78',
     // 友善小魚：粉橘色粉圈，和粉藍、粉紅入口明顯區分
@@ -67,10 +68,10 @@ const MENU_ITEMS = [
     subtitle: '3D 牛頓擺球組',
     desktopPosition: [2.85, 0.22, -3.35],
     tabletPosition: [2.05, 0.2, -3.4],
-    mobilePosition: [0, -0.12, -3.02],
+    mobilePosition: [0, -0.88, -3.02],
     desktopScale: 0.92,
     tabletScale: 0.76,
-    mobileScale: 0.46,
+    mobileScale: 0.58,
     shortLabel: getStoredLanguage() === 'en' ? 'Understand sustainability labels' : '理解永續標籤',
     accent: '#f4a6bc',
     // AR 牛頓擺球組：粉紅色粉圈，改掉原本偏亮紫色光暈
@@ -670,6 +671,108 @@ function MobileObjectHalo({ colors, active, pressed }) {
   )
 }
 
+
+/* ============================================================
+   透明水族箱 — 每一個 3D 入口都裝進可點選的圓弧玻璃箱
+   - 使用低透明度玻璃、水面、氣泡與柔和邊框，保留原本沙灘/天空背景
+   - 放在 InteractiveMenuObject 內，因此點擊水族箱本體也會進入對應頁面
+============================================================ */
+function AquariumTank({ active, pressed, color = '#8eddf2', halo, mobile = false }) {
+  const tankRef = useRef()
+  const waterRef = useRef()
+  const bubblesRef = useRef()
+  const rimColor = pressed ? ((halo && halo.pressed) || color) : ((halo && halo.core) || color)
+  const glowColor = (halo && halo.glow) || color
+
+  const bubbles = useMemo(() => [
+    [-0.84, -0.38, 0.44, 0.035, 0.8],
+    [-0.52, 0.05, -0.44, 0.026, 1.7],
+    [-0.24, 0.42, 0.36, 0.022, 2.3],
+    [0.18, -0.18, -0.38, 0.03, 3.1],
+    [0.48, 0.28, 0.46, 0.024, 4.0],
+    [0.82, -0.04, -0.3, 0.032, 4.8]
+  ], [])
+
+  useFrame((state) => {
+    const t = state.clock.elapsedTime
+    if (tankRef.current) {
+      const pulse = 1 + Math.sin(t * 1.05) * (active ? 0.014 : 0.006)
+      tankRef.current.scale.setScalar(pulse)
+    }
+    if (waterRef.current) {
+      waterRef.current.rotation.z = Math.sin(t * 0.85) * 0.018
+      waterRef.current.position.y = 0.23 + Math.sin(t * 1.2) * 0.012
+    }
+    if (bubblesRef.current) {
+      bubblesRef.current.children.forEach((bubble, index) => {
+        const speed = 0.28 + index * 0.035
+        const base = bubbles[index]
+        bubble.position.y = -0.42 + ((t * speed + base[4]) % 1.3)
+        bubble.position.x = base[0] + Math.sin(t * 1.4 + index) * 0.035
+        bubble.material.opacity = active ? 0.48 : 0.28
+      })
+    }
+  })
+
+  return (
+    <group ref={tankRef} position={[0, 0.66, -0.04]}>
+      {/* 主玻璃：極透明，讓使用者清楚看見裡面的 3D 模型與文字 */}
+      <RoundedBox args={[2.28, 2.72, 1.34]} radius={0.18} smoothness={8} renderOrder={0}>
+        <meshPhysicalMaterial
+          color="#e9fbff"
+          transparent
+          opacity={pressed ? 0.26 : (active ? 0.2 : 0.145)}
+          roughness={0.05}
+          metalness={0}
+          clearcoat={1}
+          transmission={0.38}
+          ior={1.34}
+          side={THREE.DoubleSide}
+          depthWrite={false}
+        />
+      </RoundedBox>
+
+      {/* 圓弧玻璃邊：用 wireframe 顯示水族箱邊界，不遮住模型 */}
+      <RoundedBox args={[2.34, 2.78, 1.4]} radius={0.2} smoothness={10} renderOrder={2}>
+        <meshBasicMaterial
+          color={rimColor}
+          transparent
+          opacity={pressed ? 0.34 : (active ? 0.24 : 0.16)}
+          wireframe
+          depthWrite={false}
+        />
+      </RoundedBox>
+
+      {/* 上方亮邊與底部沙層，讓水族箱有實體感 */}
+      <mesh position={[0, 1.39, 0.02]} renderOrder={3}>
+        <boxGeometry args={[1.92, 0.032, 1.02]} />
+        <meshBasicMaterial color="#ffffff" transparent opacity={active ? 0.42 : 0.28} depthWrite={false} />
+      </mesh>
+      <mesh position={[0, -1.29, 0.02]} renderOrder={1}>
+        <boxGeometry args={[2.02, 0.08, 1.05]} />
+        <meshStandardMaterial color="#f2d6a5" roughness={0.9} metalness={0} transparent opacity={0.82} />
+      </mesh>
+
+      {/* 水面線：淡藍透明，不改變原本海景，只強化「裝在水族箱」的感覺 */}
+      <mesh ref={waterRef} position={[0, 0.23, 0.03]} rotation={[-Math.PI / 2, 0, 0]} renderOrder={3}>
+        <planeGeometry args={[1.98, 0.98, 1, 1]} />
+        <meshBasicMaterial color="#aeeeff" transparent opacity={pressed ? 0.22 : (active ? 0.16 : 0.1)} side={THREE.DoubleSide} depthWrite={false} />
+      </mesh>
+
+      <group ref={bubblesRef}>
+        {bubbles.map(([x, y, z, radius], index) => (
+          <mesh key={index} position={[x, y, z]} renderOrder={4}>
+            <sphereGeometry args={[radius, 14, 14]} />
+            <meshBasicMaterial color="#ffffff" transparent opacity={0.28} depthWrite={false} />
+          </mesh>
+        ))}
+      </group>
+
+      <pointLight color={glowColor} intensity={pressed ? 0.42 : (active ? 0.28 : 0.16)} distance={mobile ? 2.1 : 2.7} decay={2} />
+    </group>
+  )
+}
+
 /* ============================================================
    互動物件容器
 ============================================================ */
@@ -710,12 +813,13 @@ function InteractiveMenuObject({ item, active, setActiveKey }) {
 
   return (
     <group ref={ref} position={item.position} scale={item.objectScale || 1} {...events}>
-      {/* 透明點擊範圍：手機版牛頓擺球組較細，原本只點模型本體容易失敗；
-          這個透明橢圓把可點選範圍和色暈一致圈起來，不改變畫面外觀。 */}
-      <mesh position={[0, 0.72, 0.02]} scale={[1.35, 1.68, 0.18]} renderOrder={10}>
+      {/* 透明點擊範圍：擴大到整座水族箱；使用者點玻璃箱任何位置都能進入所屬頁面。 */}
+      <mesh position={[0, 0.66, 0.04]} scale={[1.55, 1.55, 0.28]} renderOrder={10}>
         <sphereGeometry args={[0.92, 32, 16]} />
         <meshBasicMaterial transparent opacity={0.01} depthWrite={false} color="#ffffff" />
       </mesh>
+
+      <AquariumTank active={active || hovered} pressed={pressed} color={item.accent} halo={item.halo} mobile={item.haloVertical} />
 
       <Float speed={active ? 2.3 : 1.4} rotationIntensity={0.25} floatIntensity={0.3}>
         {item.key === 'guide' && <EyesGuide active={active || hovered} color={item.accent} showBase={item.showBase} />}
@@ -777,13 +881,13 @@ function InteractiveMenuObject({ item, active, setActiveKey }) {
         </>
       )}
 
-      <Billboard position={[0, 2.05, 0]} follow>
+      <Billboard position={[0, 1.82, 0.05]} follow>
         <Text
-          fontSize={0.22}
+          fontSize={0.2}
           color="#183b56"
           anchorX="center"
           anchorY="middle"
-          maxWidth={2.6}
+          maxWidth={2.25}
           textAlign="center"
           outlineWidth={0.012}
           outlineColor="#ffffff"
@@ -791,17 +895,30 @@ function InteractiveMenuObject({ item, active, setActiveKey }) {
           {item.title}
         </Text>
         <Text
-          position={[0, -0.32, 0]}
-          fontSize={0.13}
+          position={[0, -0.28, 0]}
+          fontSize={0.125}
           color="#2c6f97"
           anchorX="center"
           anchorY="middle"
-          maxWidth={2.5}
+          maxWidth={2.18}
           textAlign="center"
           outlineWidth={0.01}
           outlineColor="#ffffff"
         >
           {item.shortLabel}
+        </Text>
+        <Text
+          position={[0, -0.5, 0]}
+          fontSize={0.105}
+          color="#387f9f"
+          anchorX="center"
+          anchorY="middle"
+          maxWidth={2.08}
+          textAlign="center"
+          outlineWidth={0.009}
+          outlineColor="#ffffff"
+        >
+          {item.subtitle}
         </Text>
       </Billboard>
 
