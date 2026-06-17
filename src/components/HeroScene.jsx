@@ -2,7 +2,6 @@ import React, { Suspense, useMemo, useRef, useState } from 'react'
 import { Canvas, useFrame, useThree } from '@react-three/fiber'
 import {
   Billboard,
-  Float,
   Html,
   OrbitControls,
   Sky,
@@ -27,14 +26,13 @@ const MENU_ITEMS = [
   {
     key: 'guide',
     title: getStoredLanguage() === 'en' ? 'Our Philosophy' : '我們的理念',
-    subtitle: '3D 眼睛導覽',
     // 桌機/平板：水平排在畫面垂直高度約 1/2；手機：垂直排列
     desktopPosition: [-2.85, 0.22, -3.35],
     tabletPosition: [-2.05, 0.2, -3.4],
-    mobilePosition: [0, 2.15, -3.05],
+    mobilePosition: [0, 2.32, -3.05],
     desktopScale: 0.92,
     tabletScale: 0.76,
-    mobileScale: 0.58,
+    mobileScale: 0.54,
     shortLabel: getStoredLanguage() === 'en' ? 'See the purpose of sustainability' : '看見永續初衷',
     accent: '#8eddf2',
     // 網站導覽：粉藍色粉圈，降低亮度但清楚標示可點選範圍
@@ -46,13 +44,12 @@ const MENU_ITEMS = [
   {
     key: 'map',
     title: getStoredLanguage() === 'en' ? 'Nearby Friendly Seafood Restaurants' : '附近的友善海鮮地圖',
-    subtitle: '3D 友善小魚',
     desktopPosition: [0, 0.22, -3.6],
     tabletPosition: [0, 0.2, -3.6],
     mobilePosition: [0, 0.62, -3.12],
     desktopScale: 0.98,
     tabletScale: 0.78,
-    mobileScale: 0.61,
+    mobileScale: 0.56,
     shortLabel: getStoredLanguage() === 'en' ? 'Find nearby friendly seafood' : '找附近友善海鮮',
     accent: '#f2ad78',
     // 友善小魚：粉橘色粉圈，和粉藍、粉紅入口明顯區分
@@ -64,13 +61,12 @@ const MENU_ITEMS = [
   {
     key: 'ar',
     title: getStoredLanguage() === 'en' ? 'AR Interaction & Sustainability Labels' : 'AR 互動與永續標籤',
-    subtitle: '3D 牛頓擺球組',
     desktopPosition: [2.85, 0.22, -3.35],
     tabletPosition: [2.05, 0.2, -3.4],
-    mobilePosition: [0, -0.88, -3.02],
+    mobilePosition: [0, -1.08, -3.02],
     desktopScale: 0.92,
     tabletScale: 0.76,
-    mobileScale: 0.58,
+    mobileScale: 0.54,
     shortLabel: getStoredLanguage() === 'en' ? 'Understand sustainability labels' : '理解永續標籤',
     accent: '#f4a6bc',
     // AR 牛頓擺球組：粉紅色粉圈，改掉原本偏亮紫色光暈
@@ -131,7 +127,7 @@ export default function HeroScene() {
           <span className="status-kicker">目前聚焦</span>
           <h2>{activeItem.title}</h2>
           <p>{activeItem.hoverText}</p>
-          <div className="status-hint">提示：滑鼠拖曳可 720° 環視，移到 3D 物件上會觸發動態效果。</div>
+          <div className="status-hint">提示：滑鼠拖曳可 720° 環視，點擊任一水晶球即可進入對應頁面。</div>
         </div>
       </div>
     </div>
@@ -198,8 +194,8 @@ function ResponsiveMenuObjects({ activeKey, setActiveKey }) {
       return {
         position: item.mobilePosition,
         scale: item.mobileScale,
-        // 手機版：眼睛與小魚不顯示基座；牛頓擺球組保留基座
-        showBase: item.key === 'ar',
+        // 手機版：三顆水晶球維持同樣入口形式，不再顯示原本 3D 模型
+        showBase: false,
         // 手機版：光圈改成直立 O 型，第一次進入畫面就像把 3D 模型圈起來
         haloVertical: true
       }
@@ -672,9 +668,9 @@ function MobileObjectHalo({ colors, active, pressed }) {
 
 
 /* ============================================================
-   透明水晶球 — 每一個 3D 入口都包進一顆可點選的玻璃球
+   透明水晶球 — 三個首頁入口改成可點選的玻璃球
    - 以球體玻璃、粉色球緣、前景高光與內部星光，呈現「水晶球」質感
-   - 玻璃透明度保守，讓使用者清楚看見球內的標題、說明與 3D 模型
+   - 玻璃透明度保守，讓使用者清楚看見球內的標題與內容簡述
    - 放在 InteractiveMenuObject 內，因此點擊水晶球任何位置都能進入對應頁面
 ============================================================ */
 
@@ -682,13 +678,9 @@ function CrystalBall({ active, pressed, color = '#8eddf2', halo, mobile = false 
   const groupRef = useRef()
   const outerShellRef = useRef()
   const innerShellRef = useRef()
-  const tintShellRef = useRef()
   const rimRef = useRef()
   const backRimRef = useRef()
   const sparkleGroupRef = useRef()
-  const causticRef = useRef()
-  const shadowRef = useRef()
-  const glowRef = useRef()
 
   const rimColor = pressed ? ((halo && halo.pressed) || color) : ((halo && halo.core) || color)
   const glowColor = (halo && halo.glow) || color
@@ -715,22 +707,19 @@ function CrystalBall({ active, pressed, color = '#8eddf2', halo, mobile = false 
     }
     if (outerShellRef.current) {
       outerShellRef.current.rotation.y = Math.sin(t * 0.25) * 0.04
-      outerShellRef.current.material.opacity = pressed ? 0.33 : (active ? 0.28 : 0.23)
+      outerShellRef.current.material.opacity = pressed ? 0.3 : (active ? 0.25 : 0.2)
     }
     if (innerShellRef.current) {
       innerShellRef.current.rotation.y = -Math.sin(t * 0.2) * 0.03
-      innerShellRef.current.material.opacity = pressed ? 0.18 : (active ? 0.15 : 0.12)
-    }
-    if (tintShellRef.current) {
-      tintShellRef.current.material.opacity = pressed ? 0.13 : (active ? 0.105 : 0.082)
+      innerShellRef.current.material.opacity = pressed ? 0.16 : (active ? 0.12 : 0.09)
     }
     if (rimRef.current) {
       rimRef.current.rotation.z += 0.0032
-      rimRef.current.material.opacity = pressed ? 0.68 : (active ? 0.5 : 0.38)
+      rimRef.current.material.opacity = pressed ? 0.52 : (active ? 0.38 : 0.28)
     }
     if (backRimRef.current) {
       backRimRef.current.rotation.z -= 0.0023
-      backRimRef.current.material.opacity = pressed ? 0.28 : (active ? 0.22 : 0.16)
+      backRimRef.current.material.opacity = pressed ? 0.2 : (active ? 0.16 : 0.12)
     }
     if (sparkleGroupRef.current) {
       sparkleGroupRef.current.children.forEach((sparkle, index) => {
@@ -741,143 +730,97 @@ function CrystalBall({ active, pressed, color = '#8eddf2', halo, mobile = false 
         sparkle.scale.setScalar(1 + Math.sin(t * 2.4 + base[4]) * 0.16)
       })
     }
-    if (causticRef.current) {
-      causticRef.current.material.opacity = pressed ? 0.28 : (active ? 0.22 : 0.16)
-      causticRef.current.scale.x = 1.28 + Math.sin(t * 1.4) * 0.05
-      causticRef.current.scale.y = 0.42 + Math.cos(t * 1.2) * 0.02
-    }
-    if (shadowRef.current) {
-      shadowRef.current.material.opacity = pressed ? 0.28 : (active ? 0.23 : 0.18)
-      shadowRef.current.scale.x = 1.22 + Math.sin(t * 0.9) * 0.02
-    }
-    if (glowRef.current) {
-      glowRef.current.material.opacity = pressed ? 0.16 : (active ? 0.12 : 0.08)
-    }
   })
 
   return (
     <group ref={groupRef} position={[0, 0.72, 0.02]}>
-      {/* 深色接觸陰影：讓球體更像放在沙灘上的實體玻璃球 */}
-      <mesh ref={shadowRef} position={[0.08, -1.57, 0.08]} rotation={[-Math.PI / 2, 0, 0.16]} scale={[1.22, 0.42, 1]} renderOrder={0}>
-        <circleGeometry args={[1, 64]} />
-        <meshBasicMaterial color="#6f7f90" transparent opacity={0.18} depthWrite={false} />
-      </mesh>
-
-      {/* 彩色投影 / 映照：營造玻璃球折射到沙地上的光感 */}
-      <mesh ref={causticRef} position={[0, -1.54, 0]} rotation={[-Math.PI / 2, 0, -0.08]} scale={[1.28, 0.42, 1]} renderOrder={0}>
-        <circleGeometry args={[1, 64]} />
-        <meshBasicMaterial color={rimColor} transparent opacity={0.16} depthWrite={false} blending={THREE.AdditiveBlending} />
-      </mesh>
-      <mesh ref={glowRef} position={[0, -1.52, 0]} rotation={[-Math.PI / 2, 0, 0.32]} scale={[0.92, 0.18, 1]} renderOrder={0}>
-        <circleGeometry args={[1, 64]} />
-        <meshBasicMaterial color={brightColor} transparent opacity={0.08} depthWrite={false} blending={THREE.AdditiveBlending} />
-      </mesh>
-
-      {/* 外層玻璃球：更強光澤與玻璃折射 */}
+      {/* 外層玻璃球：更明顯的透明玻璃球體 */}
       <mesh ref={outerShellRef} renderOrder={1}>
         <sphereGeometry args={[1.52, 88, 64]} />
         <meshPhysicalMaterial
           color={glowColor}
           transparent
-          opacity={0.23}
-          roughness={0.005}
+          opacity={0.2}
+          roughness={0.01}
           metalness={0}
           clearcoat={1}
-          clearcoatRoughness={0.005}
-          reflectivity={1}
-          transmission={0.92}
-          thickness={1.48}
-          ior={1.5}
-          envMapIntensity={2.7}
-          attenuationColor={rimColor}
-          attenuationDistance={2.2}
+          clearcoatRoughness={0.01}
+          transmission={0.86}
+          thickness={1.25}
+          ior={1.48}
+          envMapIntensity={2.2}
+          attenuationColor={glowColor}
+          attenuationDistance={3.2}
           side={THREE.DoubleSide}
           depthWrite={false}
         />
       </mesh>
 
-      {/* 內層玻璃：讓色彩更清楚，同時保留看見球內內容物 */}
-      <mesh ref={innerShellRef} renderOrder={1} scale={[0.95, 0.95, 0.95]}>
+      {/* 內層彩色折射感：讓三顆球色系更清楚，但不遮擋內容物 */}
+      <mesh ref={innerShellRef} renderOrder={0} scale={[0.93, 0.93, 0.93]}>
         <sphereGeometry args={[1.46, 72, 48]} />
         <meshPhysicalMaterial
           color={color}
           transparent
-          opacity={0.12}
-          roughness={0.02}
+          opacity={0.09}
+          roughness={0.03}
           metalness={0}
           clearcoat={1}
-          clearcoatRoughness={0.02}
-          transmission={0.55}
-          thickness={0.85}
-          ior={1.4}
+          clearcoatRoughness={0.03}
+          transmission={0.42}
+          thickness={0.65}
+          ior={1.38}
           side={THREE.BackSide}
           depthWrite={false}
         />
       </mesh>
 
-      {/* 額外淡色染色層，讓粉藍 / 粉橘 / 粉紅更明顯 */}
-      <mesh ref={tintShellRef} renderOrder={0} scale={[0.88, 0.88, 0.88]}>
-        <sphereGeometry args={[1.36, 64, 42]} />
-        <meshBasicMaterial
-          color={rimColor}
-          transparent
-          opacity={0.082}
-          side={THREE.BackSide}
-          depthWrite={false}
-          blending={THREE.AdditiveBlending}
-        />
-      </mesh>
-
-      {/* 正面亮邊 */}
-      <mesh ref={rimRef} position={[0, 0, 0.06]} renderOrder={4}>
-        <torusGeometry args={[1.525, 0.02, 20, 180]} />
+      {/* 正面亮邊，強化「這是一顆玻璃水晶球」的輪廓 */}
+      <mesh ref={rimRef} position={[0, 0, 0.05]} renderOrder={4}>
+        <torusGeometry args={[1.525, 0.018, 20, 180]} />
         <meshBasicMaterial
           color={brightColor}
           transparent
-          opacity={0.38}
+          opacity={0.28}
           depthWrite={false}
           blending={THREE.AdditiveBlending}
         />
       </mesh>
 
-      {/* 背面色邊 */}
+      {/* 後側柔和色邊，讓球體更立體 */}
       <mesh ref={backRimRef} position={[0, 0, -0.16]} rotation={[0, 0, Math.PI * 0.08]} renderOrder={1}>
-        <torusGeometry args={[1.47, 0.026, 16, 160]} />
+        <torusGeometry args={[1.47, 0.022, 16, 160]} />
         <meshBasicMaterial
           color={rimColor}
           transparent
-          opacity={0.16}
+          opacity={0.12}
           depthWrite={false}
           blending={THREE.AdditiveBlending}
         />
       </mesh>
 
-      {/* 玻璃球內部折射線 */}
-      <mesh position={[0, -0.08, 0.08]} scale={[1.08, 0.34, 1]} renderOrder={2}>
-        <torusGeometry args={[1.18, 0.012, 16, 144]} />
-        <meshBasicMaterial color={brightColor} transparent opacity={active ? 0.32 : 0.21} depthWrite={false} />
+      {/* 球體內部的橫向折射亮線 */}
+      <mesh position={[0, -0.06, 0.08]} scale={[1.05, 0.34, 1]} renderOrder={2}>
+        <torusGeometry args={[1.16, 0.011, 16, 144]} />
+        <meshBasicMaterial color={brightColor} transparent opacity={active ? 0.26 : 0.16} depthWrite={false} />
       </mesh>
-      <mesh position={[0, 0.28, 0.09]} scale={[0.84, 0.18, 1]} renderOrder={2}>
-        <torusGeometry args={[1.04, 0.009, 16, 144]} />
-        <meshBasicMaterial color={rimColor} transparent opacity={active ? 0.24 : 0.16} depthWrite={false} />
+      <mesh position={[0, 0.28, 0.09]} scale={[0.82, 0.18, 1]} renderOrder={2}>
+        <torusGeometry args={[1.04, 0.008, 16, 144]} />
+        <meshBasicMaterial color={rimColor} transparent opacity={active ? 0.18 : 0.11} depthWrite={false} />
       </mesh>
 
-      {/* 大片高光與映照，讓使用者更容易看出玻璃質感 */}
-      <mesh position={[-0.6, 0.76, 1.22]} rotation={[0, 0, -0.42]} scale={[0.66, 0.22, 1]} renderOrder={5}>
+      {/* 前景玻璃高光 */}
+      <mesh position={[-0.58, 0.72, 1.22]} rotation={[0, 0, -0.42]} scale={[0.62, 0.2, 1]} renderOrder={5}>
         <circleGeometry args={[0.46, 48]} />
-        <meshBasicMaterial color="#ffffff" transparent opacity={pressed ? 0.7 : (active ? 0.58 : 0.45)} depthWrite={false} />
+        <meshBasicMaterial color="#ffffff" transparent opacity={pressed ? 0.6 : (active ? 0.48 : 0.36)} depthWrite={false} />
       </mesh>
-      <mesh position={[0.7, -0.24, 1.18]} rotation={[0, 0, -0.2]} scale={[0.46, 0.14, 1]} renderOrder={5}>
+      <mesh position={[0.68, -0.26, 1.18]} rotation={[0, 0, -0.2]} scale={[0.42, 0.12, 1]} renderOrder={5}>
         <circleGeometry args={[0.32, 36]} />
-        <meshBasicMaterial color="#ffffff" transparent opacity={active ? 0.32 : 0.22} depthWrite={false} />
-      </mesh>
-      <mesh position={[-0.1, 1.05, 1.18]} rotation={[0, 0, 0.02]} scale={[0.9, 0.05, 1]} renderOrder={5}>
-        <circleGeometry args={[0.34, 36]} />
         <meshBasicMaterial color="#ffffff" transparent opacity={active ? 0.24 : 0.16} depthWrite={false} />
       </mesh>
-      <mesh position={[0.22, 0.46, 1.2]} rotation={[0, 0, -0.92]} scale={[0.9, 0.036, 1]} renderOrder={5}>
-        <circleGeometry args={[0.28, 32]} />
-        <meshBasicMaterial color="#ffffff" transparent opacity={active ? 0.18 : 0.11} depthWrite={false} />
+      <mesh position={[-0.08, 1.05, 1.18]} rotation={[0, 0, 0.02]} scale={[0.82, 0.05, 1]} renderOrder={5}>
+        <circleGeometry args={[0.34, 36]} />
+        <meshBasicMaterial color="#ffffff" transparent opacity={active ? 0.18 : 0.12} depthWrite={false} />
       </mesh>
 
       {/* 球內微光星點 */}
@@ -890,25 +833,31 @@ function CrystalBall({ active, pressed, color = '#8eddf2', halo, mobile = false 
         ))}
       </group>
 
-      <pointLight color={glowColor} intensity={pressed ? 0.78 : (active ? 0.56 : 0.34)} distance={mobile ? 2.6 : 3.4} decay={2} />
+      {/* 底部柔和接觸影與色光 */}
+      <mesh position={[0, -1.52, 0]} rotation={[-Math.PI / 2, 0, 0]} scale={[1.34, 0.46, 1]} renderOrder={0}>
+        <circleGeometry args={[1, 64]} />
+        <meshBasicMaterial color={rimColor} transparent opacity={active ? 0.16 : 0.09} depthWrite={false} />
+      </mesh>
+
+      <pointLight color={glowColor} intensity={pressed ? 0.62 : (active ? 0.42 : 0.24)} distance={mobile ? 2.5 : 3.2} decay={2} />
     </group>
   )
 }
 
 function CrystalContentLabel({ item, active, mobile = false }) {
-  const panelWidth = mobile ? 1.58 : 1.72
-  const panelHeight = mobile ? 0.86 : 0.96
-  const xPad = mobile ? 1.34 : 1.46
+  const panelWidth = mobile ? 1.74 : 2.08
+  const panelHeight = mobile ? 0.82 : 0.92
+  const xPad = mobile ? 1.46 : 1.78
 
   return (
-    <Billboard position={[0, 1.38, 0.94]} follow>
-      {/* 內容說明板：放在水晶球內部前方，確保使用者可以看見三段內容 */}
+    <Billboard position={[0, 0.78, 1.08]} follow>
+      {/* 內容說明板：放在水晶球內部前方，只保留標題與內容簡述，確保文字清楚可讀 */}
       <mesh position={[0, -0.14, -0.02]} renderOrder={6}>
         <planeGeometry args={[panelWidth + 0.1, panelHeight + 0.1]} />
         <meshBasicMaterial
           color={item.accent}
           transparent
-          opacity={active ? 0.16 : 0.12}
+          opacity={active ? 0.1 : 0.075}
           depthWrite={false}
           depthTest={false}
         />
@@ -918,7 +867,7 @@ function CrystalContentLabel({ item, active, mobile = false }) {
         <meshBasicMaterial
           color="#ffffff"
           transparent
-          opacity={active ? 0.28 : 0.22}
+          opacity={active ? 0.2 : 0.15}
           depthWrite={false}
           depthTest={false}
         />
@@ -928,53 +877,39 @@ function CrystalContentLabel({ item, active, mobile = false }) {
         <meshBasicMaterial
           color="#ffffff"
           transparent
-          opacity={active ? 0.2 : 0.14}
+          opacity={active ? 0.18 : 0.12}
           depthWrite={false}
           depthTest={false}
         />
       </mesh>
 
       <Text
-        position={[0, 0.18, 0.02]}
-        fontSize={mobile ? 0.108 : 0.122}
+        position={[0, 0.12, 0.02]}
+        fontSize={mobile ? 0.128 : 0.158}
         color="#163a52"
         anchorX="center"
         anchorY="middle"
         maxWidth={xPad}
         textAlign="center"
-        outlineWidth={0.011}
+        outlineWidth={0.014}
         outlineColor="#ffffff"
         renderOrder={9}
       >
         {item.title}
       </Text>
       <Text
-        position={[0, -0.07, 0.02]}
-        fontSize={mobile ? 0.098 : 0.11}
+        position={[0, -0.17, 0.02]}
+        fontSize={mobile ? 0.112 : 0.13}
         color="#2b6788"
         anchorX="center"
         anchorY="middle"
         maxWidth={xPad}
         textAlign="center"
-        outlineWidth={0.01}
+        outlineWidth={0.012}
         outlineColor="#ffffff"
         renderOrder={9}
       >
         {item.shortLabel}
-      </Text>
-      <Text
-        position={[0, -0.29, 0.02]}
-        fontSize={mobile ? 0.09 : 0.102}
-        color="#387f9f"
-        anchorX="center"
-        anchorY="middle"
-        maxWidth={xPad}
-        textAlign="center"
-        outlineWidth={0.009}
-        outlineColor="#ffffff"
-        renderOrder={9}
-      >
-        {item.subtitle}
       </Text>
     </Billboard>
   )
@@ -1027,12 +962,6 @@ function InteractiveMenuObject({ item, active, setActiveKey }) {
       </mesh>
 
       <CrystalBall active={active || hovered} pressed={pressed} color={item.accent} halo={item.halo} mobile={item.haloVertical} />
-
-      <Float speed={active ? 2.3 : 1.4} rotationIntensity={0.25} floatIntensity={0.3}>
-        {item.key === 'guide' && <EyesGuide active={active || hovered} color={item.accent} showBase={item.showBase} />}
-        {item.key === 'map' && <FriendlyFish active={active || hovered} color={item.accent} showBase={item.showBase} />}
-        {item.key === 'ar' && <NewtonCradle active={active || hovered} color={item.accent} showBase={item.showBase} />}
-      </Float>
 
       {/* 水晶球外側輕柔色暈：保留很淡的可點選提示，不影響沙灘與天空背景。 */}
       {item.haloVertical ? (
@@ -1089,218 +1018,8 @@ function InteractiveMenuObject({ item, active, setActiveKey }) {
       <CrystalContentLabel item={item} active={active || hovered} mobile={item.haloVertical} />
 
       <Html position={[0, -1.52, 0]} center distanceFactor={10}>
-        <div className="floating-tooltip model-description">{item.hoverText}</div>
+        <div className="floating-tooltip model-description">點擊水晶球進入：{item.shortLabel}</div>
       </Html>
-    </group>
-  )
-}
-
-/* ============================================================
-   1. EyesGuide —— 一雙眼睛，適合「關於我們」
-============================================================ */
-function EyesGuide({ active, color, showBase = true }) {
-  const groupRef = useRef()
-  const leftPupil = useRef()
-  const rightPupil = useRef()
-
-  useFrame((state) => {
-    const t = state.clock.elapsedTime
-    if (groupRef.current) {
-      groupRef.current.rotation.y = Math.sin(t * 1.5) * 0.15
-      // 加入呼吸縮放
-      const scale = active ? 1.05 + Math.sin(t * 4) * 0.02 : 1
-      groupRef.current.scale.setScalar(scale)
-    }
-    const lookX = Math.sin(t * 2) * 0.05
-    const lookY = Math.cos(t * 1.5) * 0.03
-    if (leftPupil.current) leftPupil.current.position.set(-0.28 + lookX, lookY, 0.24)
-    if (rightPupil.current) rightPupil.current.position.set(0.28 + lookX, lookY, 0.24)
-  })
-
-  return (
-    <group>
-      {showBase && <RoundBase color={color} accent="#eefaff" />}
-      <group ref={groupRef} position={[0, 1.08, 0]}>
-        {/* 眼白 */}
-        <mesh position={[-0.28, 0, 0]} castShadow>
-          <sphereGeometry args={[0.28, 32, 32]} />
-          <meshPhysicalMaterial color="#ffffff" roughness={0.1} clearcoat={1} />
-        </mesh>
-        <mesh position={[0.28, 0, 0]} castShadow>
-          <sphereGeometry args={[0.28, 32, 32]} />
-          <meshPhysicalMaterial color="#ffffff" roughness={0.1} clearcoat={1} />
-        </mesh>
-        {/* 瞳孔 */}
-        <mesh ref={leftPupil} position={[-0.28, 0, 0.24]}>
-          <sphereGeometry args={[0.12, 32, 32]} />
-          <meshStandardMaterial color="#0b1b2b" roughness={0.1} metalness={0.5} />
-        </mesh>
-        <mesh ref={rightPupil} position={[0.28, 0, 0.24]}>
-          <sphereGeometry args={[0.12, 32, 32]} />
-          <meshStandardMaterial color="#0b1b2b" roughness={0.1} metalness={0.5} />
-        </mesh>
-        {/* 外框 */}
-        <mesh position={[0, 0.0, 0]}>
-          <torusGeometry args={[0.65, 0.03, 16, 64]} />
-          <meshStandardMaterial color={color} emissive={color} emissiveIntensity={active ? 1.5 : 0.5} />
-        </mesh>
-      </group>
-    </group>
-  )
-}
-
-/* ============================================================
-   2. FriendlyFish —— 一條魚，適合「附近的友善海鮮地圖」
-============================================================ */
-function FriendlyFish({ active, color, showBase = true }) {
-  const fishRef = useRef()
-  const tailRef = useRef()
-
-  // 簡化的尾巴形狀
-  const tailShape = useMemo(() => {
-    const shape = new THREE.Shape()
-    shape.moveTo(0, 0); shape.lineTo(-0.4, 0.3); shape.lineTo(-0.3, 0); shape.lineTo(-0.4, -0.3); shape.closePath()
-    return shape
-  }, [])
-
-  useFrame((state) => {
-    const t = state.clock.elapsedTime
-    if (fishRef.current) {
-      // 魚體 S 型搖擺
-      fishRef.current.rotation.y = Math.sin(t * (active ? 4 : 2)) * 0.3
-      fishRef.current.position.x = Math.sin(t * (active ? 4 : 2)) * 0.05
-    }
-    if (tailRef.current) {
-      // 尾巴反向搖擺疊加
-      tailRef.current.rotation.y = Math.sin(t * (active ? 6 : 3) - 1) * 0.5
-    }
-  })
-
-  return (
-    <group>
-      {showBase && <RoundBase color={color} accent="#e9fff9" />}
-      <group ref={fishRef} position={[0, 1.1, 0]}>
-        {/* 魚身：亮眼橘/黃系熱帶魚 */}
-        <mesh castShadow scale={[1.2, 0.7, 0.5]}>
-          <sphereGeometry args={[0.4, 32, 32]} />
-          <meshStandardMaterial color="#FF5722" roughness={0.2} metalness={0.1} />
-        </mesh>
-        {/* 魚尾 */}
-        <group ref={tailRef} position={[-0.45, 0, 0]}>
-          <mesh castShadow>
-            <extrudeGeometry args={[tailShape, { depth: 0.05, bevelEnabled: true, bevelSize: 0.02 }]} />
-            <meshStandardMaterial color="#FFC107" roughness={0.3} />
-          </mesh>
-        </group>
-        {/* 魚眼 */}
-        <mesh position={[0.35, 0.1, 0.2]}>
-          <sphereGeometry args={[0.06, 16, 16]} />
-          <meshBasicMaterial color="white" />
-        </mesh>
-        <mesh position={[0.38, 0.1, 0.23]}>
-          <sphereGeometry args={[0.03, 16, 16]} />
-          <meshBasicMaterial color="black" />
-        </mesh>
-      </group>
-    </group>
-  )
-}
-/* ============================================================
-   3. NewtonCradle —— 牛頓擺球組，適合「AR 互動與永續標籤」
-============================================================ */
-function NewtonCradle({ active, color, showBase = true }) {
-  const frameRef = useRef()
-  const leftSwing = useRef()
-  const rightSwing = useRef()
-
-  useFrame((state) => {
-    const t = state.clock.elapsedTime
-    const swing = Math.sin(t * 3.5)
-    const power = active ? 0.6 : 0.3
-
-    // 模擬物理碰撞的急停感
-    if (leftSwing.current) leftSwing.current.rotation.z = swing > 0 ? swing * power : 0
-    if (rightSwing.current) rightSwing.current.rotation.z = swing < 0 ? swing * power : 0
-  })
-
-  const Ball = ({ x }) => (
-    <group position={[x, 0, 0]}>
-      {/* 釣線/金屬絲 (新增) */}
-      <mesh position={[0, -0.3, 0]}>
-        <cylinderGeometry args={[0.003, 0.003, 0.6, 8]} />
-        <meshBasicMaterial color="#ffffff" transparent opacity={0.6} />
-      </mesh>
-      {/* 金屬球 (極高反射率) */}
-      <mesh position={[0, -0.65, 0]} castShadow>
-        <sphereGeometry args={[0.14, 32, 32]} />
-        <meshStandardMaterial 
-          color="#ffffff" 
-          metalness={0.95} 
-          roughness={0.05} 
-          envMapIntensity={2} 
-        />
-      </mesh>
-    </group>
-  )
-
-  return (
-    <group>
-      {showBase && <RoundBase color={color} accent="#f7efff" />}
-      <group ref={frameRef} position={[0, 1.2, 0]}>
-        {/* 頂部支架 */}
-        <mesh position={[0, 0.1, 0]} castShadow>
-          <boxGeometry args={[1.4, 0.05, 0.05]} />
-          <meshStandardMaterial color="#8892b0" metalness={0.6} roughness={0.3} />
-        </mesh>
-        {/* 兩側立柱 */}
-        <mesh position={[-0.7, -0.4, 0]} castShadow>
-          <boxGeometry args={[0.05, 1.0, 0.05]} />
-          <meshStandardMaterial color="#8892b0" metalness={0.6} roughness={0.3} />
-        </mesh>
-        <mesh position={[0.7, -0.4, 0]} castShadow>
-          <boxGeometry args={[0.05, 1.0, 0.05]} />
-          <meshStandardMaterial color="#8892b0" metalness={0.6} roughness={0.3} />
-        </mesh>
-
-        <group ref={leftSwing} position={[-0.42, 0.1, 0]}><Ball x={0} /></group>
-        <group position={[-0.14, 0.1, 0]}><Ball x={0} /></group>
-        <group position={[0.14, 0.1, 0]}><Ball x={0} /></group>
-        <group ref={rightSwing} position={[0.42, 0.1, 0]}><Ball x={0} /></group>
-      </group>
-    </group>
-  )
-}
-
-/* ============================================================
-   共用基座
-============================================================ */
-function RoundBase({ color, accent }) {
-  return (
-    <group>
-      <mesh position={[0, 0.06, 0]} castShadow receiveShadow>
-        <cylinderGeometry args={[0.78, 0.9, 0.16, 48]} />
-        <meshStandardMaterial color={color} roughness={0.65} metalness={0.02} />
-      </mesh>
-
-      <mesh position={[0, 0.14, 0]} castShadow>
-        <cylinderGeometry args={[0.65, 0.75, 0.05, 48]} />
-        <meshStandardMaterial color={accent} roughness={0.86} />
-      </mesh>
-
-      <mesh position={[0, 0.155, 0.28]} rotation={[-Math.PI / 2, 0, 0]}>
-        <ringGeometry args={[0.3, 0.5, 24, 1, 0.5, Math.PI * 0.65]} />
-        <meshStandardMaterial color="#bfe8ff" transparent opacity={0.55} side={THREE.DoubleSide} />
-      </mesh>
-
-      <mesh position={[-0.38, 0.16, 0.12]} rotation={[-Math.PI / 2, 0, 0.2]}>
-        <circleGeometry args={[0.06, 18]} />
-        <meshBasicMaterial color="#d9c2a0" transparent opacity={0.42} />
-      </mesh>
-
-      <mesh position={[0.36, 0.16, 0.18]} rotation={[-Math.PI / 2, 0, -0.15]}>
-        <circleGeometry args={[0.07, 18]} />
-        <meshBasicMaterial color="#d9c2a0" transparent opacity={0.42} />
-      </mesh>
     </group>
   )
 }
