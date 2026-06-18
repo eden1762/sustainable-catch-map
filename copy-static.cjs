@@ -1,9 +1,14 @@
 const fs = require("fs");
 const path = require("path");
 
+function removeDir(target) {
+  if (fs.existsSync(target)) {
+    fs.rmSync(target, { recursive: true, force: true });
+  }
+}
+
 function copyDir(src, dest) {
   if (!fs.existsSync(src)) return;
-
   fs.mkdirSync(dest, { recursive: true });
 
   for (const item of fs.readdirSync(src)) {
@@ -20,8 +25,9 @@ function copyDir(src, dest) {
 }
 
 function copyFile(src, dest) {
-  if (!fs.existsSync(src)) return;
-
+  if (!fs.existsSync(src)) {
+    throw new Error(`Missing required file: ${src}`);
+  }
   fs.mkdirSync(path.dirname(dest), { recursive: true });
   fs.copyFileSync(src, dest);
 }
@@ -29,10 +35,13 @@ function copyFile(src, dest) {
 const root = __dirname;
 const dist = path.join(root, "dist");
 
-copyDir(path.join(root, "pages"), path.join(dist, "pages"));
+removeDir(dist);
+fs.mkdirSync(dist, { recursive: true });
 
+copyFile(path.join(root, "index.html"), path.join(dist, "index.html"));
 copyFile(path.join(root, "home.js"), path.join(dist, "home.js"));
 copyFile(path.join(root, "home.css"), path.join(dist, "home.css"));
 copyFile(path.join(root, "site-i18n.js"), path.join(dist, "site-i18n.js"));
+copyDir(path.join(root, "pages"), path.join(dist, "pages"));
 
-console.log("Static files copied to dist.");
+console.log("Static site copied to dist successfully.");
