@@ -1,12 +1,10 @@
 {
   "name": "sustainable-catch-map-static",
   "private": true,
-  "version": "3.0.0",
+  "version": "3.1.0",
   "type": "module",
-  "engines": {
-    "node": "22.x"
-  },
   "scripts": {
+    "build": "node build-static.cjs",
     "start": "python3 -m http.server 4173",
     "preview": "python3 -m http.server 4173"
   }
