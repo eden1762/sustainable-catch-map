@@ -444,6 +444,64 @@ h1 {
   grid-template-columns: minmax(0, 1.05fr) minmax(320px, .95fr);
   gap: 18px;
 }
+.osm-panel {
+  min-height: 560px;
+  overflow: hidden;
+  border-radius: 28px;
+  border: 1px solid var(--line);
+  background: rgba(255,255,255,.72);
+  box-shadow: inset 0 0 0 1px rgba(255,255,255,.36);
+}
+.osm-map {
+  width: 100%;
+  min-height: 512px;
+  border-radius: 28px 28px 18px 18px;
+  background: #e8f6fb;
+  z-index: 1;
+}
+.map-note {
+  margin: 0;
+  padding: 14px 18px 16px;
+  color: var(--muted);
+  font-size: 13px;
+  line-height: 1.55;
+  font-weight: 750;
+}
+.map-fallback {
+  min-height: 512px;
+  display: grid;
+  place-items: center;
+  padding: 24px;
+  color: var(--ocean-deep);
+  font-weight: 900;
+  text-align: center;
+}
+.map-popup strong,
+.map-popup span,
+.map-popup p,
+.map-popup a {
+  display: block;
+}
+.map-popup strong {
+  margin-bottom: 4px;
+  color: var(--ocean-deep);
+  font-size: 16px;
+}
+.map-popup span {
+  margin-bottom: 8px;
+  color: var(--muted);
+  font-weight: 800;
+}
+.map-popup p {
+  margin: 0 0 10px;
+  color: var(--ink);
+  line-height: 1.45;
+}
+.map-popup a {
+  color: var(--ocean);
+  font-weight: 950;
+  text-decoration: underline;
+}
 .static-map {
   position: relative;
   min-height: 560px;
@@ -521,6 +579,17 @@ h1 {
 }
 .location-card {
   padding: 18px;
+  cursor: pointer;
+  transition: border-color .18s ease, box-shadow .18s ease, transform .18s ease, background .18s ease;
+}
+.location-card:hover,
+.location-card:focus-visible,
+.location-card.is-selected {
+  outline: none;
+  border-color: rgba(8, 107, 136, .42);
+  background: rgba(255,255,255,.9);
+  box-shadow: 0 16px 36px rgba(7, 54, 77, .13);
+  transform: translateY(-1px);
 }
 .location-card div {
   display: flex;
@@ -546,6 +615,41 @@ h1 {
 .location-card em {
   display: block;
   font-style: normal;
+}
+.address-link {
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+  margin-top: 10px;
+  color: var(--ocean-deep);
+  font-weight: 950;
+  line-height: 1.45;
+  text-decoration: underline;
+  text-underline-offset: 3px;
+}
+.address-link:hover,
+.address-link:focus-visible {
+  color: var(--ocean);
+  outline: none;
+}
+.address-link b {
+  font-size: 14px;
+}
+.map-action {
+  margin-top: 14px;
+  border: 0;
+  border-radius: 999px;
+  padding: 10px 14px;
+  background: var(--ocean-deep);
+  color: #fff;
+  font-weight: 950;
+  cursor: pointer;
+}
+.map-action:hover,
+.map-action:focus-visible {
+  outline: none;
+  background: var(--sun);
+  color: #291700;
 }
 
 .sustainability-layout {
@@ -620,7 +724,9 @@ h1 {
   .metric-grid,
   .flow-line { grid-template-columns: 1fr; }
   .timeline-row { grid-template-columns: 1fr; }
-  .static-map { min-height: 420px; }
+  .static-map,
+  .osm-panel,
+  .osm-map { min-height: 420px; }
   .location-card div { flex-direction: column; }
   .location-card span { white-space: normal; }
   .site-footer { flex-direction: column; }

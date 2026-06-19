@@ -274,103 +274,108 @@
         "zh": {
             "title": "友善海鮮地圖",
             "metaTitle": "FishFull 漁有料｜友善海鮮地圖",
-            "description": "找到合作魚攤、餐廳、社區與校園活動，查看推薦魚種、漁法故事、料理建議與購買回饋。",
+            "description": "用 OpenStreetMap 找到可買、可吃、可認識漁獲的真實地點；點店家看位置，點地址可開 Google Maps 導航。",
             "eyebrow": "找好魚地圖",
             "headline": "想買友善海鮮，先找到最近的好店",
-            "lead": "這張地圖不是只標地址，而是把魚攤、餐廳、社區與校園活動串起來。每個點位都能看推薦魚種、漁法故事、料理提示與買後回饋，讓消費者知道去哪裡買，魚販也知道怎麼介紹。",
+            "lead": "地圖改用 OpenStreetMap 呈現真實地址。點選店家卡片，地圖會自動移到該位置；點地址文字，會另開 Google Maps，方便消費者導航、魚販介紹、漁業夥伴安排走訪，年輕人也能用地圖完成採買小任務。",
             "badges": [
-                "找店家",
-                "看魚種",
-                "買後回饋"
+                "OpenStreetMap 地圖",
+                "真實地址",
+                "Google Maps 導航"
             ],
             "filters": [
                 "全部",
                 "市場",
                 "餐廳",
-                "社區",
-                "校園"
+                "漁港",
+                "魚市"
             ],
             "locations": [
                 {
                     "id": 1,
                     "type": "市場",
-                    "name": "板橋友善漁獲市場",
+                    "name": "板橋黃石市場",
                     "area": "新北市板橋區",
-                    "species": "鬼頭刀、白帶魚、鯖魚",
-                    "tag": "當季好魚推薦點",
-                    "note": "適合放置 QR Code 牌卡，讓買魚的人現場看懂魚種與料理方式。",
-                    "x": 58,
-                    "y": 58
+                    "address": "新北市板橋區北門街11號",
+                    "lat": 25.01086,
+                    "lng": 121.45658,
+                    "species": "生鮮魚貨、生魚片、家常料理食材",
+                    "tag": "市場買魚入門點",
+                    "note": "適合放 QR Code 牌卡，讓消費者在魚攤旁快速看懂魚種、季節與簡單料理方式。"
                 },
                 {
                     "id": 2,
                     "type": "餐廳",
-                    "name": "叩米友善餐桌",
-                    "area": "台北都會推薦點",
-                    "species": "當季魚種料理、簡單食譜",
+                    "name": "上引水產",
+                    "area": "台北市中山區",
+                    "address": "台北市中山區民族東路410巷2弄18號",
+                    "lat": 25.06662,
+                    "lng": 121.53702,
+                    "species": "現流海鮮、刺身、熟食、海鮮料理",
                     "tag": "把好魚端上桌",
-                    "note": "用餐桌故事把「不知道怎麼煮」變成「我今天想試試看」。",
-                    "x": 72,
-                    "y": 36
+                    "note": "用餐桌故事把『不知道怎麼煮』變成『我今天想試試看』，適合做友善海鮮料理展示。"
                 },
                 {
                     "id": 3,
-                    "type": "市場",
-                    "name": "八斗子友善魚攤",
-                    "area": "基隆八斗子",
-                    "species": "在地當季漁獲、定置網魚種",
+                    "type": "漁港",
+                    "name": "碧砂漁港",
+                    "area": "基隆市中正區",
+                    "address": "基隆市中正區北寧路211號",
+                    "lat": 25.14506,
+                    "lng": 121.79134,
+                    "species": "在地當季漁獲、白帶魚、小卷、海鮮料理",
                     "tag": "漁法與產地故事",
-                    "note": "用漁人故事與現場照片，讓在地好魚更有記憶點。",
-                    "x": 83,
-                    "y": 24
+                    "note": "適合把漁港、魚販與消費者連在一起，讓使用者理解魚從哪裡來、怎麼被捕撈。"
                 },
                 {
                     "id": 4,
-                    "type": "社區",
-                    "name": "新北社區食魚小行動",
-                    "area": "新北市在地社區",
-                    "species": "家常料理任務",
-                    "tag": "家庭買魚練習場",
-                    "note": "收集家庭料理心得、購買意願與大家最常問的魚種問題。",
-                    "x": 48,
-                    "y": 44
+                    "type": "魚市",
+                    "name": "臺北魚市",
+                    "area": "台北市中山區",
+                    "address": "台北市中山區民族東路410巷2弄20號",
+                    "lat": 25.06672,
+                    "lng": 121.53728,
+                    "species": "產銷履歷水產品、冷凍水產、家庭採買魚貨",
+                    "tag": "有來源的魚貨選擇",
+                    "note": "適合示範如何把產地、履歷與料理建議說成一般人聽得懂的購買理由。"
                 },
                 {
                     "id": 5,
-                    "type": "校園",
-                    "name": "校園永續海鮮任務站",
-                    "area": "新北校園／青年活動",
-                    "species": "標籤解謎、徽章任務",
-                    "tag": "年輕人互動入口",
-                    "note": "用遊戲任務把永續標籤變成可以拍照、分享、完成的體驗。",
-                    "x": 38,
-                    "y": 28
+                    "type": "魚市",
+                    "name": "萬大魚類批發市場",
+                    "area": "台北市萬華區",
+                    "address": "台北市萬華區萬大路531號",
+                    "lat": 25.02005,
+                    "lng": 121.49877,
+                    "species": "大台北漁貨供應、批發魚貨、零批採買",
+                    "tag": "魚販與漁貨流通現場",
+                    "note": "讓魚販、餐飲店與漁業從業者看見漁貨流通現場，也能作為年輕人認識魚市的小任務點。"
                 }
             ],
             "playbook": {
                 "eyebrow": "現場怎麼用",
                 "title": "讓魚攤與餐廳更好說、消費者更好買",
-                "body": "每個合作點都用同一套簡單流程：看見好魚、理解差異、敢買回家、留下回饋。",
+                "body": "每個地點都用同一套簡單流程：看見好魚、理解差異、敢買回家、留下回饋。",
                 "cards": [
                     {
                         "icon": "🏷️",
                         "title": "魚攤旁 QR Code",
-                        "body": "讓資訊出現在購買當下，不用等回家才查資料。"
+                        "body": "讓魚種、漁法、產地與料理方式出現在購買當下，不用等回家才查資料。"
                     },
                     {
                         "icon": "🟢",
                         "title": "紅黃綠燈提示",
-                        "body": "用最直覺的顏色提醒今天哪些魚更適合選。"
+                        "body": "用最直覺的顏色提醒今天哪些魚更適合選、哪些魚應該少買。"
                     },
                     {
                         "icon": "🍳",
                         "title": "料理建議與店家推薦",
-                        "body": "把料理焦慮變成「今天就能煮」的購買理由。"
+                        "body": "把料理焦慮變成『今天就能煮』的購買理由，也幫店家把特色說清楚。"
                     },
                     {
                         "icon": "📊",
                         "title": "店家與消費者回饋",
-                        "body": "收集銷售、詢問、回訪與心得，知道大家真正喜歡什麼。"
+                        "body": "收集銷售、詢問、回訪與心得，知道大家真正喜歡什麼，也知道哪些說法最能帶動購買。"
                     }
                 ]
             }
@@ -378,103 +383,108 @@
         "en": {
             "title": "Seafood Map",
             "metaTitle": "FishFull | Seafood Map",
-            "description": "Find partner stalls, restaurants, communities, and campus events with recommended species, fishing stories, cooking ideas, and purchase feedback.",
+            "description": "Use OpenStreetMap to find real seafood markets, restaurants, fish ports, and fish market locations. Click a spot to center the map, or open the address in Google Maps.",
             "eyebrow": "Good seafood map",
             "headline": "Want friendly seafood? Find the nearest good place first",
-            "lead": "This map is more than addresses. It connects stalls, restaurants, communities, and campus events. Each point can show recommended species, fishing stories, cooking tips, and purchase feedback.",
+            "lead": "The map now uses OpenStreetMap and real addresses. Click a place card to center the map on that spot. Click the address text to open Google Maps in a new tab for navigation.",
             "badges": [
-                "Find stores",
-                "Read species",
-                "Share feedback"
+                "OpenStreetMap",
+                "Real addresses",
+                "Google Maps link"
             ],
             "filters": [
                 "All",
                 "Market",
                 "Restaurant",
-                "Community",
-                "Campus"
+                "Fishing Port",
+                "Fish Market"
             ],
             "locations": [
                 {
                     "id": 1,
                     "type": "Market",
-                    "name": "Banqiao Friendly Seafood Market",
+                    "name": "Banqiao Huangshi Market",
                     "area": "Banqiao, New Taipei",
-                    "species": "Mahi-mahi, cutlassfish, mackerel",
-                    "tag": "Seasonal recommendation point",
-                    "note": "QR cards help shoppers understand species and cooking ideas at the stall.",
-                    "x": 58,
-                    "y": 58
+                    "address": "No. 11, Beimen St., Banqiao District, New Taipei City",
+                    "lat": 25.01086,
+                    "lng": 121.45658,
+                    "species": "Fresh seafood, sashimi, home-cooking ingredients",
+                    "tag": "Easy market starting point",
+                    "note": "QR cards can help shoppers understand species, season, and simple cooking ideas beside the stall."
                 },
                 {
                     "id": 2,
                     "type": "Restaurant",
-                    "name": "Friendly Seafood Table",
-                    "area": "Taipei recommendation point",
-                    "species": "Seasonal seafood dishes and easy recipes",
-                    "tag": "Bring good fish to the table",
-                    "note": "A table story can turn “I cannot cook fish” into “I want to try this today.”",
-                    "x": 72,
-                    "y": 36
+                    "name": "Addiction Aquatic Development",
+                    "area": "Zhongshan, Taipei",
+                    "address": "No. 18, Aly. 2, Ln. 410, Minzu E. Rd., Zhongshan District, Taipei City",
+                    "lat": 25.06662,
+                    "lng": 121.53702,
+                    "species": "Fresh seafood, sashimi, cooked seafood dishes",
+                    "tag": "Bring good seafood to the table",
+                    "note": "A table story can turn “I cannot cook fish” into “I want to try this today.”"
                 },
                 {
                     "id": 3,
-                    "type": "Market",
-                    "name": "Badouzi Friendly Fish Stall",
-                    "area": "Badouzi, Keelung",
-                    "species": "Local seasonal catch and set-net fish",
+                    "type": "Fishing Port",
+                    "name": "Bisha Fishing Port",
+                    "area": "Zhongzheng, Keelung",
+                    "address": "No. 211, Beining Rd., Zhongzheng District, Keelung City",
+                    "lat": 25.14506,
+                    "lng": 121.79134,
+                    "species": "Local seasonal catches, cutlassfish, squid, seafood dishes",
                     "tag": "Fishing method and origin story",
-                    "note": "Fisher stories and field photos make local catches memorable.",
-                    "x": 83,
-                    "y": 24
+                    "note": "A good place to connect fishers, vendors, and shoppers through origin and fishing stories."
                 },
                 {
                     "id": 4,
-                    "type": "Community",
-                    "name": "New Taipei Community Fish Action",
-                    "area": "Local community site",
-                    "species": "Home cooking missions",
-                    "tag": "Family seafood practice",
-                    "note": "Collect cooking feedback, purchase interest, and common fish questions.",
-                    "x": 48,
-                    "y": 44
+                    "type": "Fish Market",
+                    "name": "Taipei Fish Market",
+                    "area": "Zhongshan, Taipei",
+                    "address": "No. 20, Aly. 2, Ln. 410, Minzu E. Rd., Zhongshan District, Taipei City",
+                    "lat": 25.06672,
+                    "lng": 121.53728,
+                    "species": "Traceable seafood, frozen seafood, family seafood shopping",
+                    "tag": "Seafood with source information",
+                    "note": "Useful for turning origin, traceability, and cooking ideas into simple reasons to buy."
                 },
                 {
                     "id": 5,
-                    "type": "Campus",
-                    "name": "Campus Seafood Mission Station",
-                    "area": "New Taipei campus / youth event",
-                    "species": "Label puzzles and badge missions",
-                    "tag": "Youth interaction point",
-                    "note": "Game missions turn labels into experiences people can photograph, share, and complete.",
-                    "x": 38,
-                    "y": 28
+                    "type": "Fish Market",
+                    "name": "Wanda Fish Wholesale Market",
+                    "area": "Wanhua, Taipei",
+                    "address": "No. 531, Wanda Rd., Wanhua District, Taipei City",
+                    "lat": 25.02005,
+                    "lng": 121.49877,
+                    "species": "Greater Taipei seafood supply, wholesale fish, retail-bulk shopping",
+                    "tag": "Fish trade and supply site",
+                    "note": "A useful site for vendors, restaurants, fisheries workers, and young visitors to understand fish-market flow."
                 }
             ],
             "playbook": {
                 "eyebrow": "How it works on site",
                 "title": "Help vendors explain better and shoppers buy easier",
-                "body": "Each partner point follows a simple flow: see good fish, understand the difference, feel ready to buy, and leave feedback.",
+                "body": "Each place follows a simple flow: see good fish, understand the difference, feel ready to buy, and leave feedback.",
                 "cards": [
                     {
                         "icon": "🏷️",
                         "title": "QR Code beside seafood",
-                        "body": "Information appears at the buying moment, not after shoppers leave."
+                        "body": "Species, fishing method, origin, and cooking ideas appear at the buying moment."
                     },
                     {
                         "icon": "🟢",
                         "title": "Traffic-light cues",
-                        "body": "Simple colors show which seafood is easier to choose today."
+                        "body": "Simple colors show which seafood is easier to choose today and which should be avoided."
                     },
                     {
                         "icon": "🍳",
                         "title": "Cooking ideas",
-                        "body": "Cooking anxiety becomes a reason to buy today."
+                        "body": "Cooking anxiety becomes a reason to buy today, while stores can explain their strengths clearly."
                     },
                     {
                         "icon": "📊",
                         "title": "Store and shopper feedback",
-                        "body": "Sales, questions, revisits, and comments show what people really like."
+                        "body": "Sales, questions, revisits, and comments show what people really like and what messages work."
                     }
                 ]
             }
@@ -733,17 +743,113 @@
     }).join('');
   }
 
+  var mapInstance = null;
+  var mapMarkers = {};
+
+  function googleMapsLink(item) {
+    return 'https://www.google.com/maps/search/?api=1&query=' + encodeURIComponent(item.name + ' ' + item.address);
+  }
+
+  function visibleMapLocations(data) {
+    var active = sessionStorage.getItem('fishfull-map-filter') || data.filters[0];
+    var allToken = data.filters[0];
+    if (data.filters.indexOf(active) === -1) active = allToken;
+    return data.locations.filter(function (item) { return active === allToken || item.type === active; });
+  }
+
+  function mapPopupHtml(item) {
+    return [
+      '<div class="map-popup">',
+        '<strong>' + esc(item.name) + '</strong>',
+        '<span>' + esc(item.type) + '｜' + esc(item.area) + '</span>',
+        '<p>' + esc(item.species) + '</p>',
+        '<a href="' + esc(googleMapsLink(item)) + '" target="_blank" rel="noopener noreferrer">' + esc(lang() === 'en' ? 'Open address in Google Maps' : '用 Google Maps 開啟地址') + '</a>',
+      '</div>'
+    ].join('');
+  }
+
+  function focusMapLocation(id) {
+    var marker = mapMarkers[String(id)];
+    var cards = document.querySelectorAll('[data-location-id]');
+    Array.prototype.forEach.call(cards, function (card) {
+      card.classList.toggle('is-selected', card.getAttribute('data-location-id') === String(id));
+    });
+    if (!mapInstance || !marker) return;
+    mapInstance.setView(marker.getLatLng(), 16, { animate: true });
+    marker.openPopup();
+  }
+
+  function setupOsmMap(data) {
+    var mapEl = document.getElementById('fishfull-osm-map');
+    if (!mapEl) return;
+    if (!window.L) {
+      mapEl.innerHTML = '<div class="map-fallback">' + esc(lang() === 'en' ? 'OpenStreetMap is loading. If the map does not appear, please check the network connection.' : 'OpenStreetMap 載入中；如果地圖沒有出現，請確認網路連線。') + '</div>';
+      return;
+    }
+
+    if (mapInstance) {
+      mapInstance.remove();
+      mapInstance = null;
+      mapMarkers = {};
+    }
+
+    var visible = visibleMapLocations(data);
+    mapInstance = window.L.map(mapEl, {
+      scrollWheelZoom: false,
+      zoomControl: true,
+      attributionControl: true
+    }).setView([25.055, 121.55], 10);
+
+    window.L.tileLayer('https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png', {
+      maxZoom: 19,
+      attribution: '&copy; <a href="https://www.openstreetmap.org/copyright" target="_blank" rel="noopener noreferrer">OpenStreetMap</a> contributors'
+    }).addTo(mapInstance);
+
+    var markerList = [];
+    visible.forEach(function (item) {
+      var marker = window.L.marker([item.lat, item.lng], { title: item.name }).addTo(mapInstance);
+      marker.bindPopup(mapPopupHtml(item));
+      marker.on('click', function () { focusMapLocation(item.id); });
+      mapMarkers[String(item.id)] = marker;
+      markerList.push(marker);
+    });
+
+    if (markerList.length > 1) {
+      var group = window.L.featureGroup(markerList);
+      mapInstance.fitBounds(group.getBounds().pad(0.18));
+    } else if (markerList.length === 1) {
+      focusMapLocation(visible[0].id);
+    }
+
+    window.setTimeout(function () {
+      if (mapInstance) mapInstance.invalidateSize();
+    }, 80);
+  }
+
+  function locationCard(item) {
+    return [
+      '<article class="location-card" data-location-id="' + esc(item.id) + '" tabindex="0" role="button" aria-label="' + esc(lang() === 'en' ? 'Center map on ' + item.name : '在地圖置中：' + item.name) + '">',
+        '<div><strong>' + esc(item.name) + '</strong><span>' + esc(item.type) + '｜' + esc(item.area) + '</span></div>',
+        '<p>' + esc(item.species) + '</p>',
+        '<a class="address-link" href="' + esc(googleMapsLink(item)) + '" target="_blank" rel="noopener noreferrer">' + esc(lang() === 'en' ? 'Address: ' : '地址：') + esc(item.address) + '<b aria-hidden="true">↗</b></a>',
+        '<small>' + esc(item.tag) + '</small>',
+        '<em>' + esc(item.note) + '</em>',
+        '<button type="button" class="map-action" data-center-location="' + esc(item.id) + '">' + esc(lang() === 'en' ? 'Center on map' : '在地圖置中') + '</button>',
+      '</article>'
+    ].join('');
+  }
+
   function renderMap(data) {
     var active = sessionStorage.getItem('fishfull-map-filter') || data.filters[0];
     var allToken = data.filters[0];
     if (data.filters.indexOf(active) === -1) active = allToken;
-    var visible = data.locations.filter(function (item) { return active === allToken || item.type === active; });
+    var visible = visibleMapLocations(data);
     return [
       '<section class="content-section map-section">',
         '<div class="section-heading">',
-          '<p class="eyebrow">' + esc(lang() === 'en' ? 'Store spots' : '合作點位') + '</p>',
-          '<h2>' + esc(lang() === 'en' ? 'Partner spots and seafood stories' : '合作點位與好魚故事') + '</h2>',
-          '<p>' + esc(lang() === 'en' ? 'Filter partner spots and see what each place recommends, explains, and collects from shoppers.' : '篩選合作點位，查看每個地點推薦什麼魚、怎麼介紹、如何收集買後回饋。') + '</p>',
+          '<p class="eyebrow">' + esc(lang() === 'en' ? 'Real seafood spots' : '真實採買點位') + '</p>',
+          '<h2>' + esc(lang() === 'en' ? 'Real addresses on OpenStreetMap' : '用 OpenStreetMap 看真實地址') + '</h2>',
+          '<p>' + esc(lang() === 'en' ? 'Click a place card to center the OpenStreetMap view. Click the address to open Google Maps in a new tab.' : '點選店家卡片，OpenStreetMap 會自動移到該店位置；點地址文字，會另開 Google Maps 方便導航。') + '</p>',
         '</div>',
         '<div class="filter-row">',
           data.filters.map(function (filter) {
@@ -751,17 +857,12 @@
           }).join(''),
         '</div>',
         '<div class="map-layout">',
-          '<div class="static-map" aria-label="' + esc(data.title) + '">',
-            '<div class="map-coast"></div>',
-            '<div class="map-land"></div>',
-            visible.map(function (item) {
-              return '<button type="button" class="map-pin" style="--x:' + item.x + '%;--y:' + item.y + '%" aria-label="' + esc(item.name) + '"><span>' + esc(item.id) + '</span></button>';
-            }).join(''),
-          '</div>',
+          '<section class="osm-panel" aria-label="OpenStreetMap">',
+            '<div id="fishfull-osm-map" class="osm-map"></div>',
+            '<p class="map-note">' + esc(lang() === 'en' ? 'Map data © OpenStreetMap contributors. Addresses open in Google Maps for navigation.' : '地圖資料來自 OpenStreetMap；地址文字會另開 Google Maps，方便使用者導航。') + '</p>',
+          '</section>',
           '<div class="location-list">',
-            visible.map(function (item) {
-              return '<article class="location-card"><div><strong>' + esc(item.name) + '</strong><span>' + esc(item.type) + '｜' + esc(item.area) + '</span></div><p>' + esc(item.species) + '</p><small>' + esc(item.tag) + '</small><em>' + esc(item.note) + '</em></article>';
-            }).join(''),
+            visible.map(locationCard).join(''),
           '</div>',
         '</div>',
       '</section>',
@@ -814,13 +915,34 @@
     setMeta(data);
     var body = key === 'about' ? renderAbout(data) : key === 'map' ? renderMap(data) : renderSustainability(data);
     root.innerHTML = '<div class="page-shell page-' + esc(key) + '">' + nav(key, data) + '<main>' + hero(data) + body + '</main>' + footer() + '</div>';
+    if (key === 'map') setupOsmMap(data);
   }
 
   document.addEventListener('click', function (event) {
     var filter = event.target.closest && event.target.closest('[data-filter]');
-    if (!filter) return;
-    sessionStorage.setItem('fishfull-map-filter', filter.dataset.filter);
-    render();
+    if (filter) {
+      sessionStorage.setItem('fishfull-map-filter', filter.dataset.filter);
+      render();
+      return;
+    }
+
+    var centerButton = event.target.closest && event.target.closest('[data-center-location]');
+    if (centerButton) {
+      event.preventDefault();
+      focusMapLocation(centerButton.getAttribute('data-center-location'));
+      return;
+    }
+
+    var card = event.target.closest && event.target.closest('[data-location-id]');
+    if (!card || event.target.closest('a')) return;
+    focusMapLocation(card.getAttribute('data-location-id'));
+  });
+
+  document.addEventListener('keydown', function (event) {
+    var card = event.target.closest && event.target.closest('[data-location-id]');
+    if (!card || (event.key !== 'Enter' && event.key !== ' ')) return;
+    event.preventDefault();
+    focusMapLocation(card.getAttribute('data-location-id'));
   });
 
   document.addEventListener('scm-language-change', function () {
