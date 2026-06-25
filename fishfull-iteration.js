@@ -5,31 +5,31 @@
 
   var copy = {
     zh: {
-      eyebrow: '低碳好魚循環',
-      title: '掃碼不是終點，重點是讓好魚真的被買走',
-      body: 'FishFull 把一件事做到最短：掃 QR Code 看紅黃綠燈、選一種零失敗料理、在店家完成購買，再用 10 秒回饋讓魚販與漁業夥伴知道哪種友善漁獲更有市場。這不是只衝流量，而是把「看懂」變成「願意買」。',
+      eyebrow: '買魚小幫手',
+      title: '站在魚攤前，不用再猜哪條適合買',
+      body: 'FishFull 把選魚變簡單：掃 QR Code 看紅黃綠燈、選一種零失敗料理、在合作店家買回家，再用 10 秒留下感想。消費者更敢買，魚販更好介紹，漁業夥伴也知道哪種低碳好魚真的有人愛。',
       loop: [
-        ['消費者', '少踩雷：看懂魚種狀態、漁法、產地與料理方式，敢把友善海鮮帶回家。'],
-        ['魚販 / 餐飲店', '好介紹：用 QR 牌卡說清楚好魚故事，記錄詢問、試買與回購狀況。'],
-        ['漁業從業者', '有誘因：看見低碳漁法魚種的需求變化，讓好做法有機會被市場支持。'],
-        ['推廣者 / 年輕人', '玩中學：用地圖、AR 任務、拍照分享，把永續選魚變成可以揪朋友一起做的行動。']
+        ['買魚的人', '少踩雷：魚種狀態、漁法、產地與料理方式在現場看得懂，晚餐更安心。'],
+        ['魚販 / 餐飲店', '好開口：用 QR 牌卡把好魚故事講清楚，也知道客人最常問什麼。'],
+        ['漁業夥伴', '看得到需求：知道哪些低碳漁法與魚種被喜歡，讓好做法有機會被市場支持。'],
+        ['社區 / 校園玩家', '一起玩：用地圖、AR 小任務、照片分享，把永續選魚變成可以揪朋友做的行動。']
       ],
-      measuresTitle: '這一輪開始量「行為改變」',
-      measures: ['QR 掃描數', '食譜點擊', '友善魚種詢問量', '實際購買 / 回購', '店家觀察紀錄', '消費者 10 秒回饋'],
-      evidenceTitle: '現場證據放哪裡？',
-      evidence: ['MOU / 合作意向', '魚販與漁業訪談紀錄', '市場或餐廳現場照片', '社區與校園試用回饋', '6–11 月每月進度截圖'],
-      cta: '下一步：到合作點位放 QR Code 牌卡，先跑一條魚、一家店、一份食譜的最小實測。',
+      measuresTitle: '今天現場看什麼？',
+      measures: ['有沒有人掃 QR', '哪道食譜被打開', '哪條魚被詢問', '最後有沒有買', '客人原話', '10 秒買魚回饋'],
+      evidenceTitle: '現場可以留下什麼？',
+      evidence: ['合作店家名單', '魚販與漁業夥伴故事', '市場或餐廳照片', '社區與校園活動紀錄', '6–11 月每月小行動'],
+      cta: '下一步：先選一條主推魚、一家合作點、一份零失敗食譜，讓客人今天就能試買看看。',
       pulseTitle: '10 秒買魚回饋',
-      pulseBody: '先不用做很重的問卷。現場只問三件事，就能判斷使用者是不是從「看看而已」往「真的購買」前進。',
+      pulseBody: '一開始不用長問卷。現場只問三件事，就知道客人是看看而已，還是真的更願意把好魚帶回家。',
       pulseQuestions: [
         ['01', '今天有買這條魚嗎？', '已購買 / 考慮中 / 沒買，想先學料理'],
         ['02', '是什麼讓你敢買？', '紅黃綠燈、店家推薦、零失敗食譜、價格或產地'],
         ['03', '下次還會回來買嗎？', '會 / 可能會 / 需要更清楚的料理或價格資訊']
       ],
-      pulseNote: '店家只要每天記錄 3–5 筆，就能比較 QR 牌卡前後的詢問量、試買量與回購感覺，讓永續不只好聽，而是有生意感。',
+      pulseNote: '店家每天先記 3–5 筆就好。久了就能看出哪種說法、哪道料理、哪條魚最能讓人從猶豫變成下手買。',
       pulseButton: '我買了，留下 10 秒回饋',
       formTitle: '現場回饋小卡',
-      formBody: '給魚販、餐飲店、社區或校園試用：每筆回饋存在這台裝置，先能現場統計，之後再接雲端資料庫。',
+      formBody: '給魚販、餐飲店、社區或校園試用：先把每筆回饋存在這台裝置，收攤後就能複製給團隊整理。',
       placeLabel: '點位 / 店家',
       placePlaceholder: '例如：黃石市場 A 攤',
       fishLabel: '魚種或料理',
@@ -44,36 +44,37 @@
       saved: '已存入這台裝置，下一筆可以繼續記。',
       summaryTitle: '目前本機累積',
       summaryEmpty: '尚未記錄，先從 1 筆開始。',
+      summaryLabels: ['總筆數', '已購買', '會/可能會回來', '最新一筆'],
       exportLabel: '複製摘要給團隊',
       exportCopied: '摘要已複製，可以貼到工作紀錄。',
       exportFallback: '瀏覽器無法自動複製，請直接選取摘要。'
     },
     en: {
-      eyebrow: 'Low-carbon seafood loop',
-      title: 'A scan is not the goal. Real purchase change is.',
-      body: 'FishFull keeps the path short: scan a QR Code, read traffic-light seafood guidance, pick a zero-failure recipe, buy at the store, then leave 10-second feedback so vendors and fisheries partners know which friendly catches have real demand.',
+      eyebrow: 'Seafood buying helper',
+      title: 'At the fish stall, choose with less guesswork',
+      body: 'FishFull keeps seafood buying simple: scan a QR Code, read traffic-light guidance, pick a zero-failure recipe, buy from a partner spot, then leave 10-second feedback. Shoppers feel safer, vendors explain better, and fisheries partners see which low-carbon catches people actually want.',
       loop: [
-        ['Shoppers', 'Choose with less anxiety: species status, method, origin, and cooking ideas are clear at the buying moment.'],
-        ['Vendors / restaurants', 'Explain better with QR cards, then track questions, trial purchases, and repeat demand.'],
-        ['Fisheries workers', 'See whether low-carbon methods create demand, so better practices get market support.'],
-        ['Promoters / young users', 'Learn by doing through maps, AR missions, photos, and shareable buying actions.']
+        ['Seafood shoppers', 'Choose with less stress: species status, fishing method, origin, and cooking ideas are clear at the buying moment.'],
+        ['Vendors / restaurants', 'Start the conversation with QR cards, tell the fish story clearly, and learn what customers ask most.'],
+        ['Fisheries partners', 'See which low-carbon catches people like, so better fishing practices can get real market support.'],
+        ['Community / campus crews', 'Learn by doing through maps, AR mini-missions, photos, and shareable seafood actions.']
       ],
-      measuresTitle: 'Measure behavior, not only traffic',
-      measures: ['QR scans', 'Recipe clicks', 'Friendly-species questions', 'Purchases / repeat buys', 'Store notes', '10-second shopper feedback'],
-      evidenceTitle: 'Field proof slots',
-      evidence: ['MOU / partner intent', 'Vendor and fisheries interviews', 'Market or restaurant photos', 'Community and campus pilot feedback', 'June–November monthly progress screenshots'],
-      cta: 'Next move: place QR cards at partner points and test one fish, one store, and one recipe first.',
-      pulseTitle: '10-second purchase feedback',
-      pulseBody: 'Skip heavy surveys at the start. Ask only three questions on site to see whether users move from “just looking” to real purchase action.',
+      measuresTitle: 'What to watch on site',
+      measures: ['QR scans', 'Recipe opens', 'Fish questions', 'Actual buys', 'Customer quotes', '10-second feedback'],
+      evidenceTitle: 'What to save from the field',
+      evidence: ['Partner spots', 'Vendor and fisheries stories', 'Market or restaurant photos', 'Community and campus actions', 'June–November monthly moves'],
+      cta: 'Next move: start with one featured fish, one partner spot, and one zero-failure recipe so shoppers can try buying today.',
+      pulseTitle: '10-second seafood feedback',
+      pulseBody: 'No long survey at the start. Ask only three quick questions to see whether shoppers move from “just looking” to taking good fish home.',
       pulseQuestions: [
         ['01', 'Did you buy this fish today?', 'Bought / Thinking / Not yet, I need cooking help'],
-        ['02', 'What made you more ready to buy?', 'Traffic light, vendor tip, zero-failure recipe, price, or origin'],
+        ['02', 'What made buying easier?', 'Traffic light, vendor tip, zero-failure recipe, price, or origin'],
         ['03', 'Would you come back for it?', 'Yes / Maybe / Need clearer recipe or price info']
       ],
-      pulseNote: 'If a store records only 3–5 notes a day, FishFull can compare questions, trial purchases, and repeat-buy signals before and after QR cards. Sustainability becomes useful for business, not just nice words.',
+      pulseNote: 'A store only needs 3–5 notes a day at first. Over time, it becomes clear which fish, recipe, and selling line helps people stop hesitating and start buying.',
       pulseButton: 'I bought it — leave 10-second feedback',
       formTitle: 'On-site feedback card',
-      formBody: 'For vendors, restaurants, communities, or campus trials: each note is saved on this device first, then can later connect to a cloud database.',
+      formBody: 'For vendors, restaurants, communities, or campus trials: each note is saved on this device first, then can be copied to the team after closing.',
       placeLabel: 'Place / store',
       placePlaceholder: 'Example: Huangshi Market stall A',
       fishLabel: 'Fish or dish',
@@ -88,6 +89,7 @@
       saved: 'Saved on this device. Ready for the next note.',
       summaryTitle: 'Saved on this device',
       summaryEmpty: 'No notes yet. Start with one.',
+      summaryLabels: ['Total notes', 'Bought', 'Come back yes/maybe', 'Latest note'],
       exportLabel: 'Copy summary for team',
       exportCopied: 'Summary copied. Paste it into your work log.',
       exportFallback: 'Auto-copy is not available. Please select the summary text.'
@@ -122,11 +124,12 @@
     var maybe = items.filter(function (item) { return item.revisit === text.revisitOptions[1]; }).length;
     var yes = items.filter(function (item) { return item.revisit === text.revisitOptions[0]; }).length;
     var latest = items[items.length - 1];
+    var labels = text.summaryLabels || ['Total', 'Bought', 'Come back yes/maybe', 'Latest'];
     return [
-      'Total: ' + items.length,
-      'Bought: ' + bought,
-      'Come back yes/maybe: ' + yes + '/' + maybe,
-      'Latest: ' + (latest.place || '-') + ' / ' + (latest.fish || '-') + ' / ' + latest.bought + ' / ' + latest.reason
+      labels[0] + ': ' + items.length,
+      labels[1] + ': ' + bought,
+      labels[2] + ': ' + yes + '/' + maybe,
+      labels[3] + ': ' + (latest.place || '-') + ' / ' + (latest.fish || '-') + ' / ' + latest.bought + ' / ' + latest.reason
     ].join('\n');
   }
 
