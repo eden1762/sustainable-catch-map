@@ -19,46 +19,46 @@
                 "href": "/pages/sustainability.html"
             }
         ],
-        "eyebrow": "買魚不盲選・看漁法・會料理・玩任務",
+        "eyebrow": "掃碼選魚・看燈號・零失敗料理・10 秒回饋",
         "headline": "買對一條魚，也能讓海更有魚",
-        "intro": "FishFull 漁有料是一個掃 QR Code 就能用的買魚小幫手：用紅黃綠燈看懂魚種狀態，了解漁法、產地與當季料理；魚販與店家可以把好魚故事說清楚，消費者也能把每一次購買變成支持友善漁業的行動。",
-        "noSpin": "適合魚市場、餐廳、校園與社群活動。",
-        "visualTitle": "海風、沙灘、陽光",
-        "visualText": "讓大家一進站就知道：怎麼挑魚、去哪裡買、完成什麼永續小任務。",
+        "intro": "FishFull 漁有料是一個掃 QR Code 就能用的買魚小幫手：用紅黃綠燈看懂魚種狀態，搭配漁法、產地與零失敗料理，讓想買友善海鮮的人少一點焦慮、多一點行動。",
+        "noSpin": "最短路線：掃 QR → 看紅黃綠燈 → 選零失敗食譜 → 到合作點購買 → 留 10 秒回饋。",
+        "visualTitle": "一條好魚的低碳循環",
+        "visualText": "消費者敢買，魚販好介紹，漁業夥伴看見需求，社區與校園把行動擴散出去。",
         "visualTags": [
             "掃碼即用",
             "市場好讀",
-            "手機友善"
+            "買後可量測"
         ],
-        "actionTitle": "今天想怎麼開始？",
-        "actionHint": "三個入口對應三種需求：了解理念、找到友善店家、用互動任務學會辨識標籤。",
+        "actionTitle": "今天先完成哪一步？",
+        "actionHint": "把網站入口收斂成三個真實行動：先懂怎麼選、找到哪裡買、用小任務降低料理與標籤焦慮。",
         "actions": [
             {
                 "tone": "blue",
                 "href": "/pages/about.html",
                 "number": "01",
-                "title": "我們的理念",
-                "subtitle": "用漁業知識，幫大家買到更安心的當季好魚",
-                "badge": "先懂再買",
-                "description": "把「不知道怎麼挑、怎麼煮」說成簡單選魚方法：看魚種、看漁法、看季節，讓消費者買得安心，魚販也更容易介紹好漁獲。"
+                "title": "先懂怎麼選",
+                "subtitle": "用紅黃綠燈與漁法故事，先把魚看懂",
+                "badge": "少踩雷",
+                "description": "把「不知道怎麼挑、怎麼煮」變成簡單判斷：看魚種、看漁法、看季節，再用零失敗料理讓第一次購買更有把握。"
             },
             {
                 "tone": "orange",
                 "href": "/pages/map.html",
                 "number": "02",
-                "title": "友善海鮮地圖",
-                "subtitle": "找魚攤、餐廳與社區合作點，把好魚帶到你身邊",
-                "badge": "就近採買",
-                "description": "把合作魚攤、餐廳、社區與校園標在地圖上，搭配推薦魚種、料理建議與購買回饋，讓好選擇更容易被看見。"
+                "title": "去附近買魚",
+                "subtitle": "找魚攤、餐廳與社區合作點，把好魚帶回家",
+                "badge": "直接行動",
+                "description": "把合作魚攤、餐廳、社區與校園標在地圖上，搭配推薦魚種、料理建議與購買回饋，讓好選擇更容易被真的買走。"
             },
             {
                 "tone": "pink",
                 "href": "/pages/sustainability.html",
                 "number": "03",
-                "title": "AR 永續小任務",
+                "title": "玩任務學標籤",
                 "subtitle": "用遊戲感學會看標籤，拍照分享再完成購買回饋",
                 "badge": "玩中學",
-                "description": "把紅黃綠燈、產地故事、漁法知識做成徽章任務，讓年輕人願意停下來、懂得選，也願意分享給朋友。"
+                "description": "把紅黃綠燈、產地故事、漁法知識做成徽章任務，讓年輕人願意停下來、懂得選，也願意揪朋友一起完成低碳好魚任務。"
             }
         ],
         "stats": [
@@ -67,12 +67,12 @@
                 "label": "看懂魚種狀態"
             },
             {
-                "value": "免下載",
-                "label": "掃碼直接用"
+                "value": "1條魚",
+                "label": "先跑最小實測"
             },
             {
-                "value": "買後回饋",
-                "label": "知道大家怎麼選"
+                "value": "10秒",
+                "label": "買後留下回饋"
             }
         ]
     },
@@ -93,46 +93,46 @@
                 "href": "/pages/sustainability.html"
             }
         ],
-        "eyebrow": "Choose smarter · Know the catch · Cook with confidence · Play missions",
+        "eyebrow": "Scan · Read traffic lights · Cook with confidence · Leave feedback",
         "headline": "Choose the right fish, and help keep the ocean full",
-        "intro": "FishFull is a QR Code seafood helper for real buying moments. Shoppers can read traffic-light fish status, fishing method, origin, and easy cooking ideas; vendors and restaurants can tell better catch stories, and every purchase can support friendly fisheries.",
-        "noSpin": "Made for seafood markets, restaurants, campuses, and social events.",
-        "visualTitle": "Light--Beach--Sun",
-        "visualText": "The replaces visitors immediately know how to choose fish, where to buy, and which sustainability mission to try.",
+        "intro": "FishFull is a QR Code seafood helper for real buying moments. Shoppers read traffic-light fish status, fishing method, origin, and zero-failure cooking ideas, so sustainable seafood feels less risky and more doable.",
+        "noSpin": "Shortest path: scan QR → read traffic lights → choose an easy recipe → buy at a partner spot → leave 10-second feedback.",
+        "visualTitle": "One good-fish low-carbon loop",
+        "visualText": "Shoppers buy with confidence, vendors explain clearly, fisheries partners see demand, and communities or campuses spread the action.",
         "visualTags": [
             "Scan to use",
             "Market friendly",
-            "Mobile friendly"
+            "Purchase measurable"
         ],
-        "actionTitle": "How would you like to start?",
-        "actionHint": "Three entrances match three needs: understand the idea, find friendly stores, and learn labels through interactive missions.",
+        "actionTitle": "Which step will you take today?",
+        "actionHint": "The homepage now points to three real actions: understand the choice, find where to buy, and use missions to reduce label and cooking anxiety.",
         "actions": [
             {
                 "tone": "blue",
                 "href": "/pages/about.html",
                 "number": "01",
-                "title": "Our Idea",
-                "subtitle": "Use fisheries knowledge to help people buy better seasonal seafood",
-                "badge": "Know then buy",
-                "description": "Turn “I do not know how to choose or cook fish” into simple buying guidance: species, fishing method, and season, so shoppers feel confident and vendors can explain good catches clearly."
+                "title": "Learn how to choose",
+                "subtitle": "Read traffic lights and fishing stories before buying",
+                "badge": "Less guesswork",
+                "description": "Turn “I do not know how to choose or cook fish” into simple judgment: species, method, season, and a zero-failure recipe for the first purchase."
             },
             {
                 "tone": "orange",
                 "href": "/pages/map.html",
                 "number": "02",
-                "title": "Seafood Map",
+                "title": "Buy nearby",
                 "subtitle": "Find stalls, restaurants, and community spots that bring good catches closer",
-                "badge": "Buy nearby",
-                "description": "Partner stalls, restaurants, communities, and campuses are shown on the map with recommended species, cooking ideas, and purchase feedback."
+                "badge": "Take action",
+                "description": "Partner stalls, restaurants, communities, and campuses are shown on the map with recommended species, cooking ideas, and purchase feedback so good choices are actually bought."
             },
             {
                 "tone": "pink",
                 "href": "/pages/sustainability.html",
                 "number": "03",
-                "title": "AR Missions",
+                "title": "Play label missions",
                 "subtitle": "Learn labels with game-like tasks, photo sharing, and purchase feedback",
                 "badge": "Learn by playing",
-                "description": "Traffic lights, origin stories, and fishing-method knowledge become badge missions that help younger visitors stop, learn, choose, and share."
+                "description": "Traffic lights, origin stories, and fishing-method knowledge become badge missions that help younger visitors stop, learn, choose, and invite friends into low-carbon seafood action."
             }
         ],
         "stats": [
@@ -141,16 +141,16 @@
                 "label": "Read fish status"
             },
             {
-                "value": "No app",
-                "label": "Scan and use"
+                "value": "1 fish",
+                "label": "Start with the smallest test"
             },
             {
-                "value": "Feedback",
-                "label": "Learn what people choose"
+                "value": "10 sec",
+                "label": "Leave purchase feedback"
             }
         ]
     }
-};
+  };
 
   function lang() {
     return window.SCMLanguage ? window.SCMLanguage.current() : (localStorage.getItem('scm-language') === 'en' ? 'en' : 'zh');
