@@ -17,6 +17,10 @@
             {
                 "label": "AR 永續小任務",
                 "href": "/pages/sustainability.html"
+            },
+            {
+                "label": "現場佐證",
+                "href": "/pages/field.html"
             }
         ],
         "eyebrow": "掃碼選魚・看燈號・零失敗料理・10 秒回饋",
@@ -31,7 +35,7 @@
             "買後可量測"
         ],
         "actionTitle": "今天先完成哪一步？",
-        "actionHint": "把網站入口收斂成三個真實行動：先懂怎麼選、找到哪裡買、用小任務降低料理與標籤焦慮。",
+        "actionHint": "把網站入口收斂成四個真實行動：先懂怎麼選、找到哪裡買、用小任務降低料理與標籤焦慮，最後用現場佐證確認好魚真的被買走。",
         "actions": [
             {
                 "tone": "blue",
@@ -59,6 +63,15 @@
                 "subtitle": "用遊戲感學會看標籤，拍照分享再完成購買回饋",
                 "badge": "玩中學",
                 "description": "把紅黃綠燈、產地故事、漁法知識做成徽章任務，讓年輕人願意停下來、懂得選，也願意揪朋友一起完成低碳好魚任務。"
+            },
+            {
+                "tone": "blue",
+                "href": "/pages/field.html",
+                "number": "04",
+                "title": "看現場佐證",
+                "subtitle": "用 MOU、訪談、照片與購買回饋證明有行動",
+                "badge": "有證據",
+                "description": "把合作意向、魚販訪談、現場照片、社區校園試用與購買紀錄收在同一頁，讓團隊知道下一輪要補哪個證據，而不是只看瀏覽量。"
             }
         ],
         "stats": [
@@ -91,6 +104,10 @@
             {
                 "label": "AR Missions",
                 "href": "/pages/sustainability.html"
+            },
+            {
+                "label": "Field Proof",
+                "href": "/pages/field.html"
             }
         ],
         "eyebrow": "Scan · Read traffic lights · Cook with confidence · Leave feedback",
@@ -105,7 +122,7 @@
             "Purchase measurable"
         ],
         "actionTitle": "Which step will you take today?",
-        "actionHint": "The homepage now points to three real actions: understand the choice, find where to buy, and use missions to reduce label and cooking anxiety.",
+        "actionHint": "The homepage now points to four real actions: understand the choice, find where to buy, use missions to reduce label and cooking anxiety, and check field proof that good fish are actually bought.",
         "actions": [
             {
                 "tone": "blue",
@@ -133,6 +150,15 @@
                 "subtitle": "Learn labels with game-like tasks, photo sharing, and purchase feedback",
                 "badge": "Learn by playing",
                 "description": "Traffic lights, origin stories, and fishing-method knowledge become badge missions that help younger visitors stop, learn, choose, and invite friends into low-carbon seafood action."
+            },
+            {
+                "tone": "blue",
+                "href": "/pages/field.html",
+                "number": "04",
+                "title": "Check field proof",
+                "subtitle": "Use MOUs, interviews, photos, and purchase notes to prove action",
+                "badge": "Evidence",
+                "description": "Partner intent, vendor interviews, site photos, community and campus trials, and purchase notes are kept on one page so the team knows what evidence to collect next."
             }
         ],
         "stats": [
@@ -259,29 +285,24 @@
     ].join('');
   }
 
-  function goTo(href) {
-    if (href) window.location.href = href;
+  function bindRoutes() {
+    document.addEventListener('click', function (event) {
+      var target = event.target.closest('[data-href]');
+      if (!target) return;
+      window.location.href = target.getAttribute('data-href');
+    });
+    document.addEventListener('keydown', function (event) {
+      if (event.key !== 'Enter' && event.key !== ' ') return;
+      var target = event.target.closest('.route-card[data-href]');
+      if (!target) return;
+      event.preventDefault();
+      window.location.href = target.getAttribute('data-href');
+    });
   }
 
-  document.addEventListener('click', function (event) {
-    var input = event.target.closest && event.target.closest('input[type="button"][data-href]');
-    if (input) {
-      goTo(input.getAttribute('data-href'));
-      return;
-    }
-
-    var card = event.target.closest && event.target.closest('.route-card[data-href]');
-    if (card) goTo(card.getAttribute('data-href'));
+  document.addEventListener('DOMContentLoaded', function () {
+    render();
+    bindRoutes();
   });
-
-  document.addEventListener('keydown', function (event) {
-    if (event.key !== 'Enter' && event.key !== ' ') return;
-    var card = event.target.closest && event.target.closest('.route-card[data-href]');
-    if (!card || event.target.matches('input, button, a')) return;
-    event.preventDefault();
-    goTo(card.getAttribute('data-href'));
-  });
-
   document.addEventListener('scm-language-change', render);
-  render();
 })();
