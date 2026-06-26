@@ -1,0 +1,55 @@
+.field-quick-actions {
+  position: fixed;
+  left: 50%;
+  bottom: 14px;
+  z-index: 40;
+  display: flex;
+  gap: 10px;
+  padding: 10px;
+  border: 1px solid rgba(8, 107, 136, .16);
+  border-radius: 999px;
+  background: rgba(255, 255, 255, .9);
+  box-shadow: 0 18px 46px rgba(7, 54, 77, .18);
+  transform: translateX(-50%);
+  backdrop-filter: blur(14px);
+}
+
+.field-quick-actions a {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  min-width: 136px;
+  padding: 12px 16px;
+  border-radius: 999px;
+  background: #086b88;
+  color: #fff;
+  font-weight: 950;
+  text-decoration: none;
+}
+
+.field-quick-actions a:first-child {
+  background: #ffad32;
+  color: #07364d;
+}
+
+@media (max-width: 640px) {
+  body[data-page="field"] {
+    padding-bottom: 86px;
+  }
+
+  .field-quick-actions {
+    right: 12px;
+    bottom: 10px;
+    left: 12px;
+    justify-content: stretch;
+    border-radius: 24px;
+    transform: none;
+  }
+
+  .field-quick-actions a {
+    flex: 1 1 0;
+    min-width: 0;
+    padding: 12px 10px;
+    font-size: 14px;
+  }
+}
