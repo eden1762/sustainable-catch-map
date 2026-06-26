@@ -16,7 +16,7 @@
 }
 
 .field-quick-actions::before {
-  content: "現場照這樣走：找點 → 料理 → 回饋";
+  content: "掃 QR 後：找點 → 料理 → 回饋";
   position: absolute;
   top: 8px;
   left: 18px;
