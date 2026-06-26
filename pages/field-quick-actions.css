@@ -16,7 +16,7 @@
 }
 
 .field-quick-actions::before {
-  content: "下一步：買 → 煮 → 回饋";
+  content: "現場照這樣走：買 → 煮 → 回饋";
   position: absolute;
   top: 8px;
   left: 18px;
@@ -31,6 +31,7 @@
   align-items: center;
   justify-content: center;
   flex: 1 1 0;
+  gap: 6px;
   min-width: 0;
   min-height: 46px;
   padding: 12px 12px;
@@ -44,9 +45,26 @@
   transition: transform .18s ease, box-shadow .18s ease;
 }
 
+.field-quick-actions a::before {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  width: 1.5em;
+  height: 1.5em;
+  border-radius: 999px;
+  background: rgba(255, 255, 255, .3);
+  font-size: .86em;
+  line-height: 1;
+}
+
 .field-quick-actions a:first-child {
   background: #ffad32;
   color: #07364d;
+}
+
+.field-quick-actions a:first-child::before {
+  content: "1";
+  background: rgba(7, 54, 77, .12);
 }
 
 .field-quick-actions a:nth-child(2) {
@@ -54,14 +72,27 @@
   color: #07364d;
 }
 
+.field-quick-actions a:nth-child(2)::before {
+  content: "2";
+  background: rgba(7, 54, 77, .12);
+}
+
 .field-quick-actions a:last-child {
   box-shadow: inset 0 0 0 2px rgba(255, 255, 255, .42);
+}
+
+.field-quick-actions a:last-child::before {
+  content: "3";
 }
 
 .field-quick-actions a:hover,
 .field-quick-actions a:focus-visible {
   box-shadow: 0 10px 24px rgba(7, 54, 77, .18);
   transform: translateY(-1px);
+}
+
+.field-quick-actions a:active {
+  transform: translateY(0) scale(.98);
 }
 
 .field-quick-actions a:focus-visible {
@@ -103,6 +134,12 @@
   }
 
   .field-quick-actions a {
+    gap: 4px;
     font-size: 12px;
+  }
+
+  .field-quick-actions a::before {
+    width: 1.35em;
+    height: 1.35em;
   }
 }
