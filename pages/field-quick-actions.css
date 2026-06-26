@@ -1,29 +1,32 @@
 .field-quick-actions {
   position: fixed;
-  left: 50%;
-  bottom: max(14px, env(safe-area-inset-bottom));
+  right: max(14px, env(safe-area-inset-right));
+  top: 50%;
   z-index: 40;
   display: flex;
+  flex-direction: column;
   gap: 8px;
-  width: min(calc(100% - 28px), 560px);
-  padding: 26px 10px 10px;
+  width: 142px;
+  padding: 34px 10px 10px;
   border: 1px solid rgba(8, 107, 136, .16);
   border-radius: 28px;
   background: rgba(255, 255, 255, .92);
   box-shadow: 0 18px 46px rgba(7, 54, 77, .18);
-  transform: translateX(-50%);
+  transform: translateY(-50%);
   backdrop-filter: blur(14px);
 }
 
 .field-quick-actions::before {
-  content: "掃碼後三步：買點、做法、回饋";
+  content: "掃碼後三步";
   position: absolute;
-  top: 8px;
-  left: 18px;
+  top: 10px;
+  left: 14px;
+  right: 14px;
   color: #086b88;
   font-size: 12px;
   font-weight: 950;
   letter-spacing: .08em;
+  text-align: center;
 }
 
 .field-quick-actions a {
@@ -34,7 +37,7 @@
   flex-direction: column;
   gap: 3px;
   min-width: 0;
-  min-height: 54px;
+  min-height: 58px;
   padding: 11px 10px;
   border-radius: 22px;
   background: #086b88;
@@ -104,11 +107,11 @@
 .field-quick-actions a:hover,
 .field-quick-actions a:focus-visible {
   box-shadow: 0 10px 24px rgba(7, 54, 77, .18);
-  transform: translateY(-1px);
+  transform: translateX(-2px);
 }
 
 .field-quick-actions a:active {
-  transform: translateY(0) scale(.98);
+  transform: translateX(0) scale(.98);
 }
 
 .field-quick-actions a:focus-visible {
@@ -116,8 +119,15 @@
   outline-offset: 3px;
 }
 
+@media (min-width: 641px) {
+  body[data-page="field"] {
+    padding-right: 156px;
+  }
+}
+
 @media (max-width: 640px) {
   body[data-page="field"] {
+    padding-right: 0;
     padding-bottom: calc(144px + env(safe-area-inset-bottom));
   }
 
@@ -125,19 +135,34 @@
     right: 12px;
     bottom: max(10px, env(safe-area-inset-bottom));
     left: 12px;
+    top: auto;
     width: auto;
+    flex-direction: row;
     justify-content: stretch;
+    padding: 26px 10px 10px;
     border-radius: 24px;
     transform: none;
   }
 
   .field-quick-actions::before {
+    content: "掃碼後三步：買點、做法、回饋";
     left: 16px;
+    right: auto;
+    text-align: left;
   }
 
   .field-quick-actions a {
     min-height: 62px;
     padding: 11px 7px;
+  }
+
+  .field-quick-actions a:hover,
+  .field-quick-actions a:focus-visible {
+    transform: translateY(-1px);
+  }
+
+  .field-quick-actions a:active {
+    transform: translateY(0) scale(.98);
   }
 
   .field-quick-actions a strong {
@@ -210,6 +235,7 @@
 
 @media print {
   body[data-page="field"] {
+    padding-right: 0;
     padding-bottom: 0;
   }
 
