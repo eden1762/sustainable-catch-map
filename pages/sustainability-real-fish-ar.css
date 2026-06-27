@@ -1,24 +1,20 @@
-/* FishFull AR: keep the 3D fish visible and place the fish ID card outside the AR frame. */
+/* FishFull AR：讓 3D 魚留在相框內，認魚小卡移到相框外。 */
 .sustainability-layout .model-stage {
   position: relative;
-  display: grid;
-  gap: 14px;
   min-height: 0 !important;
   height: auto !important;
-  padding: 14px !important;
+  padding: 12px !important;
   overflow: visible !important;
   border-radius: 28px;
-  background:
-    radial-gradient(circle at 22% 16%, rgba(255,255,255,.86), transparent 25%),
-    radial-gradient(circle at 74% 72%, rgba(75,198,230,.18), transparent 26%),
-    linear-gradient(160deg, #def8ff 0%, #effcff 48%, #fff2dd 100%);
+  background: linear-gradient(160deg, #def8ff 0%, #effcff 50%, #fff2dd 100%);
 }
 
 .ar-stage {
   position: relative;
   min-height: 560px;
+  margin-bottom: 260px;
   border-radius: 26px;
-  overflow: hidden;
+  overflow: visible !important;
   isolation: isolate;
   background:
     radial-gradient(circle at 22% 16%, rgba(255,255,255,.86), transparent 25%),
@@ -26,11 +22,33 @@
     linear-gradient(160deg, #def8ff 0%, #effcff 48%, #fff2dd 100%);
 }
 
+.ar-stage::after {
+  content: '';
+  position: absolute;
+  inset: 0;
+  z-index: 1;
+  border: 1px solid rgba(13,127,179,.18);
+  border-radius: inherit;
+  box-shadow: inset 0 0 0 1px rgba(255,255,255,.7), 0 18px 45px rgba(8,39,61,.13);
+  pointer-events: none;
+}
+
+.ar-camera,
+.ar-ocean-glow,
+.ar-model,
+.ar-fallback-fish,
+.ar-model-fallback,
+.ar-toolbar,
+.ar-hint-pill,
+.ar-toast {
+  border-radius: inherit;
+}
+
 .ar-title-pill[data-ar-title] { display: inline-flex !important; }
 
 .ar-ocean-glow {
   position: absolute;
-  inset: 15% 6% 18%;
+  inset: 14% 7% 18%;
   z-index: 1;
   border-radius: 999px;
   background: radial-gradient(circle, rgba(255,255,255,.62), rgba(98,210,232,.18) 44%, transparent 70%);
@@ -38,36 +56,12 @@
   pointer-events: none;
 }
 
-.ar-ocean-glow::before,
-.ar-ocean-glow::after {
-  content: '';
-  position: absolute;
-  border-radius: 999px;
-  pointer-events: none;
-}
-
-.ar-ocean-glow::before {
-  inset: 18% 12% auto 12%;
-  height: 22%;
-  background: linear-gradient(90deg, transparent, rgba(255,255,255,.52), transparent);
-  transform: rotate(-6deg);
-}
-
-.ar-ocean-glow::after {
-  left: 18%;
-  right: 18%;
-  bottom: 10%;
-  height: 18%;
-  background: radial-gradient(ellipse, rgba(10,94,135,.16), transparent 70%);
-  filter: blur(8px);
-}
-
 .ar-model {
   position: absolute;
-  inset: 0 -3% 11%;
+  inset: 0 -4% 12%;
   z-index: 3;
-  width: 106%;
-  height: 88%;
+  width: 108%;
+  height: 86%;
   display: block;
   background: transparent;
   opacity: 1;
@@ -79,15 +73,12 @@
   --progress-bar-height: 4px;
 }
 
+.ar-stage.is-ar-on .ar-model { inset: 0 -7% 10%; width: 114%; height: 90%; }
 .ar-stage[data-fish-tone="bream"] .ar-model { filter: drop-shadow(0 28px 36px rgba(179,42,56,.25)); }
 .ar-stage[data-fish-tone="mackerel"] .ar-model { filter: drop-shadow(0 28px 36px rgba(23,100,150,.27)); }
 .ar-stage[data-fish-tone="mahi"] .ar-model { filter: drop-shadow(0 28px 36px rgba(210,148,28,.25)); }
-.ar-stage.is-ar-on .ar-model { inset: 0 -6% 10%; width: 112%; height: 90%; }
 
-@keyframes fishfullFloat {
-  0%, 100% { transform: translateY(0) scale(1); }
-  50% { transform: translateY(-12px) scale(1.015); }
-}
+@keyframes fishfullFloat { 0%,100%{transform:translateY(0) scale(1)} 50%{transform:translateY(-12px) scale(1.015)} }
 
 .ar-fallback-fish {
   --fish-color: #df4b57;
@@ -95,7 +86,7 @@
   left: 50%;
   top: 42%;
   z-index: 2;
-  width: min(66%, 500px);
+  width: min(68%, 500px);
   aspect-ratio: 2.6 / 1;
   transform: translate(-50%, -50%) rotateX(10deg) rotateY(-16deg) rotateZ(-3deg);
   transform-style: preserve-3d;
@@ -112,214 +103,100 @@
   position: absolute;
   inset: 18% 16% 18% 9%;
   border-radius: 60% 48% 48% 60% / 52% 48% 50% 48%;
-  background:
-    radial-gradient(circle at 78% 34%, rgba(255,255,255,.92) 0 4%, transparent 5%),
-    linear-gradient(115deg, rgba(255,255,255,.88) 0 8%, var(--fish-color) 28%, rgba(18,48,71,.95) 100%);
+  background: radial-gradient(circle at 78% 34%, rgba(255,255,255,.92) 0 4%, transparent 5%), linear-gradient(115deg, rgba(255,255,255,.88) 0 8%, var(--fish-color) 28%, rgba(18,48,71,.95) 100%);
   box-shadow: inset 0 13px 24px rgba(255,255,255,.32), inset -26px -16px 28px rgba(18,48,71,.22), 0 24px 48px rgba(4,35,55,.2);
   transform: translateZ(18px);
 }
-
-.fish-tail {
-  position: absolute;
-  left: 0;
-  top: 24%;
-  width: 28%;
-  height: 52%;
-  background: linear-gradient(120deg, var(--fish-color), rgba(18,48,71,.8));
-  clip-path: polygon(100% 50%, 0 0, 27% 50%, 0 100%);
-  transform: translateZ(2px) rotateY(-10deg);
-  box-shadow: inset 0 10px 16px rgba(255,255,255,.25);
-}
-
-.fish-fin {
-  position: absolute;
-  left: 38%;
-  width: 28%;
-  height: 24%;
-  background: linear-gradient(135deg, rgba(255,255,255,.62), var(--fish-color));
-  clip-path: polygon(8% 100%, 50% 0, 100% 100%);
-  opacity: .82;
-  transform: translateZ(28px);
-}
-
-.fish-fin-top { top: 3%; }
-.fish-fin-bottom { bottom: 1%; transform: translateZ(28px) rotateX(180deg); }
-
-.fish-eye {
-  position: absolute;
-  right: 21%;
-  top: 38%;
-  z-index: 2;
-  width: 7%;
-  aspect-ratio: 1;
-  border-radius: 999px;
-  background: radial-gradient(circle at 62% 45%, #123047 0 28%, #fff 31% 100%);
-  transform: translateZ(32px);
-  box-shadow: 0 0 0 4px rgba(255,255,255,.3);
-}
-
-.fish-shine {
-  position: absolute;
-  left: 27%;
-  top: 27%;
-  width: 42%;
-  height: 16%;
-  border-radius: 999px;
-  background: linear-gradient(90deg, rgba(255,255,255,.7), rgba(255,255,255,.04));
-  transform: translateZ(34px) rotate(-6deg);
-}
-
-@keyframes fishfullFallbackSwim {
-  0%, 100% { transform: translate(-50%, -50%) rotateX(10deg) rotateY(-16deg) rotateZ(-3deg) scale(1); }
-  50% { transform: translate(-50%, calc(-50% - 10px)) rotateX(10deg) rotateY(16deg) rotateZ(2deg) scale(1.03); }
-}
+.fish-tail { position:absolute; left:0; top:24%; width:28%; height:52%; background:linear-gradient(120deg,var(--fish-color),rgba(18,48,71,.8)); clip-path:polygon(100% 50%,0 0,27% 50%,0 100%); transform:translateZ(2px) rotateY(-10deg); }
+.fish-fin { position:absolute; left:38%; width:28%; height:24%; background:linear-gradient(135deg,rgba(255,255,255,.62),var(--fish-color)); clip-path:polygon(8% 100%,50% 0,100% 100%); opacity:.82; transform:translateZ(28px); }
+.fish-fin-top { top:3%; }
+.fish-fin-bottom { bottom:1%; transform:translateZ(28px) rotateX(180deg); }
+.fish-eye { position:absolute; right:21%; top:38%; z-index:2; width:7%; aspect-ratio:1; border-radius:999px; background:radial-gradient(circle at 62% 45%,#123047 0 28%,#fff 31% 100%); transform:translateZ(32px); box-shadow:0 0 0 4px rgba(255,255,255,.3); }
+.fish-shine { position:absolute; left:27%; top:27%; width:42%; height:16%; border-radius:999px; background:linear-gradient(90deg,rgba(255,255,255,.7),rgba(255,255,255,.04)); transform:translateZ(34px) rotate(-6deg); }
+@keyframes fishfullFallbackSwim { 0%,100%{transform:translate(-50%,-50%) rotateX(10deg) rotateY(-16deg) rotateZ(-3deg) scale(1)} 50%{transform:translate(-50%,calc(-50% - 10px)) rotateX(10deg) rotateY(16deg) rotateZ(2deg) scale(1.03)} }
 
 .ar-model-fallback {
   position: absolute;
   left: 50%;
   top: 68%;
-  z-index: 2;
+  z-index: 4;
   transform: translate(-50%, -50%);
   border-radius: 999px;
   padding: 10px 14px;
-  background: rgba(255,255,255,.86);
+  background: rgba(255,255,255,.88);
   color: #123047;
   font-weight: 900;
   box-shadow: 0 14px 30px rgba(8,39,61,.14);
   text-align: center;
 }
-
 .ar-stage.is-model-ready .ar-model-fallback { display: none; }
-.ar-stage.is-model-error .ar-model-fallback { display: block; z-index: 5; border: 1px solid rgba(13,127,179,.22); }
 
 .ar-species-panel {
-  position: relative !important;
-  left: auto !important;
-  right: auto !important;
+  position: absolute !important;
+  left: 0 !important;
+  right: 0 !important;
+  top: calc(100% + 14px) !important;
   bottom: auto !important;
-  top: auto !important;
-  z-index: 1;
+  z-index: 8;
   display: grid;
   gap: 6px;
-  width: min(100%, 620px);
-  margin: 0 auto;
+  width: auto;
+  max-width: none;
+  margin: 0 2px;
   padding: 14px 16px;
-  border: 1px solid rgba(255,255,255,.86);
+  border: 1px solid rgba(255,255,255,.88);
   border-radius: 20px;
-  background: rgba(255,255,255,.9);
+  background: rgba(255,255,255,.92);
   color: #123047;
   box-shadow: 0 18px 42px rgba(8,39,61,.14);
   backdrop-filter: blur(12px);
   -webkit-backdrop-filter: blur(12px);
 }
-
-.ar-species-panel strong { font-size: .88rem; letter-spacing: .08em; }
+.ar-species-panel strong { font-size:.88rem; letter-spacing:.08em; }
 .ar-species-panel span,
-.ar-species-panel em { display: block; font-size: .9rem; line-height: 1.42; }
-.ar-species-panel em { font-style: normal; font-weight: 900; color: #0d6f92; }
-.ar-species-panel span:nth-of-type(2) {
-  width: fit-content;
-  border-radius: 999px;
-  padding: 4px 9px;
-  background: rgba(255,186,73,.18);
-  color: #755018;
-  font-weight: 900;
-}
+.ar-species-panel em { display:block; font-size:.9rem; line-height:1.42; }
+.ar-species-panel em { font-style:normal; font-weight:900; color:#0d6f92; }
+.ar-species-panel span:nth-of-type(2) { width:fit-content; border-radius:999px; padding:4px 9px; background:rgba(255,186,73,.18); color:#755018; font-weight:900; }
 
-.ar-next-links { display: flex; flex-wrap: wrap; gap: 7px; margin-top: 4px; }
-.ar-next-links a {
-  flex: 1 1 86px;
-  min-width: 0;
-  border-radius: 999px;
-  padding: 8px 10px;
-  background: rgba(13,127,179,.1);
-  color: #0d6f92;
-  font-size: .82rem;
-  font-weight: 900;
-  text-align: center;
-  text-decoration: none;
-}
+.ar-next-links { display:flex; flex-wrap:wrap; gap:7px; margin-top:4px; }
+.ar-next-links a { flex:1 1 86px; min-width:0; border-radius:999px; padding:8px 10px; background:rgba(13,127,179,.1); color:#0d6f92; font-size:.82rem; font-weight:900; text-align:center; text-decoration:none; }
 .ar-next-links a:hover,
-.ar-next-links a:focus-visible { background: #0d7fb3; color: #fff; }
+.ar-next-links a:focus-visible { background:#0d7fb3; color:#fff; }
 
-.ar-real-ar-btn {
-  position: absolute;
-  right: 18px;
-  bottom: 78px;
-  background: linear-gradient(90deg, #123047, #0d7fb3);
-  color: #fff;
-  border-color: rgba(255,255,255,.92);
-}
+.ar-real-ar-btn { position:absolute; right:18px; bottom:78px; background:linear-gradient(90deg,#123047,#0d7fb3); color:#fff; border-color:rgba(255,255,255,.92); }
+.ar-fish-btn.is-bream { --fish-color:#df4b57; }
+.ar-fish-btn.is-mackerel { --fish-color:#1789c8; }
+.ar-fish-btn.is-mahi { --fish-color:#d9a42a; }
 
-.ar-fish-btn.is-bream { --fish-color: #df4b57; }
-.ar-fish-btn.is-mackerel { --fish-color: #1789c8; }
-.ar-fish-btn.is-mahi { --fish-color: #d9a42a; }
-
-.ar-photo-btn {
-  width: auto;
-  min-width: 72px;
-  padding-left: 14px;
-  padding-right: 14px;
-  font-size: 14px;
-  background: linear-gradient(90deg, #ff7a59, #ffb84d);
-  color: #fff;
-  border-color: rgba(255,255,255,.9);
-  text-shadow: 0 1px 2px rgba(0,0,0,.18);
-}
-.ar-photo-btn::before { content: '📸'; font-size: 17px; line-height: 1; }
-.ar-photo-btn.is-busy { opacity: .72; pointer-events: none; }
-.ar-photo-btn.is-busy::before { content: '…'; }
-
-.ar-save-sheet {
-  position: absolute;
-  left: 12px;
-  right: 12px;
-  bottom: 74px;
-  z-index: 7;
-  display: none;
-  gap: 8px;
-  padding: 12px;
-  border-radius: 20px;
-  background: rgba(255,255,255,.92);
-  color: #123047;
-  box-shadow: 0 16px 36px rgba(8,39,61,.24);
-}
-.ar-stage.is-save-ready .ar-save-sheet { display: grid; }
-.ar-save-sheet strong { font-size: .96rem; }
-.ar-save-sheet span { font-size: .82rem; line-height: 1.35; }
-.ar-save-actions { display: flex; gap: 8px; flex-wrap: wrap; }
-.ar-save-actions .ar-action-btn { flex: 1 1 120px; }
+.ar-photo-btn { width:auto; min-width:72px; padding-left:14px; padding-right:14px; font-size:14px; background:linear-gradient(90deg,#ff7a59,#ffb84d); color:#fff; border-color:rgba(255,255,255,.9); text-shadow:0 1px 2px rgba(0,0,0,.18); }
+.ar-photo-btn::before { content:'📸'; font-size:17px; line-height:1; }
+.ar-photo-btn.is-busy { opacity:.72; pointer-events:none; }
+.ar-photo-btn.is-busy::before { content:'…'; }
 
 @media (max-width: 768px) {
-  .sustainability-layout .model-stage { padding: 10px !important; gap: 12px; border-radius: 24px; }
-  .ar-stage { min-height: 500px; border-radius: 22px; }
-  .ar-model { inset: 5% -30% 25%; width: 160%; height: 66%; }
-  .ar-stage.is-ar-on .ar-model { inset: 4% -32% 24%; width: 164%; height: 68%; }
-  .ar-fallback-fish { top: 37%; width: 104%; }
-  .ar-model-fallback { top: 58%; max-width: calc(100% - 44px); font-size: .86rem; }
-  .ar-species-panel { padding: 12px; border-radius: 18px; gap: 5px; }
+  .sustainability-layout .model-stage { padding:10px !important; border-radius:24px; }
+  .ar-stage { min-height:500px; margin-bottom:286px; border-radius:22px; }
+  .ar-model { inset:5% -30% 25%; width:160%; height:66%; }
+  .ar-stage.is-ar-on .ar-model { inset:4% -32% 24%; width:164%; height:68%; }
+  .ar-fallback-fish { top:37%; width:104%; }
+  .ar-model-fallback { top:58%; max-width:calc(100% - 44px); font-size:.86rem; }
+  .ar-species-panel { padding:12px; border-radius:18px; gap:5px; }
   .ar-species-panel span,
-  .ar-species-panel em { font-size: .82rem; line-height: 1.35; }
-  .ar-next-links { gap: 6px; }
-  .ar-next-links a { padding: 8px 6px; font-size: .78rem; }
-  .ar-real-ar-btn { right: 12px; bottom: 74px; }
-  .ar-photo-btn { min-width: 68px; padding-left: 11px; padding-right: 11px; }
-  .ar-hint-pill { bottom: 12px; }
+  .ar-species-panel em { font-size:.82rem; line-height:1.35; }
+  .ar-next-links { gap:6px; }
+  .ar-next-links a { padding:8px 6px; font-size:.78rem; }
+  .ar-real-ar-btn { right:12px; bottom:74px; }
+  .ar-photo-btn { min-width:68px; padding-left:11px; padding-right:11px; }
+  .ar-hint-pill { bottom:12px; }
 }
 
 @media (max-width: 430px) {
-  .ar-stage { min-height: 470px; }
-  .ar-model { inset: 10% -38% 27%; width: 176%; height: 58%; }
-  .ar-stage.is-ar-on .ar-model { inset: 9% -40% 26%; width: 180%; height: 60%; }
-  .ar-fallback-fish { top: 35%; width: 116%; }
-  .ar-species-panel span:nth-of-type(3) { display: none; }
+  .ar-stage { min-height:470px; margin-bottom:300px; }
+  .ar-model { inset:10% -38% 27%; width:176%; height:58%; }
+  .ar-stage.is-ar-on .ar-model { inset:9% -40% 26%; width:180%; height:60%; }
+  .ar-fallback-fish { top:35%; width:116%; }
+  .ar-species-panel span:nth-of-type(3) { display:none; }
 }
 
-@media (max-width: 380px) {
-  .ar-next-links a { flex-basis: 72px; }
-}
-
-@media (prefers-reduced-motion: reduce) {
-  .ar-model,
-  .ar-fallback-fish { animation: none; }
-}
+@media (max-width: 380px) { .ar-next-links a { flex-basis:72px; } }
+@media (prefers-reduced-motion: reduce) { .ar-model, .ar-fallback-fish { animation:none; } }
