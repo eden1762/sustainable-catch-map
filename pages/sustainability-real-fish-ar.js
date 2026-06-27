@@ -11,6 +11,8 @@
       enLook: 'Look for: red body, clear eyes, bright gills; ask origin and catch method before you buy.',
       zhStatus: '黃燈：看來源與漁法再下手',
       enStatus: 'Yellow: check origin and catch method first',
+      zhFresh: ['眼睛清亮', '魚鰓鮮紅', '魚身有光澤'],
+      enFresh: ['Clear eyes', 'Bright red gills', 'Glossy skin'],
       zhMethod: '現場問法：今天哪裡來？適合清蒸還是乾煎？',
       enMethod: 'Ask at the counter: where is it from today, and is it better steamed or pan-fried?',
       zhCook: '料理提示：薑絲清蒸 8～10 分鐘，少調味就能吃出甜味。',
@@ -33,6 +35,8 @@
       enLook: 'Look for: blue back, silver belly, clear stripes, and springy flesh.',
       zhStatus: '綠燈：新手友善，適合日常餐桌',
       enStatus: 'Green: beginner-friendly for everyday meals',
+      zhFresh: ['魚腹銀亮', '條紋清楚', '按壓會回彈'],
+      enFresh: ['Silver belly', 'Clear stripes', 'Springy touch'],
       zhMethod: '現場問法：油脂夠嗎？今天適合鹽烤還是乾煎？',
       enMethod: 'Ask: is it fatty enough today, and should I grill or pan-fry it?',
       zhCook: '料理提示：魚身擦乾、鍋熱再下，乾煎到表皮酥就很香。',
@@ -55,6 +59,8 @@
       enLook: 'Look for: bright yellow-green body, firm cuts, clean color, and no harsh smell.',
       zhStatus: '綠燈：肉厚好料理，適合餐盒與聚餐',
       enStatus: 'Green: firm, easy, and great for bowls or shared meals',
+      zhFresh: ['色澤乾淨', '沒有刺鼻味', '切面不出水'],
+      enFresh: ['Clean color', 'No harsh smell', 'Dry, firm cut'],
       zhMethod: '現場問法：這批適合切片嗎？香煎會不會太乾？',
       enMethod: 'Ask: is this batch good for fillets, and how do I keep it from drying out?',
       zhCook: '料理提示：中火香煎，起鍋前加檸檬或胡椒，味道很 clean。',
@@ -122,11 +128,12 @@
     stage.innerHTML = [
       '<video class="ar-camera" playsinline muted></video>',
       '<div class="ar-ocean-glow" aria-hidden="true"></div>',
-      '<div class="ar-fallback-fish" aria-hidden="true" data-fallback-fish><span class="fish-body"></span><span class="fish-tail"></span><span class="fish-fin fish-fin-top"></span><span class="fish-fin fish-fin-bottom"></span><span class="fish-eye"></span><span class="fish-shine"></span></div>',
+      '<div class="ar-fallback-fish" aria-hidden="true" data-fallback-fish><span class="fish-body"></span><span class="fish-tail"></span><span class="fish-fin fish-fin-top"></span><span class="fish-fin fish-fin-bottom"></span><span class="fish-eye"></span><span class="fish-shine"></span><span class="fish-gill"></span><span class="fish-scale scale-one"></span><span class="fish-scale scale-two"></span><span class="fish-scale scale-three"></span></div>',
       '<model-viewer class="ar-model" camera-controls touch-action="pan-y" auto-rotate rotation-per-second="16deg" shadow-intensity="1.2" exposure="1.1" camera-target="0m 0m 0m" field-of-view="27deg" min-camera-orbit="auto auto 2.4m" max-camera-orbit="auto auto 5m" ar ar-modes="webxr scene-viewer quick-look" interaction-prompt="none" loading="eager" reveal="auto">',
       '  <button type="button" class="ar-action-btn ar-real-ar-btn" slot="ar-button" data-real-ar></button>',
       '</model-viewer>',
       '<div class="ar-model-fallback" data-model-fallback>3D 魚種載入中</div>',
+      '<div class="ar-fresh-strip" aria-live="polite" data-fresh-strip></div>',
       '<div class="ar-species-panel" aria-live="polite" data-species-panel></div>',
       '<div class="ar-toolbar">',
       '  <div class="ar-toolbar-left">',
@@ -270,6 +277,14 @@
         : pick(fish.zhTitle + ' 3D 魚載入中', fish.enTitle + ' 3D fish loading');
     }
 
+    var freshStrip = state.stage.querySelector('[data-fresh-strip]');
+    if (freshStrip) {
+      var checks = pick(fish.zhFresh, fish.enFresh);
+      freshStrip.innerHTML = ['<strong>' + esc(pick('新鮮度快看', 'Freshness check')) + '</strong>']
+        .concat(checks.map(function (text) { return '<span>' + esc(text) + '</span>'; }))
+        .join('');
+    }
+
     var panel = state.stage.querySelector('[data-species-panel]');
     if (panel) {
       panel.innerHTML = [
@@ -288,8 +303,8 @@
     }
 
     state.stage.querySelector('[data-ar-hint]').textContent = state.arOn
-      ? pick('現在是「' + fish.zhTitle + '」。可直接按「拍照」保存合照，再看認魚、問法與料理提示。', 'Showing "' + fish.enTitle + '". Tap Photo to save the shot, then check ID, questions, and cooking tips.')
-      : pick('選一種魚，看 3D 模型與認魚小卡；開相機後可疊在市場、餐桌或活動現場，並直接拍照。', 'Choose a fish, view the 3D model and ID card, then open the camera to place it at the market, table, or booth and take a photo.');
+      ? pick('現在是「' + fish.zhTitle + '」。可直接按「拍照」保存合照，再看新鮮度、問法與料理提示。', 'Showing "' + fish.enTitle + '". Tap Photo to save the shot, then check freshness, questions, and cooking tips.')
+      : pick('選一種魚，看 3D 模型、新鮮度快看與認魚小卡；開相機後可疊在市場、餐桌或活動現場。', 'Choose a fish, view the 3D model, freshness check, and ID card, then open the camera at the market, table, or booth.');
   }
 
   async function toggleAr() {
@@ -312,7 +327,7 @@
       state.arOn = true;
       state.stage.classList.add('is-ar-on');
       updateLanguage();
-      showToast(pick('相機已開。對準魚攤、餐桌或活動攤位，再按「拍照」即可。', 'Camera is on. Point at the stall, table, or booth, then tap Photo.'));
+      showToast(pick('相機已開。先對準魚眼、魚鰓、魚身光澤，再按「拍照」留存。', 'Camera is on. Check eyes, gills, and glossy skin first, then tap Photo.'));
     } catch (err) {
       state.arOn = false;
       state.stage.classList.remove('is-ar-on');
@@ -408,6 +423,20 @@
     ctx.ellipse(size * 0.14, -size * 0.12, size * 0.52, size * 0.09, -0.12, 0, Math.PI * 2);
     ctx.fill();
 
+    ctx.strokeStyle = 'rgba(255,255,255,.36)';
+    ctx.lineWidth = Math.max(3, size * 0.012);
+    for (var i = 0; i < 3; i += 1) {
+      ctx.beginPath();
+      ctx.arc(-size * (0.18 + i * 0.18), size * 0.02, size * 0.17, -0.95, 0.95);
+      ctx.stroke();
+    }
+
+    ctx.strokeStyle = 'rgba(230,45,55,.65)';
+    ctx.lineWidth = Math.max(4, size * 0.018);
+    ctx.beginPath();
+    ctx.arc(size * 0.42, size * 0.03, size * 0.14, -1.2, 1.2);
+    ctx.stroke();
+
     ctx.fillStyle = 'rgba(255,255,255,.78)';
     ctx.beginPath();
     ctx.arc(size * 0.62, -size * 0.08, size * 0.075, 0, Math.PI * 2);
@@ -422,7 +451,7 @@
   function drawPanel(ctx, width, height, fish) {
     var isEn = lang() === 'en';
     var margin = Math.max(24, width * 0.045);
-    var panelHeight = Math.min(height * 0.26, 220);
+    var panelHeight = Math.min(height * 0.3, 250);
     var y = height - panelHeight - margin;
     roundRect(ctx, margin, y, width - margin * 2, panelHeight, 28);
     ctx.fillStyle = 'rgba(255,255,255,.86)';
@@ -438,7 +467,9 @@
     ctx.fillStyle = '#0d6f92';
     ctx.fillText(isEn ? fish.enStatus : fish.zhStatus, margin + 26, y + 78);
     ctx.fillStyle = 'rgba(18,48,71,.78)';
-    wrapText(ctx, isEn ? fish.enMethod : fish.zhMethod, margin + 26, y + 112, width - margin * 2 - 52, Math.round(width * 0.026));
+    wrapText(ctx, (isEn ? 'Fresh: ' : '新鮮度：') + (isEn ? fish.enFresh : fish.zhFresh).join(isEn ? ' · ' : '、'), margin + 26, y + 108, width - margin * 2 - 52, Math.round(width * 0.023));
+    ctx.fillStyle = 'rgba(18,48,71,.78)';
+    wrapText(ctx, isEn ? fish.enMethod : fish.zhMethod, margin + 26, y + 146, width - margin * 2 - 52, Math.round(width * 0.026));
     ctx.fillStyle = 'rgba(18,48,71,.92)';
     ctx.font = '900 ' + Math.round(width * 0.018) + 'px system-ui, -apple-system, BlinkMacSystemFont, sans-serif';
     ctx.fillText(isEn ? 'FishFull · seafood made easy' : 'FishFull 漁有料 · 選魚買魚更簡單', margin + 26, y + panelHeight - 24);
