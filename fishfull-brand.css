@@ -1,0 +1,16 @@
+.brand-kicker,
+.brand small {
+  font-size: 0 !important;
+  letter-spacing: 0 !important;
+  line-height: 1 !important;
+}
+
+.brand-kicker::after,
+.brand small::after {
+  content: "FISHFULL MAP";
+  display: inline-block;
+  font-size: 0.72rem;
+  letter-spacing: 0.16em;
+  font-weight: 800;
+  line-height: 1.1;
+}
