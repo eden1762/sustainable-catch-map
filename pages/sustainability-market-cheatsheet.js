@@ -61,7 +61,8 @@
   }
 
   function activeKey() {
-    var tone = document.querySelector('.ar-stage') && document.querySelector('.ar-stage').dataset.fishTone;
+    var stage = document.querySelector('.ar-stage');
+    var tone = stage && stage.dataset.fishTone;
     if (tone === 'mackerel') return 'mackerel';
     if (tone === 'mahi') return 'mahiMahi';
     return 'crimsonBream';
@@ -70,12 +71,19 @@
   function renderCheatsheet() {
     var panel = document.querySelector('.ar-species-panel');
     if (!panel) return;
-    var text = COPY[lang()] || COPY.zh;
-    var questions = text.questions[activeKey()] || [];
+    var currentLang = lang();
+    var key = activeKey();
+    var signature = currentLang + ':' + key;
     var old = panel.querySelector('.ar-market-cheatsheet');
+    if (old && old.dataset.signature === signature) return;
+
+    var text = COPY[currentLang] || COPY.zh;
+    var questions = text.questions[key] || [];
     if (old) old.remove();
+
     var box = document.createElement('div');
     box.className = 'ar-market-cheatsheet';
+    box.dataset.signature = signature;
     box.innerHTML = [
       '<strong>' + esc(text.title) + '</strong>',
       '<p>' + esc(text.helper) + '</p>',
