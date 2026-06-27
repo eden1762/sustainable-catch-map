@@ -6,32 +6,39 @@
       brand: 'FishFull 漁有料',
       kicker: 'SUSTAINABLE CATCH MAP',
       nav: [
+        { label: '掃碼試用', href: '#qr-demo' },
         { label: '我們的理念', href: '/pages/about.html' },
         { label: '主推魚', href: '/pages/fish.html' },
         { label: '去附近買魚', href: '/pages/map.html' },
         { label: '零失敗食譜', href: '/pages/recipes.html' },
-        { label: '十秒回饋', href: '/pages/feedback.html' },
-        { label: '看現場紀錄', href: '/pages/field.html' }
+        { label: '十秒回饋', href: '/pages/feedback.html' }
       ],
-      eyebrow: '掃碼選魚・主推魚・合作點地圖・零失敗料理・10 秒回饋',
-      headline: '買對一條魚，也能讓海更有魚',
-      intro: 'FishFull 漁有料把友善海鮮變成今天就能做的小行動：先看一條主推魚，找到附近合作點，帶走一份零失敗食譜，買完或沒買都能用十秒留下回饋。',
-      noSpin: '最短路線：看主推魚 → 找合作點 → 選食譜 → 今天試買 → 留十秒回饋。',
-      visualTitle: '一條好魚的行動路線',
-      visualText: '消費者敢買，魚販好介紹，漁業夥伴看見需求，社區與校園把行動擴散出去。',
-      visualTags: ['主推魚', '合作點', '零失敗食譜', '十秒回饋'],
-      actionTitle: '今天先完成哪一步？',
-      actionHint: '每個入口都接到實際頁面，不再只有文字說明。看完下一步，就能直接點進去行動。',
+      eyebrow: '掃碼試用・找魚種・合作點地圖・AR 集點・食譜回饋',
+      headline: '掃一下，知道這條魚怎麼買、怎麼煮',
+      intro: 'FishFull 漁有料把買魚現場變成一條好懂路線：掃 QR Code 先看魚貨小卡，知道來源與料理建議；想買某種魚，就看主推魚與附近合作點，再接到優惠、AR 互動集點、零失敗食譜與十秒回饋。',
+      noSpin: '兩種最快玩法：掃 QR Code 試用魚貨小卡，或直接找想買的魚種與合作點。',
+      qrTitle: '現場先掃這張 QR Code',
+      qrBody: '試用範例會帶你看：魚貨履歷小卡、AR 互動集點、推薦商家、優惠提醒、料理食譜與回饋入口。魚攤、店家、活動牌卡都可以放這張。',
+      qrCta: '打開試用頁 →',
+      qrAlt: 'FishFull 漁有料試用 QR Code，連到玩標籤頁面',
+      qrHref: '/pages/sustainability.html?demo=qr',
+      qrSteps: ['掃碼看履歷', '找合作點', '玩 AR 集點', '帶食譜回家', '10 秒回饋'],
+      visualTitle: '一條好魚的現場路線',
+      visualText: '消費者敢問敢買，魚販好介紹，漁業夥伴看見需求，社區與校園把友善海鮮變成今天就能做的行動。',
+      visualTags: ['QR 試用', '魚種推薦', '合作點', 'AR 集點', '零失敗食譜'],
+      actionTitle: '你現在想怎麼開始？',
+      actionHint: '買魚現場不用讀很久。掃碼、找魚、找店、看食譜、集點與回饋，都整理成可以立刻點的入口。',
+      routeEyebrow: 'START HERE',
       actions: [
-        { tone: 'blue', href: '/pages/fish.html', number: '01', title: '主推魚', subtitle: '先把選擇縮成一條今天能試買的魚', badge: '先看這條', description: '用口感、份量、問法與料理搭配，讓第一次買友善魚的人少一點猶豫。' },
-        { tone: 'orange', href: '/pages/map.html', number: '02', title: '去附近買魚', subtitle: '找市場、魚市、餐廳與漁港合作點', badge: '直接行動', description: '把可買、可吃、可認識漁獲的地點整理在地圖上，點地址就能去。' },
-        { tone: 'pink', href: '/pages/recipes.html', number: '03', title: '零失敗食譜', subtitle: '清蒸、乾煎、煮湯，今晚就能上桌', badge: '不翻車', description: '買之前先知道怎麼煮，讓客人從「我不會」變成「我可以試」。' },
-        { tone: 'blue', href: '/pages/feedback.html', number: '04', title: '十秒回饋', subtitle: '買或沒買都能回一句現場真話', badge: '快速記錄', description: '回饋集中在獨立頁，不再每頁重複出現，店家也比較好整理。' },
-        { tone: 'orange', href: '/pages/field.html', number: '05', title: '看現場紀錄', subtitle: '看魚販怎麼講、客人怎麼問', badge: '真實現場', description: '把合作店家、活動、問答與採買反應整理成大家看得懂的紀錄。' },
-        { tone: 'pink', href: '/pages/sustainability.html', number: '06', title: '玩標籤', subtitle: '用任務感學會看漁法、產地與料理', badge: '年輕好懂', description: '把標籤變成掃碼、拍照、選魚、料理與回饋的小任務。' }
+        { tone: 'blue', href: '/pages/sustainability.html?demo=qr', number: '01', title: '掃碼試用', subtitle: '先看魚貨履歷範例與 AR 互動', badge: '最快上手', description: '適合魚攤、店家、活動現場。掃一下就知道這套服務怎麼幫客人看懂魚、找到料理與留下回饋。' },
+        { tone: 'orange', href: '/pages/fish.html', number: '02', title: '找想買的魚', subtitle: '不知道買哪條，就先看今日主推魚', badge: '選魚不尷尬', description: '用口感、份量、問法與料理搭配，讓第一次買友善魚的人少一點猶豫。' },
+        { tone: 'pink', href: '/pages/map.html', number: '03', title: '找附近合作點', subtitle: '看市場、魚市、餐廳與漁港', badge: '直接去買', description: '把可買、可吃、可認識漁獲的地點整理在地圖上，想買就能直接導航。' },
+        { tone: 'blue', href: '/pages/recipes.html', number: '04', title: '拿零失敗食譜', subtitle: '清蒸、乾煎、煮湯，今晚就能上桌', badge: '不翻車', description: '買之前先知道怎麼煮，讓客人從「我不會」變成「我可以試」。' },
+        { tone: 'orange', href: '/pages/sustainability.html', number: '05', title: '玩 AR 集點', subtitle: '用任務感看懂標籤、產地與漁法', badge: '有趣好懂', description: '把標籤變成拍照、選魚、料理與集點小任務，年輕人也比較願意互動。' },
+        { tone: 'pink', href: '/pages/feedback.html', number: '06', title: '留下十秒回饋', subtitle: '買或沒買都能回一句現場真話', badge: '快速記錄', description: '回饋集中在獨立頁，店家與活動夥伴比較好整理，也能讓下一輪推薦更準。' }
       ],
       stats: [
-        { value: '1條魚', label: '先主推一條好魚' },
+        { value: '1掃', label: '看魚貨小卡' },
         { value: '1張圖', label: '找到合作點' },
         { value: '10秒', label: '留下買魚回饋' }
       ]
@@ -40,32 +47,39 @@
       brand: 'FishFull',
       kicker: 'SUSTAINABLE CATCH MAP',
       nav: [
+        { label: 'QR Demo', href: '#qr-demo' },
         { label: 'Idea', href: '/pages/about.html' },
         { label: 'Featured Fish', href: '/pages/fish.html' },
         { label: 'Buy Nearby', href: '/pages/map.html' },
         { label: 'Easy Recipes', href: '/pages/recipes.html' },
-        { label: 'Feedback', href: '/pages/feedback.html' },
-        { label: 'Field Notes', href: '/pages/field.html' }
+        { label: 'Feedback', href: '/pages/feedback.html' }
       ],
-      eyebrow: 'Featured fish · Partner map · Easy recipe · 10-second feedback',
-      headline: 'Choose the right fish, and help keep the ocean full',
-      intro: 'FishFull turns friendly seafood into a practical buying route: start with one featured fish, find a nearby partner spot, pick an easy recipe, then leave quick feedback after buying or almost buying.',
-      noSpin: 'Shortest path: featured fish → partner spot → easy recipe → try buying today → leave feedback.',
-      visualTitle: 'One good-fish action route',
-      visualText: 'Shoppers buy with confidence, vendors explain clearly, fisheries partners see demand, and communities spread the action.',
-      visualTags: ['Featured fish', 'Partner spot', 'Easy recipe', 'Feedback'],
-      actionTitle: 'Which step will you take today?',
-      actionHint: 'Each entrance now leads to a real page, not only a sentence.',
+      eyebrow: 'QR demo · Fish finder · Partner map · AR points · Recipes · Feedback',
+      headline: 'Scan once, then know what to buy and cook',
+      intro: 'FishFull turns seafood buying into a clear route: scan a QR code for a sample catch card, check origin and cooking ideas, find a featured fish or nearby partner spot, then continue to offers, AR point missions, easy recipes, and quick feedback.',
+      noSpin: 'Fastest path: scan the demo QR code, or jump straight to the fish and partner map.',
+      qrTitle: 'Scan this demo QR code',
+      qrBody: 'The sample route shows a catch card, AR point mission, partner spots, offer prompt, easy recipe, and feedback entrance. It works for fish stalls, stores, markets, and event cards.',
+      qrCta: 'Open demo page →',
+      qrAlt: 'FishFull demo QR code linking to the label mission page',
+      qrHref: '/pages/sustainability.html?demo=qr',
+      qrSteps: ['Catch card', 'Partner spot', 'AR points', 'Recipe', 'Feedback'],
+      visualTitle: 'A good-fish field route',
+      visualText: 'Shoppers ask and buy with confidence, vendors explain clearly, fisheries partners see demand, and communities turn friendly seafood into action.',
+      visualTags: ['QR demo', 'Fish finder', 'Partner spot', 'AR points', 'Easy recipe'],
+      actionTitle: 'How do you want to start?',
+      actionHint: 'The buying flow is split into quick entrances: scan, find fish, find spots, cook, collect points, and leave feedback.',
+      routeEyebrow: 'START HERE',
       actions: [
-        { tone: 'blue', href: '/pages/fish.html', number: '01', title: 'Featured Fish', subtitle: 'Start with one fish people can try today', badge: 'Start here', description: 'Use taste, portion, vendor talk, and recipe pairing to reduce first-time buying stress.' },
-        { tone: 'orange', href: '/pages/map.html', number: '02', title: 'Buy Nearby', subtitle: 'Find markets, restaurants, ports, and fish markets', badge: 'Take action', description: 'Real seafood spots are organized on a map with address links for navigation.' },
-        { tone: 'pink', href: '/pages/recipes.html', number: '03', title: 'Easy Recipes', subtitle: 'Steam, pan-fry, or make soup tonight', badge: 'Low fail', description: 'A recipe before buying helps shoppers move from “I cannot cook fish” to “I can try.”' },
-        { tone: 'blue', href: '/pages/feedback.html', number: '04', title: '10-sec Feedback', subtitle: 'Save one real buying note', badge: 'Quick note', description: 'Feedback now lives on one page instead of repeating everywhere.' },
-        { tone: 'orange', href: '/pages/field.html', number: '05', title: 'Field Notes', subtitle: 'See how vendors talk and shoppers ask', badge: 'Real field', description: 'Partner stores, activities, questions, and buying responses are kept together.' },
-        { tone: 'pink', href: '/pages/sustainability.html', number: '06', title: 'Label Missions', subtitle: 'Learn methods, origin, and cooking through tasks', badge: 'Youth friendly', description: 'Labels become small missions that connect scanning, choosing, cooking, and feedback.' }
+        { tone: 'blue', href: '/pages/sustainability.html?demo=qr', number: '01', title: 'Scan Demo', subtitle: 'Try a sample catch card and AR interaction', badge: 'Fastest start', description: 'Useful for fish stalls, stores, markets, and events. One scan shows how FishFull helps shoppers understand a fish, cook it, and leave feedback.' },
+        { tone: 'orange', href: '/pages/fish.html', number: '02', title: 'Find a Fish', subtitle: 'Start with one featured fish for today', badge: 'Less awkward', description: 'Use taste, portion, vendor talk, and recipe pairing to reduce first-time buying stress.' },
+        { tone: 'pink', href: '/pages/map.html', number: '03', title: 'Find Partner Spots', subtitle: 'See markets, restaurants, ports, and fish markets', badge: 'Go buy', description: 'Real seafood spots are organized on a map with address links for navigation.' },
+        { tone: 'blue', href: '/pages/recipes.html', number: '04', title: 'Get Easy Recipes', subtitle: 'Steam, pan-fry, or make soup tonight', badge: 'Low fail', description: 'A recipe before buying helps shoppers move from “I cannot cook fish” to “I can try.”' },
+        { tone: 'orange', href: '/pages/sustainability.html', number: '05', title: 'Play AR Points', subtitle: 'Learn labels, origin, and methods through missions', badge: 'Fun learning', description: 'Labels become small missions that connect scanning, choosing, cooking, points, and feedback.' },
+        { tone: 'pink', href: '/pages/feedback.html', number: '06', title: 'Leave Feedback', subtitle: 'Save one real buying note in seconds', badge: 'Quick note', description: 'Feedback now lives on one page so partners can collect and review notes more easily.' }
       ],
       stats: [
-        { value: '1 fish', label: 'Start with one good catch' },
+        { value: '1 scan', label: 'Open a catch card' },
         { value: '1 map', label: 'Find partner spots' },
         { value: '10 sec', label: 'Leave feedback' }
       ]
@@ -115,9 +129,32 @@
     }).join('');
   }
 
+  function qrStepsTemplate(steps) {
+    return steps.map(function (step) {
+      return '<span>' + escapeHtml(step) + '</span>';
+    }).join('');
+  }
+
+  function qrDemoTemplate(text) {
+    return [
+      '<section class="qr-demo-card" id="qr-demo" aria-label="' + escapeHtml(text.qrTitle) + '">',
+        '<a class="qr-image-link" href="' + escapeHtml(text.qrHref) + '" aria-label="' + escapeHtml(text.qrCta) + '">',
+          '<img src="/assets/fishfull-demo-qr.svg" width="164" height="164" loading="eager" decoding="async" alt="' + escapeHtml(text.qrAlt) + '">',
+        '</a>',
+        '<div class="qr-demo-copy">',
+          '<p class="qr-label">QR DEMO</p>',
+          '<h2>' + escapeHtml(text.qrTitle) + '</h2>',
+          '<p>' + escapeHtml(text.qrBody) + '</p>',
+          '<div class="qr-step-row">' + qrStepsTemplate(text.qrSteps) + '</div>',
+          '<a class="qr-demo-link" href="' + escapeHtml(text.qrHref) + '">' + escapeHtml(text.qrCta) + '</a>',
+        '</div>',
+      '</section>'
+    ].join('');
+  }
+
   function setMeta(text, currentLang) {
     document.documentElement.lang = currentLang === 'en' ? 'en' : 'zh-Hant';
-    document.title = currentLang === 'en' ? 'FishFull | Choose seafood with confidence' : 'FishFull 漁有料｜買對一條魚，也能讓海更有魚';
+    document.title = currentLang === 'en' ? 'FishFull | Scan seafood, buy better, cook easier' : 'FishFull 漁有料｜掃碼試用、找魚買魚、料理回饋';
     var desc = document.querySelector('meta[name="description"]');
     if (desc) desc.setAttribute('content', text.intro);
   }
@@ -143,6 +180,7 @@
             '<h1 id="home-title">' + escapeHtml(text.headline) + '</h1>',
             '<p class="hero-intro">' + escapeHtml(text.intro) + '</p>',
             '<div class="no-spin-note">' + escapeHtml(text.noSpin) + '</div>',
+            qrDemoTemplate(text),
             '<div class="hero-stats" aria-label="FishFull metrics">' + statsTemplate(text.stats) + '</div>',
           '</section>',
           '<section class="coast-panel" aria-label="Static coastal design summary">',
@@ -152,7 +190,7 @@
             '<div class="coast-card"><h2>' + escapeHtml(text.visualTitle) + '</h2><p>' + escapeHtml(text.visualText) + '</p><div class="coast-tags">' + tagsTemplate(text.visualTags) + '</div></div>',
           '</section>',
           '<section class="route-panel" aria-labelledby="route-title">',
-            '<div class="route-heading"><p class="eyebrow">SELECT ROUTE</p><h2 id="route-title">' + escapeHtml(text.actionTitle) + '</h2><p>' + escapeHtml(text.actionHint) + '</p></div>',
+            '<div class="route-heading"><p class="eyebrow">' + escapeHtml(text.routeEyebrow) + '</p><h2 id="route-title">' + escapeHtml(text.actionTitle) + '</h2><p>' + escapeHtml(text.actionHint) + '</p></div>',
             '<div class="route-grid">' + actionsTemplate(text.actions) + '</div>',
           '</section>',
         '</main>',
