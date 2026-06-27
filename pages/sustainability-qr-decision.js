@@ -13,6 +13,10 @@
       enSteps: ['Green: clear eyes, bright gills, clear origin', 'Yellow: fish looks good, but origin or method is unclear', 'Red: dull gills, sticky skin, off smell'],
       zhAsk: '這尾赤鯮今天哪裡來？用什麼方式捕的？',
       enAsk: 'Where is this bream from today, and how was it caught?',
+      zhVendor: '給魚販：先說「今天赤鯮肉細，清蒸最甜」，再補來源與漁法，客人會更敢買。',
+      enVendor: 'For fishmongers: lead with “delicate, sweet when steamed,” then add origin and catch method to build trust.',
+      zhVendorCta: '複製魚販說法',
+      enVendorCta: 'Copy seller line',
       zhRecipe: '買了就走清蒸：蔥薑、少油，先吃魚甜味。',
       enRecipe: 'Bought it? Steam with scallion and ginger, then let the sweetness lead.',
       recipeHref: '/pages/recipes.html#steam'
@@ -28,6 +32,10 @@
       enSteps: ['Green: silver belly, clear stripes, clean ocean aroma', 'Yellow: good fat, but ask time off ice', 'Red: heavy smell, soft belly, dull surface'],
       zhAsk: '這批花腹鯖剛離冰多久？今天適合鹽烤嗎？',
       enAsk: 'How long has this mackerel been off ice, and is it good for grilling today?',
+      zhVendor: '給魚販：先說「這批花腹鯖油脂漂亮，擦乾鹽烤就香」，再提醒離冰時間。',
+      enVendor: 'For fishmongers: say “good fat, crisp skin when grilled,” then share time off ice clearly.',
+      zhVendorCta: '複製魚販說法',
+      enVendorCta: 'Copy seller line',
       zhRecipe: '買了就走鹽烤：擦乾、薄鹽、魚皮煎香。',
       enRecipe: 'Bought it? Pat dry, salt lightly, and crisp the skin.',
       recipeHref: '/pages/recipes.html#grill'
@@ -43,6 +51,10 @@
       enSteps: ['Green: clean cut, thick flesh, no harsh smell', 'Yellow: buyable, but dry edges mean cook soon', 'Red: watery cut, dull color, strange smell'],
       zhAsk: '這片鬼頭刀切好多久？香煎會不會太乾？',
       enAsk: 'When was this mahi-mahi cut, and how do I sear it without drying it out?',
+      zhVendor: '給魚販：先說「鬼頭刀厚切不易碎，香煎、便當都穩」，再講切片時間。',
+      enVendor: 'For fishmongers: say “firm fillet, great for searing and bowls,” then share when it was cut.',
+      zhVendorCta: '複製魚販說法',
+      enVendorCta: 'Copy seller line',
       zhRecipe: '買了就走香煎：厚片先擦乾，中火煎到邊緣轉白。',
       enRecipe: 'Bought it? Sear a dry thick cut until the edges turn pearly.',
       recipeHref: '/pages/recipes.html#sear'
@@ -68,6 +80,7 @@
     var tone = stage.dataset.fishTone || 'bream';
     var item = COPY[tone] || COPY.bream;
     var recipeLabel = lang() === 'en' ? 'Open zero-fail recipe' : '打開零失敗食譜';
+    var vendorLabel = lang() === 'en' ? 'Fish stall trust line' : '魚攤成交短句';
     var card = stage.querySelector('[data-ar-qr-decision]');
     if (!card) {
       card = document.createElement('aside');
@@ -88,11 +101,24 @@
         return '<li><b>' + (index + 1) + '</b><span>' + esc(step) + '</span></li>';
       }).join('') + '</ul>',
       '<button class="ar-qr-decision__ask" type="button">' + esc(get(item, 'Ask')) + '</button>',
+      '<div class="ar-qr-decision__vendor">',
+      '  <small>' + esc(vendorLabel) + '</small>',
+      '  <p>' + esc(get(item, 'Vendor')) + '</p>',
+      '  <button class="ar-qr-decision__vendor-copy" type="button" data-copy-text="' + esc(get(item, 'Vendor')) + '">' + esc(get(item, 'VendorCta')) + '</button>',
+      '</div>',
       '<a class="ar-qr-decision__recipe" href="' + esc(item.recipeHref) + '">',
       '  <span>' + esc(get(item, 'Recipe')) + '</span>',
       '  <b>' + esc(recipeLabel) + '</b>',
       '</a>'
     ].join('');
+  }
+
+  function copyButton(button, text) {
+    if (!button || !navigator.clipboard || !navigator.clipboard.writeText) return;
+    navigator.clipboard.writeText(text).then(function () {
+      button.classList.add('is-copied');
+      window.setTimeout(function () { button.classList.remove('is-copied'); }, 900);
+    }).catch(function () {});
   }
 
   function boot() {
@@ -111,12 +137,9 @@
         window.setTimeout(function () { render(stage); }, 320);
       }
       var ask = event.target.closest && event.target.closest('.ar-qr-decision__ask');
-      if (ask && navigator.clipboard && navigator.clipboard.writeText) {
-        navigator.clipboard.writeText(ask.textContent.trim()).then(function () {
-          ask.classList.add('is-copied');
-          window.setTimeout(function () { ask.classList.remove('is-copied'); }, 900);
-        }).catch(function () {});
-      }
+      if (ask) copyButton(ask, ask.textContent.trim());
+      var vendor = event.target.closest && event.target.closest('.ar-qr-decision__vendor-copy');
+      if (vendor) copyButton(vendor, vendor.getAttribute('data-copy-text') || vendor.textContent.trim());
     });
   }
 
