@@ -21,6 +21,30 @@
   pointer-events: none;
 }
 
+.ar-ocean-glow::before,
+.ar-ocean-glow::after {
+  content: '';
+  position: absolute;
+  border-radius: 999px;
+  pointer-events: none;
+}
+
+.ar-ocean-glow::before {
+  inset: 18% 12% auto 12%;
+  height: 22%;
+  background: linear-gradient(90deg, transparent, rgba(255,255,255,.5), transparent);
+  transform: rotate(-6deg);
+}
+
+.ar-ocean-glow::after {
+  left: 18%;
+  right: 18%;
+  bottom: 10%;
+  height: 18%;
+  background: radial-gradient(ellipse, rgba(10,94,135,.16), transparent 70%);
+  filter: blur(8px);
+}
+
 .ar-model {
   position: absolute;
   inset: 4% 3% 16%;
@@ -39,6 +63,13 @@
 .ar-stage[data-fish-tone="bream"] .ar-model { filter: drop-shadow(0 28px 36px rgba(179,42,56,.24)); }
 .ar-stage[data-fish-tone="mackerel"] .ar-model { filter: drop-shadow(0 28px 36px rgba(23,100,150,.25)); }
 .ar-stage[data-fish-tone="mahi"] .ar-model { filter: drop-shadow(0 28px 36px rgba(210,148,28,.24)); }
+
+.ar-stage.is-ar-on .ar-model {
+  inset: 2% 0 12%;
+  width: 100%;
+  height: 84%;
+  filter: drop-shadow(0 24px 32px rgba(2,22,35,.26));
+}
 
 @keyframes fishfullFloat {
   0%, 100% { transform: translateY(0) scale(1); }
@@ -106,6 +137,15 @@
   color: #0d6f92;
 }
 
+.ar-species-panel span:nth-of-type(2) {
+  width: fit-content;
+  border-radius: 999px;
+  padding: 4px 9px;
+  background: rgba(255,186,73,.18);
+  color: #755018;
+  font-weight: 900;
+}
+
 .ar-next-links {
   display: flex;
   flex-wrap: wrap;
@@ -147,9 +187,15 @@
 
 @media (max-width: 768px) {
   .ar-model {
-    inset: 10% -8% 25%;
-    width: 116%;
-    height: 58%;
+    inset: 8% -10% 24%;
+    width: 120%;
+    height: 60%;
+  }
+
+  .ar-stage.is-ar-on .ar-model {
+    inset: 6% -12% 22%;
+    width: 124%;
+    height: 64%;
   }
 
   .ar-species-panel {
@@ -189,5 +235,11 @@
 
   .ar-next-links a {
     flex-basis: 72px;
+  }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .ar-model {
+    animation: none;
   }
 }
