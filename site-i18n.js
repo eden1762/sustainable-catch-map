@@ -33,6 +33,7 @@
     document.documentElement.lang = active === 'en' ? 'en' : 'zh-Hant';
     updateButtons();
     document.dispatchEvent(new Event('fishfull-language-change'));
+    document.dispatchEvent(new Event('scm-language-change'));
   }
 
   function toggle() {
@@ -53,6 +54,7 @@
     escapeHtml: escapeHtml,
     site: 'FishFull Map'
   };
+  window.SCMLanguage = window.FishFullLanguage;
 
   if (document.readyState === 'loading') {
     document.addEventListener('DOMContentLoaded', function () { set(active); });
