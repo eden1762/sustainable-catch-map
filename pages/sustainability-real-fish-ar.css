@@ -1,15 +1,32 @@
-/* Real fish 3D layer for the sustainability page. */
-.sustainability-layout .model-stage,
-.ar-stage {
+/* FishFull AR: keep the 3D fish visible and place the fish ID card outside the AR frame. */
+.sustainability-layout .model-stage {
+  position: relative;
+  display: grid;
+  gap: 14px;
+  min-height: 0 !important;
+  height: auto !important;
+  padding: 14px !important;
+  overflow: visible !important;
+  border-radius: 28px;
   background:
     radial-gradient(circle at 22% 16%, rgba(255,255,255,.86), transparent 25%),
     radial-gradient(circle at 74% 72%, rgba(75,198,230,.18), transparent 26%),
     linear-gradient(160deg, #def8ff 0%, #effcff 48%, #fff2dd 100%);
 }
 
-.ar-title-pill[data-ar-title] {
-  display: inline-flex !important;
+.ar-stage {
+  position: relative;
+  min-height: 560px;
+  border-radius: 26px;
+  overflow: hidden;
+  isolation: isolate;
+  background:
+    radial-gradient(circle at 22% 16%, rgba(255,255,255,.86), transparent 25%),
+    radial-gradient(circle at 74% 72%, rgba(75,198,230,.18), transparent 26%),
+    linear-gradient(160deg, #def8ff 0%, #effcff 48%, #fff2dd 100%);
 }
+
+.ar-title-pill[data-ar-title] { display: inline-flex !important; }
 
 .ar-ocean-glow {
   position: absolute;
@@ -47,10 +64,10 @@
 
 .ar-model {
   position: absolute;
-  inset: 0 0 14%;
+  inset: 0 -3% 11%;
   z-index: 3;
-  width: 100%;
-  height: 82%;
+  width: 106%;
+  height: 88%;
   display: block;
   background: transparent;
   opacity: 1;
@@ -65,13 +82,7 @@
 .ar-stage[data-fish-tone="bream"] .ar-model { filter: drop-shadow(0 28px 36px rgba(179,42,56,.25)); }
 .ar-stage[data-fish-tone="mackerel"] .ar-model { filter: drop-shadow(0 28px 36px rgba(23,100,150,.27)); }
 .ar-stage[data-fish-tone="mahi"] .ar-model { filter: drop-shadow(0 28px 36px rgba(210,148,28,.25)); }
-
-.ar-stage.is-ar-on .ar-model {
-  inset: 0 -3% 13%;
-  width: 106%;
-  height: 86%;
-  filter: drop-shadow(0 24px 32px rgba(2,22,35,.28));
-}
+.ar-stage.is-ar-on .ar-model { inset: 0 -6% 10%; width: 112%; height: 90%; }
 
 @keyframes fishfullFloat {
   0%, 100% { transform: translateY(0) scale(1); }
@@ -82,9 +93,9 @@
   --fish-color: #df4b57;
   position: absolute;
   left: 50%;
-  top: 40%;
+  top: 42%;
   z-index: 2;
-  width: min(58%, 430px);
+  width: min(66%, 500px);
   aspect-ratio: 2.6 / 1;
   transform: translate(-50%, -50%) rotateX(10deg) rotateY(-16deg) rotateZ(-3deg);
   transform-style: preserve-3d;
@@ -93,16 +104,9 @@
   animation: fishfullFallbackSwim 4.6s ease-in-out infinite;
 }
 
-.ar-stage.is-model-ready .ar-fallback-fish {
-  opacity: 0;
-  visibility: hidden;
-}
-
+.ar-stage.is-model-ready .ar-fallback-fish { opacity: 0; visibility: hidden; }
 .ar-stage.is-model-error .ar-fallback-fish,
-.ar-stage:not(.is-model-ready) .ar-fallback-fish {
-  opacity: 1;
-  visibility: visible;
-}
+.ar-stage:not(.is-model-ready) .ar-fallback-fish { opacity: 1; visibility: visible; }
 
 .fish-body {
   position: absolute;
@@ -111,10 +115,7 @@
   background:
     radial-gradient(circle at 78% 34%, rgba(255,255,255,.92) 0 4%, transparent 5%),
     linear-gradient(115deg, rgba(255,255,255,.88) 0 8%, var(--fish-color) 28%, rgba(18,48,71,.95) 100%);
-  box-shadow:
-    inset 0 13px 24px rgba(255,255,255,.32),
-    inset -26px -16px 28px rgba(18,48,71,.22),
-    0 24px 48px rgba(4,35,55,.2);
+  box-shadow: inset 0 13px 24px rgba(255,255,255,.32), inset -26px -16px 28px rgba(18,48,71,.22), 0 24px 48px rgba(4,35,55,.2);
   transform: translateZ(18px);
 }
 
@@ -176,11 +177,11 @@
 .ar-model-fallback {
   position: absolute;
   left: 50%;
-  top: 62%;
+  top: 68%;
   z-index: 2;
   transform: translate(-50%, -50%);
   border-radius: 999px;
-  padding: 12px 16px;
+  padding: 10px 14px;
   background: rgba(255,255,255,.86);
   color: #123047;
   font-weight: 900;
@@ -188,53 +189,34 @@
   text-align: center;
 }
 
-.ar-stage.is-model-ready .ar-model-fallback {
-  display: none;
-}
-
-.ar-stage.is-model-error .ar-model-fallback {
-  display: block;
-  z-index: 5;
-  border: 1px solid rgba(13,127,179,.22);
-}
+.ar-stage.is-model-ready .ar-model-fallback { display: none; }
+.ar-stage.is-model-error .ar-model-fallback { display: block; z-index: 5; border: 1px solid rgba(13,127,179,.22); }
 
 .ar-species-panel {
-  position: absolute;
-  left: 16px;
-  right: 16px;
-  bottom: 86px;
-  z-index: 4;
+  position: relative !important;
+  left: auto !important;
+  right: auto !important;
+  bottom: auto !important;
+  top: auto !important;
+  z-index: 1;
   display: grid;
-  gap: 5px;
-  max-width: 540px;
-  padding: 12px 14px;
-  border: 1px solid rgba(255,255,255,.84);
-  border-radius: 18px;
-  background: rgba(255,255,255,.86);
+  gap: 6px;
+  width: min(100%, 620px);
+  margin: 0 auto;
+  padding: 14px 16px;
+  border: 1px solid rgba(255,255,255,.86);
+  border-radius: 20px;
+  background: rgba(255,255,255,.9);
   color: #123047;
-  box-shadow: 0 18px 42px rgba(8,39,61,.16);
+  box-shadow: 0 18px 42px rgba(8,39,61,.14);
   backdrop-filter: blur(12px);
   -webkit-backdrop-filter: blur(12px);
 }
 
-.ar-species-panel strong {
-  font-size: .86rem;
-  letter-spacing: .08em;
-}
-
+.ar-species-panel strong { font-size: .88rem; letter-spacing: .08em; }
 .ar-species-panel span,
-.ar-species-panel em {
-  display: block;
-  font-size: .9rem;
-  line-height: 1.42;
-}
-
-.ar-species-panel em {
-  font-style: normal;
-  font-weight: 900;
-  color: #0d6f92;
-}
-
+.ar-species-panel em { display: block; font-size: .9rem; line-height: 1.42; }
+.ar-species-panel em { font-style: normal; font-weight: 900; color: #0d6f92; }
 .ar-species-panel span:nth-of-type(2) {
   width: fit-content;
   border-radius: 999px;
@@ -244,13 +226,7 @@
   font-weight: 900;
 }
 
-.ar-next-links {
-  display: flex;
-  flex-wrap: wrap;
-  gap: 7px;
-  margin-top: 4px;
-}
-
+.ar-next-links { display: flex; flex-wrap: wrap; gap: 7px; margin-top: 4px; }
 .ar-next-links a {
   flex: 1 1 86px;
   min-width: 0;
@@ -263,12 +239,8 @@
   text-align: center;
   text-decoration: none;
 }
-
 .ar-next-links a:hover,
-.ar-next-links a:focus-visible {
-  background: #0d7fb3;
-  color: #fff;
-}
+.ar-next-links a:focus-visible { background: #0d7fb3; color: #fff; }
 
 .ar-real-ar-btn {
   position: absolute;
@@ -294,124 +266,60 @@
   border-color: rgba(255,255,255,.9);
   text-shadow: 0 1px 2px rgba(0,0,0,.18);
 }
+.ar-photo-btn::before { content: '📸'; font-size: 17px; line-height: 1; }
+.ar-photo-btn.is-busy { opacity: .72; pointer-events: none; }
+.ar-photo-btn.is-busy::before { content: '…'; }
 
-.ar-photo-btn::before {
-  content: '📸';
-  font-size: 17px;
-  line-height: 1;
+.ar-save-sheet {
+  position: absolute;
+  left: 12px;
+  right: 12px;
+  bottom: 74px;
+  z-index: 7;
+  display: none;
+  gap: 8px;
+  padding: 12px;
+  border-radius: 20px;
+  background: rgba(255,255,255,.92);
+  color: #123047;
+  box-shadow: 0 16px 36px rgba(8,39,61,.24);
 }
-
-.ar-photo-btn.is-busy {
-  opacity: .72;
-  pointer-events: none;
-}
-
-.ar-photo-btn.is-busy::before {
-  content: '…';
-}
+.ar-stage.is-save-ready .ar-save-sheet { display: grid; }
+.ar-save-sheet strong { font-size: .96rem; }
+.ar-save-sheet span { font-size: .82rem; line-height: 1.35; }
+.ar-save-actions { display: flex; gap: 8px; flex-wrap: wrap; }
+.ar-save-actions .ar-action-btn { flex: 1 1 120px; }
 
 @media (max-width: 768px) {
-  .sustainability-layout .model-stage,
-  .ar-stage {
-    min-height: 560px;
-  }
-
-  .ar-model {
-    inset: 5% -18% 25%;
-    width: 136%;
-    height: 66%;
-  }
-
-  .ar-stage.is-ar-on .ar-model {
-    inset: 4% -20% 25%;
-    width: 140%;
-    height: 68%;
-  }
-
-  .ar-fallback-fish {
-    top: 37%;
-    width: 88%;
-  }
-
-  .ar-model-fallback {
-    top: 56%;
-    max-width: calc(100% - 44px);
-    font-size: .86rem;
-  }
-
-  .ar-species-panel {
-    left: 10px;
-    right: 10px;
-    bottom: 96px;
-    gap: 4px;
-    padding: 10px 12px;
-    border-radius: 16px;
-  }
-
+  .sustainability-layout .model-stage { padding: 10px !important; gap: 12px; border-radius: 24px; }
+  .ar-stage { min-height: 500px; border-radius: 22px; }
+  .ar-model { inset: 5% -30% 25%; width: 160%; height: 66%; }
+  .ar-stage.is-ar-on .ar-model { inset: 4% -32% 24%; width: 164%; height: 68%; }
+  .ar-fallback-fish { top: 37%; width: 104%; }
+  .ar-model-fallback { top: 58%; max-width: calc(100% - 44px); font-size: .86rem; }
+  .ar-species-panel { padding: 12px; border-radius: 18px; gap: 5px; }
   .ar-species-panel span,
-  .ar-species-panel em {
-    font-size: .82rem;
-    line-height: 1.35;
-  }
-
-  .ar-next-links {
-    gap: 6px;
-  }
-
-  .ar-next-links a {
-    padding: 8px 6px;
-    font-size: .78rem;
-  }
-
-  .ar-real-ar-btn {
-    right: 12px;
-    bottom: 78px;
-  }
-
-  .ar-photo-btn {
-    min-width: 68px;
-    padding-left: 11px;
-    padding-right: 11px;
-  }
+  .ar-species-panel em { font-size: .82rem; line-height: 1.35; }
+  .ar-next-links { gap: 6px; }
+  .ar-next-links a { padding: 8px 6px; font-size: .78rem; }
+  .ar-real-ar-btn { right: 12px; bottom: 74px; }
+  .ar-photo-btn { min-width: 68px; padding-left: 11px; padding-right: 11px; }
+  .ar-hint-pill { bottom: 12px; }
 }
 
 @media (max-width: 430px) {
-  .sustainability-layout .model-stage,
-  .ar-stage {
-    min-height: 590px;
-  }
-
-  .ar-model {
-    inset: 9% -22% 28%;
-    width: 144%;
-    height: 60%;
-  }
-
-  .ar-stage.is-ar-on .ar-model {
-    inset: 8% -24% 27%;
-    width: 148%;
-    height: 62%;
-  }
-
-  .ar-fallback-fish {
-    top: 35%;
-    width: 96%;
-  }
+  .ar-stage { min-height: 470px; }
+  .ar-model { inset: 10% -38% 27%; width: 176%; height: 58%; }
+  .ar-stage.is-ar-on .ar-model { inset: 9% -40% 26%; width: 180%; height: 60%; }
+  .ar-fallback-fish { top: 35%; width: 116%; }
+  .ar-species-panel span:nth-of-type(3) { display: none; }
 }
 
 @media (max-width: 380px) {
-  .ar-species-panel span:nth-of-type(3) {
-    display: none;
-  }
-
-  .ar-next-links a {
-    flex-basis: 72px;
-  }
+  .ar-next-links a { flex-basis: 72px; }
 }
 
 @media (prefers-reduced-motion: reduce) {
   .ar-model,
-  .ar-fallback-fish {
-    animation: none;
-  }
+  .ar-fallback-fish { animation: none; }
 }
