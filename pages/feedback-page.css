@@ -13,6 +13,19 @@
   box-shadow: 0 22px 54px rgba(7, 54, 77, .12);
 }
 
+.page-feedback .feedback-form::before {
+  content: '現場模式：先存一筆，收攤再複製摘要';
+  display: block;
+  margin: 0 0 14px;
+  padding: 10px 14px;
+  border-radius: 16px;
+  background: rgba(255,255,255,.78);
+  border: 1px solid rgba(8,107,136,.14);
+  color: #0f4d5e;
+  font-size: .92rem;
+  font-weight: 900;
+}
+
 .page-feedback .feedback-form input,
 .page-feedback .feedback-form textarea {
   font-size: 1rem;
@@ -131,6 +144,22 @@
   }
 }
 
+@media (max-width: 420px) {
+  .page-feedback .feedback-form::before {
+    margin-bottom: 12px;
+    font-size: .88rem;
+    line-height: 1.45;
+  }
+
+  .page-feedback .feedback-form label {
+    line-height: 1.55;
+  }
+
+  .page-feedback .feedback-actions {
+    gap: 8px;
+  }
+}
+
 @supports not selector(:has(*)) {
   .page-feedback .feedback-choice input:checked + span {
     font-weight: 900;
@@ -140,6 +169,10 @@
 }
 
 @media print {
+  .page-feedback .feedback-form::before {
+    border: 1px solid #777;
+  }
+
   .page-feedback .feedback-actions {
     position: static;
     box-shadow: none;
