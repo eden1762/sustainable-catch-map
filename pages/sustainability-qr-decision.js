@@ -12,7 +12,10 @@
       zhSteps: ['綠：眼亮、鰓紅、來源說得清楚', '黃：魚況好，但產地或漁法還不明', '紅：鰓暗、魚身黏、味道不舒服'],
       enSteps: ['Green: clear eyes, bright gills, clear origin', 'Yellow: fish looks good, but origin or method is unclear', 'Red: dull gills, sticky skin, off smell'],
       zhAsk: '這尾赤鯮今天哪裡來？用什麼方式捕的？',
-      enAsk: 'Where is this bream from today, and how was it caught?'
+      enAsk: 'Where is this bream from today, and how was it caught?',
+      zhRecipe: '買了就走清蒸：蔥薑、少油，先吃魚甜味。',
+      enRecipe: 'Bought it? Steam with scallion and ginger, then let the sweetness lead.',
+      recipeHref: '/pages/recipes.html#steam'
     },
     mackerel: {
       zhTitle: '掃碼後 30 秒決策',
@@ -24,7 +27,10 @@
       zhSteps: ['綠：銀腹亮、條紋清、海味舒服', '黃：油脂夠，但離冰時間要再問', '紅：腥味重、魚腹軟、表面發暗'],
       enSteps: ['Green: silver belly, clear stripes, clean ocean aroma', 'Yellow: good fat, but ask time off ice', 'Red: heavy smell, soft belly, dull surface'],
       zhAsk: '這批花腹鯖剛離冰多久？今天適合鹽烤嗎？',
-      enAsk: 'How long has this mackerel been off ice, and is it good for grilling today?'
+      enAsk: 'How long has this mackerel been off ice, and is it good for grilling today?',
+      zhRecipe: '買了就走鹽烤：擦乾、薄鹽、魚皮煎香。',
+      enRecipe: 'Bought it? Pat dry, salt lightly, and crisp the skin.',
+      recipeHref: '/pages/recipes.html#grill'
     },
     mahi: {
       zhTitle: '掃碼後 30 秒決策',
@@ -36,7 +42,10 @@
       zhSteps: ['綠：切面乾淨、肉厚、沒有刺鼻味', '黃：看起來可買，但邊緣略乾要快煮', '紅：切面出水、顏色鈍、聞起來怪'],
       enSteps: ['Green: clean cut, thick flesh, no harsh smell', 'Yellow: buyable, but dry edges mean cook soon', 'Red: watery cut, dull color, strange smell'],
       zhAsk: '這片鬼頭刀切好多久？香煎會不會太乾？',
-      enAsk: 'When was this mahi-mahi cut, and how do I sear it without drying it out?'
+      enAsk: 'When was this mahi-mahi cut, and how do I sear it without drying it out?',
+      zhRecipe: '買了就走香煎：厚片先擦乾，中火煎到邊緣轉白。',
+      enRecipe: 'Bought it? Sear a dry thick cut until the edges turn pearly.',
+      recipeHref: '/pages/recipes.html#sear'
     }
   };
 
@@ -58,6 +67,7 @@
     if (!stage) return;
     var tone = stage.dataset.fishTone || 'bream';
     var item = COPY[tone] || COPY.bream;
+    var recipeLabel = lang() === 'en' ? 'Open zero-fail recipe' : '打開零失敗食譜';
     var card = stage.querySelector('[data-ar-qr-decision]');
     if (!card) {
       card = document.createElement('aside');
@@ -77,7 +87,11 @@
       '<ul class="ar-qr-decision__steps">' + get(item, 'Steps').map(function (step, index) {
         return '<li><b>' + (index + 1) + '</b><span>' + esc(step) + '</span></li>';
       }).join('') + '</ul>',
-      '<button class="ar-qr-decision__ask" type="button">' + esc(get(item, 'Ask')) + '</button>'
+      '<button class="ar-qr-decision__ask" type="button">' + esc(get(item, 'Ask')) + '</button>',
+      '<a class="ar-qr-decision__recipe" href="' + esc(item.recipeHref) + '">',
+      '  <span>' + esc(get(item, 'Recipe')) + '</span>',
+      '  <b>' + esc(recipeLabel) + '</b>',
+      '</a>'
     ].join('');
   }
 
