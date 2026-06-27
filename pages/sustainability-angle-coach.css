@@ -1,0 +1,94 @@
+/* FishFull AR：市場現場拍魚角度提示，讓新手更快拍到魚眼、魚鰓與魚身光澤。 */
+.ar-angle-coach {
+  position: absolute;
+  left: 16px;
+  right: 16px;
+  bottom: 72px;
+  z-index: 7;
+  display: grid;
+  gap: 8px;
+  max-width: 420px;
+  padding: 10px 12px;
+  border: 1px solid rgba(255,255,255,.86);
+  border-radius: 18px;
+  background: rgba(255,255,255,.78);
+  color: #123047;
+  box-shadow: 0 16px 34px rgba(8,39,61,.14);
+  backdrop-filter: blur(14px);
+  -webkit-backdrop-filter: blur(14px);
+}
+
+.ar-angle-coach strong {
+  display: flex;
+  align-items: center;
+  gap: 7px;
+  font-size: .82rem;
+  font-weight: 1000;
+  letter-spacing: .03em;
+}
+
+.ar-angle-coach strong::before {
+  content: '';
+  width: 9px;
+  height: 9px;
+  border-radius: 999px;
+  background: var(--fish-accent, #0d7fb3);
+  box-shadow: 0 0 0 6px color-mix(in srgb, var(--fish-accent, #0d7fb3) 18%, transparent);
+}
+
+.ar-angle-coach p {
+  margin: 0;
+  font-size: .82rem;
+  font-weight: 800;
+  line-height: 1.42;
+  color: rgba(18,48,71,.84);
+}
+
+.ar-angle-coach ol {
+  display: grid;
+  grid-template-columns: repeat(3, minmax(0, 1fr));
+  gap: 6px;
+  margin: 0;
+  padding: 0;
+  list-style: none;
+}
+
+.ar-angle-coach li {
+  min-width: 0;
+  border-radius: 14px;
+  padding: 7px 8px;
+  background: rgba(13,127,179,.1);
+  color: #0d6f92;
+  font-size: .76rem;
+  font-weight: 900;
+  line-height: 1.25;
+}
+
+.ar-stage.is-ar-on .ar-angle-coach {
+  background: rgba(255,255,255,.9);
+  transform: translateY(-4px);
+}
+
+@media (max-width: 768px) {
+  .ar-angle-coach {
+    left: 10px;
+    right: 10px;
+    bottom: 58px;
+    max-width: none;
+    padding: 9px;
+    border-radius: 16px;
+  }
+
+  .ar-angle-coach p { font-size: .76rem; }
+  .ar-angle-coach li { padding: 6px; font-size: .7rem; }
+}
+
+@media (max-width: 430px) {
+  .ar-angle-coach {
+    bottom: 54px;
+  }
+
+  .ar-angle-coach p {
+    display: none;
+  }
+}
