@@ -333,6 +333,21 @@
   background: var(--fish-mint);
 }
 
+.brand small {
+  font-size: 0 !important;
+  letter-spacing: 0 !important;
+  line-height: 1 !important;
+}
+.brand small::after {
+  content: "FISHFULL MAP";
+  display: inline-block;
+  color: var(--fish-sea);
+  font-size: 10px;
+  letter-spacing: .16em;
+  font-weight: 950;
+  line-height: 1.1;
+}
+
 @media (max-width: 1020px) {
   .link-grid,
   .recipe-grid,
@@ -390,5 +405,8 @@
   }
   .mission-orb {
     width: 92%;
+  }
+  .brand small::after {
+    font-size: 9px;
   }
 }
