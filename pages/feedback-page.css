@@ -13,6 +13,33 @@
   box-shadow: 0 22px 54px rgba(7, 54, 77, .12);
 }
 
+.page-feedback .feedback-form input,
+.page-feedback .feedback-form textarea {
+  font-size: 1rem;
+  background: rgba(255,255,255,.94);
+}
+
+.page-feedback .feedback-form textarea {
+  min-height: 112px;
+  line-height: 1.65;
+  resize: vertical;
+}
+
+.page-feedback .feedback-form input:focus,
+.page-feedback .feedback-form textarea:focus,
+.page-feedback .feedback-choice:focus-within {
+  outline: 3px solid rgba(255, 194, 75, .48);
+  outline-offset: 2px;
+  border-color: rgba(8,107,136,.45);
+  box-shadow: 0 0 0 6px rgba(8,107,136,.08);
+}
+
+.page-feedback .feedback-choice:has(input:checked) {
+  background: rgba(255, 247, 220, .92);
+  border-color: rgba(255, 194, 75, .72);
+  box-shadow: inset 0 0 0 1px rgba(8,107,136,.08);
+}
+
 .page-feedback .feedback-actions {
   position: sticky;
   bottom: 14px;
@@ -50,6 +77,9 @@
 
 .page-feedback .feedback-summary {
   scroll-margin-bottom: 120px;
+  white-space: pre-line;
+  line-height: 1.7;
+  font-variant-numeric: tabular-nums;
 }
 
 @media (max-width: 640px) {
@@ -73,6 +103,18 @@
     width: 100%;
     justify-content: flex-start;
     padding: 11px 12px;
+  }
+
+  .page-feedback .feedback-form textarea {
+    min-height: 132px;
+  }
+}
+
+@supports not selector(:has(*)) {
+  .page-feedback .feedback-choice input:checked + span {
+    font-weight: 900;
+    text-decoration: underline;
+    text-underline-offset: 4px;
   }
 }
 
