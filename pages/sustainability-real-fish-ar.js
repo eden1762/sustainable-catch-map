@@ -7,6 +7,8 @@
       enTitle: 'Crimson Sea Bream',
       zhBody: '紅亮魚身、肉質細緻，適合清蒸、乾煎與宴客餐桌。',
       enBody: 'A red-toned fish with delicate meat, great for steaming or pan-frying.',
+      zhLook: '認魚重點：魚身偏紅、眼睛清亮、魚鰓鮮紅，肉細但要先問來源。',
+      enLook: 'Look for: red body, clear eyes, bright gills, and ask about origin first.',
       zhStatus: '黃燈：看來源與漁法再下手',
       enStatus: 'Yellow: check origin and fishing method first',
       zhMethod: '現場問法：今天哪裡來？適合清蒸還是乾煎？',
@@ -26,6 +28,8 @@
       enTitle: 'Pacific Mackerel',
       zhBody: '藍背銀腹、油脂香，適合乾煎、鹽烤，也很適合魚販一句話介紹。',
       enBody: 'A blue-backed oily fish, easy to recommend for grilling or pan-frying.',
+      zhLook: '認魚重點：藍背銀腹、條紋清楚，摸起來有彈性，適合先推給新手。',
+      enLook: 'Look for: blue back, silver belly, clear stripes, and springy flesh.',
       zhStatus: '綠燈：新手友善，適合日常餐桌',
       enStatus: 'Green: beginner-friendly for everyday meals',
       zhMethod: '現場問法：油脂夠嗎？今天適合鹽烤還是乾煎？',
@@ -45,6 +49,8 @@
       enTitle: 'Mahi-mahi',
       zhBody: '亮黃綠色、肉厚有存在感，適合香煎、烤魚與年輕人愛的餐盒料理。',
       enBody: 'A bright yellow-green fish with firm meat, good for searing, grilling, and bowls.',
+      zhLook: '認魚重點：魚身亮黃綠、肉厚，切片時看肉色乾淨、沒有刺鼻味。',
+      enLook: 'Look for: bright yellow-green body, firm cuts, clean color, and no harsh smell.',
       zhStatus: '綠燈：肉厚好料理，適合餐盒與聚餐',
       enStatus: 'Green: firm and easy for bowls or shared meals',
       zhMethod: '現場問法：這批適合切片嗎？香煎會不會太乾？',
@@ -123,6 +129,16 @@
     state.stage = stage;
     state.video = stage.querySelector('.ar-camera');
     state.model = stage.querySelector('.ar-model');
+    state.model.addEventListener('load', function () {
+      stage.classList.add('is-model-ready');
+      stage.classList.remove('is-model-error');
+    });
+    state.model.addEventListener('error', function () {
+      stage.classList.remove('is-model-ready');
+      stage.classList.add('is-model-error');
+      var fish = item();
+      showToast(pick(fish.zhTitle + ' 3D 模型暫時載入不了，先看認魚小卡與料理提示。', fish.enTitle + ' 3D model is not loading. Use the fish ID card and cooking tip first.'));
+    });
 
     var options = stage.querySelector('[data-fish-options]');
     KEYS.forEach(function (key) {
@@ -178,6 +194,7 @@
     });
 
     state.stage.dataset.fishTone = fish.tone;
+    state.stage.classList.remove('is-model-ready', 'is-model-error');
     state.stage.querySelectorAll('[data-fish]').forEach(function (btn) {
       var selected = btn.dataset.fish === key;
       btn.classList.toggle('is-selected', selected);
@@ -214,14 +231,27 @@
       btn.setAttribute('title', pick('選擇' + fishOption.zhTitle, 'Select ' + fishOption.enTitle));
     });
 
+    var fallback = state.stage.querySelector('[data-model-fallback]');
+    if (fallback) {
+      fallback.textContent = state.stage.classList.contains('is-model-error')
+        ? pick('模型暫時沒載入，先用小卡認魚', 'Model not loaded; use the ID card first')
+        : pick(fish.zhTitle + ' 3D 魚種載入中', fish.enTitle + ' 3D fish loading');
+    }
+
     var panel = state.stage.querySelector('[data-species-panel]');
     if (panel) {
       panel.innerHTML = [
         '<strong>' + esc(pick('認魚小卡', 'Fish ID card')) + '</strong>',
+        '<span>' + esc(pick(fish.zhLook, fish.enLook)) + '</span>',
         '<span>' + esc(pick(fish.zhStatus, fish.enStatus)) + '</span>',
         '<span>' + esc(pick(fish.zhMethod, fish.enMethod)) + '</span>',
         '<span>' + esc(pick(fish.zhCook, fish.enCook)) + '</span>',
-        '<em>' + esc(pick(fish.zhNext, fish.enNext)) + '</em>'
+        '<em>' + esc(pick(fish.zhNext, fish.enNext)) + '</em>',
+        '<div class="ar-next-links">',
+        '  <a href="map.html">' + esc(pick('找買點', 'Find spot')) + '</a>',
+        '  <a href="recipes.html">' + esc(pick('看做法', 'Cook it')) + '</a>',
+        '  <a href="feedback.html">' + esc(pick('填回饋', 'Feedback')) + '</a>',
+        '</div>'
       ].join('');
     }
 
