@@ -5,21 +5,23 @@
     zh: {
       eyebrow: '掃碼即玩',
       title: '魚攤前 10 秒開局，不用研究就能開始',
-      body: '掃到 FishFull QR 後，先看完整魚身，再照著三個現場按鈕走：看魚、問一句、接食譜。魚販可以更好介紹，消費者也比較敢買。',
+      body: '掃到 FishFull QR 後，先看完整魚身，再照著四個現場按鈕走：看魚、問一句、接食譜、留回饋。魚販可以更好介紹，消費者也比較敢買。',
       actions: [
         { label: '看完整 3D 魚', href: '/ar.html#fishfull-ar-stage', hint: '先確認魚身、眼睛、魚鰓與魚紋' },
         { label: '帶一句去問', href: '/ar.html#fishfull-mission', hint: '直接用綠黃紅任務卡開口' },
-        { label: '買了接食譜', href: '/pages/recipes.html', hint: '清蒸、乾煎、煮湯都能快速上手' }
+        { label: '買了接食譜', href: '/pages/recipes.html', hint: '清蒸、乾煎、煮湯都能快速上手' },
+        { label: '吃完十秒回饋', href: '/pages/feedback.html', hint: '幫好魚攤與友善通路被更多人看見' }
       ]
     },
     en: {
       eyebrow: 'Scan and play',
       title: 'Start at the fish stall in 10 seconds',
-      body: 'After scanning a FishFull QR code, shoppers see the full fish first, then follow three on-site taps: view, ask, and cook. Fishmongers explain faster; buyers feel less lost.',
+      body: 'After scanning a FishFull QR code, shoppers see the full fish first, then follow four on-site taps: view, ask, cook, and leave feedback. Fishmongers explain faster; buyers feel less lost.',
       actions: [
         { label: 'View the full 3D fish', href: '/ar.html#fishfull-ar-stage', hint: 'Check body, eyes, gills, and skin pattern' },
         { label: 'Ask one clear question', href: '/ar.html#fishfull-mission', hint: 'Use the green, yellow, and red mission cards' },
-        { label: 'Open easy recipes', href: '/pages/recipes.html', hint: 'Steam, pan-fry, or soup without overthinking' }
+        { label: 'Open easy recipes', href: '/pages/recipes.html', hint: 'Steam, pan-fry, or soup without overthinking' },
+        { label: 'Leave 10-sec feedback', href: '/pages/feedback.html', hint: 'Help good stalls and friendly channels get discovered' }
       ]
     }
   };
