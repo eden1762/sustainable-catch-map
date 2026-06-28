@@ -220,6 +220,121 @@
   z-index: 12 !important;
 }
 
+.page-ar-game .ar-market-mission {
+  position: relative;
+  overflow: hidden;
+  background:
+    radial-gradient(circle at 8% 12%, rgba(31,183,216,.16), transparent 26%),
+    radial-gradient(circle at 92% 0%, rgba(255,173,50,.18), transparent 24%),
+    rgba(255,255,255,.8);
+}
+
+.page-ar-game .ar-market-mission::after {
+  content: '';
+  position: absolute;
+  right: -70px;
+  bottom: -90px;
+  width: 220px;
+  height: 220px;
+  border-radius: 999px;
+  background: radial-gradient(circle, rgba(8,93,117,.12), transparent 68%);
+  pointer-events: none;
+}
+
+.page-ar-game .ar-mission-grid {
+  position: relative;
+  z-index: 1;
+  display: grid;
+  grid-template-columns: repeat(3, minmax(0, 1fr));
+  gap: 14px;
+  margin-top: 20px;
+}
+
+.page-ar-game .ar-mission-card {
+  display: flex;
+  flex-direction: column;
+  gap: 12px;
+  min-width: 0;
+  border: 1px solid rgba(8,93,117,.12);
+  border-radius: 24px;
+  padding: 18px;
+  background: rgba(255,255,255,.84);
+  box-shadow: 0 20px 48px rgba(7,54,77,.1);
+}
+
+.page-ar-game .ar-mission-card h3 {
+  margin: 0;
+  color: var(--ocean-deep);
+  font-size: clamp(18px, 2vw, 24px);
+}
+
+.page-ar-game .ar-mission-card p {
+  margin: 0;
+  color: var(--muted);
+  line-height: 1.72;
+}
+
+.page-ar-game .mission-tag {
+  align-self: flex-start;
+  border-radius: 999px;
+  padding: 7px 11px;
+  color: #fff;
+  font-size: 12px;
+  font-weight: 950;
+  letter-spacing: .08em;
+}
+
+.page-ar-game .mission-green .mission-tag {
+  background: #15845a;
+}
+
+.page-ar-game .mission-yellow .mission-tag {
+  background: #b57400;
+}
+
+.page-ar-game .mission-red .mission-tag {
+  background: #b64545;
+}
+
+.page-ar-game .mission-ask {
+  display: grid;
+  grid-template-columns: 34px minmax(0, 1fr);
+  align-items: center;
+  gap: 10px;
+  border-radius: 18px;
+  padding: 12px;
+  background: rgba(232,247,251,.76);
+}
+
+.page-ar-game .mission-ask span {
+  display: inline-grid;
+  place-items: center;
+  width: 34px;
+  height: 34px;
+  border-radius: 50%;
+  background: var(--ocean-deep);
+  color: #fff;
+  font-weight: 950;
+}
+
+.page-ar-game .mission-ask strong {
+  color: var(--ocean-deep);
+  line-height: 1.45;
+}
+
+.page-ar-game .ar-mission-card a {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  min-height: 44px;
+  margin-top: auto;
+  border-radius: 999px;
+  background: linear-gradient(90deg, var(--ocean-deep), var(--ocean));
+  color: #fff;
+  font-weight: 950;
+  text-align: center;
+}
+
 .page-ar-game .ar-quick-guide .info-grid {
   grid-template-columns: repeat(4, minmax(0, 1fr));
 }
@@ -233,6 +348,7 @@
     order: -1;
   }
 
+  .page-ar-game .ar-mission-grid,
   .page-ar-game .ar-quick-guide .info-grid {
     grid-template-columns: repeat(2, minmax(0, 1fr));
   }
@@ -329,8 +445,28 @@
     margin-top: 6px;
   }
 
+  .page-ar-game .ar-mission-grid,
   .page-ar-game .ar-quick-guide .info-grid {
     grid-template-columns: 1fr;
+  }
+
+  .page-ar-game .ar-market-mission {
+    padding: 20px !important;
+    border-radius: 28px;
+  }
+
+  .page-ar-game .ar-mission-card {
+    padding: 16px;
+    border-radius: 22px;
+  }
+
+  .page-ar-game .mission-ask {
+    grid-template-columns: 30px minmax(0, 1fr);
+  }
+
+  .page-ar-game .mission-ask span {
+    width: 30px;
+    height: 30px;
   }
 }
 
