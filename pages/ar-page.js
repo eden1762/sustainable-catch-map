@@ -49,6 +49,14 @@
         { tone: 'yellow', tag: '黃燈', title: '先多問一句再決定', body: '看起來不錯但不確定來源、大小或保存時間時，請魚販補一句重點。', ask: '這條是今天進的嗎？兩個人吃會不會太多？', href: '/pages/fish.html', action: '看主推魚資訊' },
         { tone: 'red', tag: '紅燈', title: '不懂就先別硬買', body: '魚身乾、氣味重、說不清來源，先換一條或改買更熟悉的魚。', ask: '有沒有更適合今天煮湯或香煎的選擇？', href: '/pages/map.html', action: '找友善通路' }
       ],
+      handoffEyebrow: '魚販接球',
+      handoffTitle: '把手機拿給魚販看，30 秒完成介紹',
+      handoffBody: '消費者不用尷尬背知識；魚販也不用從零開始說明。AR 看完魚後，照著三句話就能把來源、料理、份量講清楚，讓好魚更容易成交。',
+      handoffCards: [
+        { icon: '🌊', title: '來源一句話', body: '今天這批從哪裡來？適合想支持在地漁業的人嗎？' },
+        { icon: '🧊', title: '鮮度一句話', body: '魚眼、魚鰓、魚身哪裡最該看？請魚販直接指給你看。' },
+        { icon: '🍽️', title: '份量一句話', body: '一人、兩人、家庭晚餐各買多大？避免買太多也避免不夠吃。' }
+      ],
       guideEyebrow: '現場怎麼用',
       guideTitle: '看完魚，下一步就能問、買、煮、回饋',
       guideBody: '給漁產消費者、魚販、漁業夥伴和年輕人使用：每個按鈕都接到真實行動，不用滑很久。',
@@ -107,6 +115,14 @@
         { tone: 'green', tag: 'Green', title: 'Good to ask the next step', body: 'Clear eyes, red gills, and glossy skin? Ask about origin and the best cooking style today.', ask: 'Is this better steamed or pan-fried today?', href: '/pages/recipes.html', action: 'Open easy recipes' },
         { tone: 'yellow', tag: 'Yellow', title: 'Ask one more question first', body: 'Looks okay but origin, size, or holding time feels unclear? Ask the fishmonger for one practical detail.', ask: 'Did this arrive today, and is it enough for two?', href: '/pages/fish.html', action: 'View featured fish' },
         { tone: 'red', tag: 'Red', title: 'Do not force the buy', body: 'Dry body, strong smell, or unclear origin? Switch fish or choose something more familiar.', ask: 'Do you have a better fish for soup or pan-searing?', href: '/pages/map.html', action: 'Find friendly channels' }
+      ],
+      handoffEyebrow: 'Fishmonger handoff',
+      handoffTitle: 'Show the phone and get a 30-second explanation',
+      handoffBody: 'Shoppers do not need to memorize seafood facts, and fishmongers do not need to start from zero. After the AR fish view, these three prompts make origin, freshness, and serving size easier to explain.',
+      handoffCards: [
+        { icon: '🌊', title: 'Origin in one line', body: 'Where did this batch come from, and is it a good pick for local-seafood supporters?' },
+        { icon: '🧊', title: 'Freshness in one line', body: 'Which eye, gill, or skin detail should I look at? Ask the fishmonger to point it out.' },
+        { icon: '🍽️', title: 'Serving size in one line', body: 'What size works for one person, two people, or a family dinner without overbuying?' }
       ],
       guideEyebrow: 'How to use it on-site',
       guideTitle: 'After viewing the fish, ask, buy, cook, and leave feedback',
@@ -257,6 +273,23 @@
     ].join('');
   }
 
+  function handoff(text) {
+    return [
+      '<section class="content-section ar-vendor-handoff">',
+        '<div class="section-heading">',
+          '<p class="eyebrow">' + esc(text.handoffEyebrow) + '</p>',
+          '<h2>' + esc(text.handoffTitle) + '</h2>',
+          '<p>' + esc(text.handoffBody) + '</p>',
+        '</div>',
+        '<div class="ar-handoff-grid">',
+          list(text.handoffCards, function (card) {
+            return '<article class="ar-handoff-card"><span aria-hidden="true">' + esc(card.icon) + '</span><h3>' + esc(card.title) + '</h3><p>' + esc(card.body) + '</p></article>';
+          }),
+        '</div>',
+      '</section>'
+    ].join('');
+  }
+
   function guide(text) {
     return [
       '<section class="content-section ar-quick-guide">',
@@ -288,6 +321,7 @@
           arSection(text),
           playLoop(text),
           mission(text),
+          handoff(text),
           guide(text),
         '</main>',
         '<footer class="site-footer"><strong>FishFull 漁有料</strong><span>' + esc(text.footer) + '</span></footer>',
