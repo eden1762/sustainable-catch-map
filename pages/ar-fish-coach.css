@@ -89,7 +89,8 @@
 }
 
 .page-ar-game .ar-coach-main p,
-.page-ar-game .ar-coach-detail p {
+.page-ar-game .ar-coach-detail p,
+.page-ar-game .ar-coach-mission p {
   margin: 0;
   color: var(--muted);
   line-height: 1.65;
@@ -114,6 +115,74 @@
   border-radius: 14px;
   color: var(--ocean-deep);
   background: rgba(255,255,255,.9);
+}
+
+.page-ar-game .ar-coach-mission {
+  display: grid;
+  gap: 12px;
+  padding: 14px;
+  border: 1px solid rgba(8,93,117,.12);
+  border-radius: 22px;
+  background: linear-gradient(135deg, rgba(255,255,255,.94), rgba(255,247,226,.78));
+}
+
+.page-ar-game .ar-coach-mission strong {
+  display: block;
+  margin-bottom: 2px;
+  color: var(--ocean-deep);
+  font-size: 17px;
+}
+
+.page-ar-game .ar-coach-mission-steps {
+  display: grid;
+  grid-template-columns: repeat(3, minmax(0, 1fr));
+  gap: 8px;
+  min-width: 0;
+}
+
+.page-ar-game .ar-coach-mission-steps button {
+  display: grid;
+  grid-template-columns: auto minmax(0, 1fr);
+  gap: 7px;
+  align-items: center;
+  min-width: 0;
+  padding: 10px;
+  border: 1px solid rgba(8,93,117,.14);
+  border-radius: 16px;
+  color: var(--ink);
+  font: inherit;
+  font-size: 14px;
+  font-weight: 850;
+  text-align: left;
+  background: rgba(255,255,255,.88);
+  cursor: pointer;
+  overflow-wrap: anywhere;
+}
+
+.page-ar-game .ar-coach-mission-steps span {
+  display: inline-grid;
+  place-items: center;
+  width: 24px;
+  height: 24px;
+  border-radius: 999px;
+  color: #fff;
+  font-size: 12px;
+  font-weight: 950;
+  background: var(--ocean-deep);
+}
+
+.page-ar-game .ar-coach-mission-steps button[aria-pressed="true"] {
+  color: var(--ocean-deep);
+  border-color: rgba(13,143,102,.34);
+  background: rgba(232,248,244,.92);
+}
+
+.page-ar-game .ar-coach-mission-steps button[aria-pressed="true"] span {
+  background: #0d8f66;
+}
+
+.page-ar-game .ar-coach-progress {
+  font-weight: 850;
 }
 
 .page-ar-game .ar-coach-result > a {
@@ -150,6 +219,17 @@
   }
 }
 
+@media (max-width: 560px) {
+  .page-ar-game .ar-coach-mission-steps {
+    grid-template-columns: 1fr;
+  }
+
+  .page-ar-game .ar-coach-mission-steps button {
+    width: 100%;
+    min-height: 48px;
+  }
+}
+
 @media (max-width: 420px) {
   .page-ar-game .ar-fish-coach {
     margin-inline: 0;
@@ -165,5 +245,10 @@
     width: 36px;
     height: 36px;
     border-radius: 12px;
+  }
+
+  .page-ar-game .ar-coach-mission {
+    padding: 12px;
+    border-radius: 20px;
   }
 }
