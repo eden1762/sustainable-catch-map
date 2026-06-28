@@ -21,6 +21,7 @@
         {
           key: 'safe',
           fishKey: 'crimsonBream',
+          tone: 'green',
           label: '第一次買，想穩穩煮好',
           fish: '赤鯮',
           light: '綠燈',
@@ -35,6 +36,7 @@
         {
           key: 'daily',
           fishKey: 'mackerel',
+          tone: 'yellow',
           label: '想買日常好吃又不踩雷',
           fish: '花腹鯖',
           light: '黃燈',
@@ -47,8 +49,24 @@
           href: '/pages/fish.html'
         },
         {
+          key: 'pause',
+          fishKey: 'mackerel',
+          tone: 'red',
+          label: '資訊不清楚，先不要衝動買',
+          fish: '先暫停確認',
+          light: '紅燈',
+          lightText: '來源、保存、魚身狀態說不清楚時，先問清楚再決定，別讓晚餐變踩雷現場。',
+          bodyChecks: ['眼睛混濁或凹陷', '鰓色偏灰或有異味', '魚身軟塌、表面黏膩'],
+          stallLine: '可以請魚販補上來源、進貨時間與建議料理；講得清楚再買，講不清楚就換一尾。',
+          ask: '這條來源、進貨時間和保存方式可以再跟我說清楚嗎？如果不適合今天吃，有沒有更穩的選擇？',
+          cook: '如果狀態不明，先不要硬煮。改挑資訊清楚、氣味乾淨、魚身有彈性的魚，餐桌會更安心。',
+          cta: '看燈號怎麼判斷',
+          href: '/pages/sustainability.html'
+        },
+        {
           key: 'party',
           fishKey: 'mahiMahi',
+          tone: 'green',
           label: '想做有存在感的一餐',
           fish: '鬼頭刀',
           light: '綠燈',
@@ -81,6 +99,7 @@
         {
           key: 'safe',
           fishKey: 'crimsonBream',
+          tone: 'green',
           label: 'First-time buy, keep it foolproof',
           fish: 'Crimson sea bream',
           light: 'Green',
@@ -95,6 +114,7 @@
         {
           key: 'daily',
           fishKey: 'mackerel',
+          tone: 'yellow',
           label: 'Everyday tasty, low-risk dinner',
           fish: 'Pacific mackerel',
           light: 'Yellow',
@@ -107,8 +127,24 @@
           href: '/pages/fish.html'
         },
         {
+          key: 'pause',
+          fishKey: 'mackerel',
+          tone: 'red',
+          label: 'Info is unclear, pause before buying',
+          fish: 'Pause and confirm',
+          light: 'Red',
+          lightText: 'When origin, handling, or body cues are unclear, ask before you buy. No dinner-table jump scares.',
+          bodyChecks: ['Cloudy or sunken eyes', 'Gray gills or off smell', 'Soft body or sticky surface'],
+          stallLine: 'Ask for origin, arrival time, and handling. If the answer is fuzzy, pick a cleaner, clearer option.',
+          ask: 'Can you tell me the origin, arrival time, and handling for this fish? If it is not ideal for tonight, what is the safer pick?',
+          cook: 'Do not force it if the cues feel off. Choose a fish with clear info, clean aroma, and firm body instead.',
+          cta: 'Learn the color cues',
+          href: '/pages/sustainability.html'
+        },
+        {
           key: 'party',
           fishKey: 'mahiMahi',
+          tone: 'green',
           label: 'Make a dinner-table moment',
           fish: 'Mahi-mahi',
           light: 'Green',
@@ -178,7 +214,7 @@
 
   function card(option, text) {
     return [
-      '<div class="ar-coach-result" data-result="' + esc(option.key) + '">',
+      '<div class="ar-coach-result" data-result="' + esc(option.key) + '" data-tone="' + esc(option.tone || 'green') + '">',
         '<div class="ar-coach-main">',
           '<span>' + esc(option.light) + '</span>',
           '<h3>' + esc(option.fish) + '</h3>',
