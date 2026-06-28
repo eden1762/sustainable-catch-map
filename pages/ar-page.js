@@ -234,7 +234,7 @@
 
   function mission(text) {
     return [
-      '<section class="content-section ar-market-mission">',
+      '<section class="content-section ar-market-mission" id="fishfull-mission">',
         '<div class="section-heading">',
           '<p class="eyebrow">' + esc(text.missionEyebrow) + '</p>',
           '<h2>' + esc(text.missionTitle) + '</h2>',
