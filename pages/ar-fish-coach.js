@@ -5,11 +5,13 @@
     zh: {
       eyebrow: 'AR 選魚小教練',
       title: '看完 3D 魚，直接知道下一步怎麼買、怎麼煮',
-      body: '在魚攤前先選今天的情境，FishFull 會把魚種、燈號、問法和零失敗料理接起來。手機上這一段固定放在魚模型下方，不會蓋住完整魚身。',
+      body: '在魚攤前先選今天的情境，FishFull 會同步切換上方 3D 魚，再把魚種、燈號、問法和零失敗料理接起來。手機上這一段固定放在魚模型下方，不會蓋住完整魚身。',
       pickLabel: '今天比較像哪一種？',
+      syncNote: '已同步上方 3D 魚，先看完整魚身再開口問。',
       options: [
         {
           key: 'safe',
+          fishKey: 'crimsonBream',
           label: '第一次買，想穩穩煮好',
           fish: '赤鯮',
           light: '綠燈',
@@ -21,6 +23,7 @@
         },
         {
           key: 'daily',
+          fishKey: 'mackerel',
           label: '想買日常好吃又不踩雷',
           fish: '花腹鯖',
           light: '黃燈',
@@ -32,6 +35,7 @@
         },
         {
           key: 'party',
+          fishKey: 'mahiMahi',
           label: '想做有存在感的一餐',
           fish: '鬼頭刀',
           light: '綠燈',
@@ -46,11 +50,13 @@
     en: {
       eyebrow: 'AR buying coach',
       title: 'After the 3D fish view, know what to buy and how to cook it',
-      body: 'Pick your market moment and FishFull connects fish choice, color cue, fishmonger question, and an easy cooking next step. On mobile, this stays below the fish model, so it never covers the full body.',
+      body: 'Pick your market moment and FishFull switches the 3D fish above, then connects fish choice, color cue, fishmonger question, and an easy cooking next step. On mobile, this stays below the fish model, so it never covers the full body.',
       pickLabel: 'What are you buying for today?',
+      syncNote: 'The 3D fish above is synced. View the full body first, then ask at the counter.',
       options: [
         {
           key: 'safe',
+          fishKey: 'crimsonBream',
           label: 'First-time buy, keep it foolproof',
           fish: 'Crimson sea bream',
           light: 'Green',
@@ -62,6 +68,7 @@
         },
         {
           key: 'daily',
+          fishKey: 'mackerel',
           label: 'Everyday tasty, low-risk dinner',
           fish: 'Pacific mackerel',
           light: 'Yellow',
@@ -73,6 +80,7 @@
         },
         {
           key: 'party',
+          fishKey: 'mahiMahi',
           label: 'Make a dinner-table moment',
           fish: 'Mahi-mahi',
           light: 'Green',
@@ -96,13 +104,17 @@
     });
   }
 
-  function card(option) {
+  function card(option, text) {
     return [
       '<div class="ar-coach-result" data-result="' + esc(option.key) + '">',
         '<div class="ar-coach-main">',
           '<span>' + esc(option.light) + '</span>',
           '<h3>' + esc(option.fish) + '</h3>',
           '<p>' + esc(option.lightText) + '</p>',
+        '</div>',
+        '<div class="ar-coach-detail ar-coach-sync">',
+          '<strong>🐟</strong>',
+          '<p>' + esc(text.syncNote) + '</p>',
         '</div>',
         '<div class="ar-coach-detail">',
           '<strong>Q</strong>',
@@ -117,6 +129,21 @@
     ].join('');
   }
 
+  function syncFishModel(fishKey) {
+    if (!fishKey) return;
+    var tries = 0;
+    function attempt() {
+      var button = document.querySelector('[data-fish="' + fishKey + '"]');
+      if (button) {
+        if (button.getAttribute('aria-pressed') !== 'true') button.click();
+        return;
+      }
+      tries += 1;
+      if (tries < 8) window.setTimeout(attempt, 120);
+    }
+    attempt();
+  }
+
   function bind(section) {
     var buttons = Array.prototype.slice.call(section.querySelectorAll('[data-coach-pick]'));
     var results = Array.prototype.slice.call(section.querySelectorAll('[data-result]'));
@@ -125,6 +152,7 @@
         var key = button.getAttribute('data-coach-pick');
         buttons.forEach(function (item) { item.setAttribute('aria-pressed', item === button ? 'true' : 'false'); });
         results.forEach(function (item) { item.hidden = item.getAttribute('data-result') !== key; });
+        syncFishModel(button.getAttribute('data-coach-fish'));
       });
     });
   }
@@ -148,12 +176,12 @@
         '<div class="ar-coach-picks" aria-label="' + esc(text.pickLabel) + '">',
           '<strong>' + esc(text.pickLabel) + '</strong>',
           text.options.map(function (option, index) {
-            return '<button type="button" data-coach-pick="' + esc(option.key) + '" aria-pressed="' + (index === 0 ? 'true' : 'false') + '">' + esc(option.label) + '</button>';
+            return '<button type="button" data-coach-pick="' + esc(option.key) + '" data-coach-fish="' + esc(option.fishKey) + '" aria-pressed="' + (index === 0 ? 'true' : 'false') + '">' + esc(option.label) + '</button>';
           }).join(''),
         '</div>',
         '<div class="ar-coach-results">',
           text.options.map(function (option, index) {
-            var html = card(option);
+            var html = card(option, text);
             return index === 0 ? html : html.replace('<div class="ar-coach-result"', '<div class="ar-coach-result" hidden');
           }).join(''),
         '</div>',
@@ -162,6 +190,7 @@
 
     stage.insertAdjacentElement('afterend', section);
     bind(section);
+    syncFishModel(text.options[0] && text.options[0].fishKey);
   }
 
   function scheduleRender() {
