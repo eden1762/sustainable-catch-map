@@ -146,6 +146,38 @@
 .scale-one { left:32%; top:36%; }
 .scale-two { left:43%; top:35%; }
 .scale-three { left:54%; top:36%; }
+
+.ar-stage[data-fish-tone="mackerel"] .fish-body {
+  background:
+    radial-gradient(circle at 78% 34%, rgba(255,255,255,.92) 0 4%, transparent 5%),
+    repeating-linear-gradient(106deg, rgba(5,49,78,.7) 0 7px, rgba(255,255,255,.18) 8px 14px, transparent 15px 30px),
+    linear-gradient(115deg, rgba(235,252,255,.96) 0 12%, #1789c8 36%, #102f47 100%);
+}
+.ar-stage[data-fish-tone="mackerel"] .fish-scale { width:18%; height:16%; border-right:0; border-top:3px solid rgba(255,255,255,.62); border-radius:999px; transform:translateZ(38px) rotate(-18deg); }
+.ar-stage[data-fish-tone="mackerel"] .scale-one { left:30%; top:28%; }
+.ar-stage[data-fish-tone="mackerel"] .scale-two { left:42%; top:32%; }
+.ar-stage[data-fish-tone="mackerel"] .scale-three { left:54%; top:30%; }
+.ar-stage[data-fish-tone="mackerel"] .fish-shine { left:22%; top:52%; width:46%; height:10%; background:linear-gradient(90deg,rgba(255,255,255,.86),rgba(214,247,255,.18)); }
+
+.ar-stage[data-fish-tone="mahi"] .fish-body {
+  background:
+    radial-gradient(circle at 78% 34%, rgba(255,255,255,.92) 0 4%, transparent 5%),
+    linear-gradient(0deg, rgba(255,255,255,.86) 0 28%, transparent 30%),
+    linear-gradient(115deg, #fff7c8 0 12%, #d9a42a 36%, #11876e 82%, #123047 100%);
+}
+.ar-stage[data-fish-tone="mahi"] .fish-fin-top { top:-3%; left:34%; width:38%; height:30%; opacity:.9; }
+.ar-stage[data-fish-tone="mahi"] .fish-tail { background:linear-gradient(120deg,#f5c84f,#11876e 62%,#123047); }
+.ar-stage[data-fish-tone="mahi"] .fish-scale { border-right-color:rgba(255,255,255,.48); height:30%; }
+
+.ar-stage[data-fish-tone="bream"] .fish-body {
+  background:
+    radial-gradient(circle at 78% 34%, rgba(255,255,255,.95) 0 4%, transparent 5%),
+    radial-gradient(circle at 48% 55%, rgba(255,255,255,.48), transparent 24%),
+    linear-gradient(115deg, #fff1ec 0 12%, #df4b57 42%, #9f2b40 72%, #123047 100%);
+}
+.ar-stage[data-fish-tone="bream"] .fish-gill { border-right-width:5px; border-right-color:rgba(255,46,70,.84); }
+.ar-stage[data-fish-tone="bream"] .fish-fin { background:linear-gradient(135deg,rgba(255,255,255,.7),#df4b57 70%); }
+
 @keyframes fishfullFallbackSwim { 0%,100%{transform:translate(-50%,-50%) rotateX(10deg) rotateY(-16deg) rotateZ(-3deg) scale(1)} 50%{transform:translate(-50%,calc(-50% - 10px)) rotateX(10deg) rotateY(16deg) rotateZ(2deg) scale(1.03)} }
 
 .ar-model-fallback {
