@@ -1,6 +1,8 @@
 (function () {
   'use strict';
 
+  var savedPickKey = 'fishfull.arCoachPick';
+
   var copy = {
     zh: {
       eyebrow: 'AR 選魚小教練',
@@ -170,6 +172,24 @@
     });
   }
 
+  function findOption(options, key) {
+    return options.filter(function (option) { return option.key === key; })[0] || options[0];
+  }
+
+  function getSavedPick(options) {
+    try {
+      return findOption(options, window.localStorage && window.localStorage.getItem(savedPickKey));
+    } catch (err) {
+      return options[0];
+    }
+  }
+
+  function savePick(key) {
+    try {
+      if (window.localStorage) window.localStorage.setItem(savedPickKey, key);
+    } catch (err) {}
+  }
+
   function bodyCheck(option, text) {
     return [
       '<div class="ar-coach-bodycheck">',
@@ -311,6 +331,7 @@
         var key = button.getAttribute('data-coach-pick');
         buttons.forEach(function (item) { item.setAttribute('aria-pressed', item === button ? 'true' : 'false'); });
         results.forEach(function (item) { item.hidden = item.getAttribute('data-result') !== key; });
+        savePick(key);
         syncFishModel(button.getAttribute('data-coach-fish'));
       });
     });
@@ -325,6 +346,7 @@
     if (!stage || root.querySelector('.ar-fish-coach')) return;
 
     var text = copy[lang()] || copy.zh;
+    var selected = getSavedPick(text.options);
     var section = document.createElement('section');
     section.className = 'content-section ar-fish-coach';
     section.innerHTML = [
@@ -336,14 +358,14 @@
       '<div class="ar-coach-panel">',
         '<div class="ar-coach-picks" aria-label="' + esc(text.pickLabel) + '">',
           '<strong>' + esc(text.pickLabel) + '</strong>',
-          text.options.map(function (option, index) {
-            return '<button type="button" data-coach-pick="' + esc(option.key) + '" data-coach-fish="' + esc(option.fishKey) + '" aria-pressed="' + (index === 0 ? 'true' : 'false') + '">' + esc(option.label) + '</button>';
+          text.options.map(function (option) {
+            return '<button type="button" data-coach-pick="' + esc(option.key) + '" data-coach-fish="' + esc(option.fishKey) + '" aria-pressed="' + (option.key === selected.key ? 'true' : 'false') + '">' + esc(option.label) + '</button>';
           }).join(''),
         '</div>',
         '<div class="ar-coach-results">',
-          text.options.map(function (option, index) {
+          text.options.map(function (option) {
             var html = card(option, text);
-            return index === 0 ? html : html.replace('<div class="ar-coach-result"', '<div class="ar-coach-result" hidden');
+            return option.key === selected.key ? html : html.replace('<div class="ar-coach-result"', '<div class="ar-coach-result" hidden');
           }).join(''),
         '</div>',
       '</div>'
@@ -351,7 +373,7 @@
 
     stage.insertAdjacentElement('afterend', section);
     bind(section, text);
-    syncFishModel(text.options[0] && text.options[0].fishKey);
+    syncFishModel(selected && selected.fishKey);
   }
 
   function scheduleRender() {
