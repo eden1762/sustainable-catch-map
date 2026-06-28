@@ -10,6 +10,8 @@
       syncNote: '已同步上方 3D 魚，先看完整魚身再開口問。',
       bodyCheckTitle: '完整魚身先看這 3 點',
       stallBadge: '攤',
+      copyAskLabel: '一鍵帶去問',
+      copiedAskLabel: '已準備好，可以拿給魚販看',
       missionTitle: '現場三步驟任務',
       missionHint: '點一下代表完成，買魚更有節奏。',
       missionDone: '已完成 {count}/3，下一步更清楚。',
@@ -68,6 +70,8 @@
       syncNote: 'The 3D fish above is synced. View the full body first, then ask at the counter.',
       bodyCheckTitle: 'Check these 3 full-body cues first',
       stallBadge: 'Shop',
+      copyAskLabel: 'One-tap question',
+      copiedAskLabel: 'Ready to show your fishmonger',
       missionTitle: 'Three-step market mission',
       missionHint: 'Tap each step when done, so buying feels easier.',
       missionDone: '{count}/3 done. Your next move is clearer.',
@@ -143,6 +147,18 @@
     ].join('');
   }
 
+  function askCard(option, text) {
+    return [
+      '<div class="ar-coach-detail ar-coach-ask-card">',
+        '<strong>Q</strong>',
+        '<div>',
+          '<p>' + esc(option.ask) + '</p>',
+          '<button type="button" class="ar-coach-copy-ask" data-copy-ask="' + esc(option.ask) + '" data-copy-label="' + esc(text.copyAskLabel) + '" data-copied-label="' + esc(text.copiedAskLabel) + '">' + esc(text.copyAskLabel) + '</button>',
+        '</div>',
+      '</div>'
+    ].join('');
+  }
+
   function mission(option, text) {
     return [
       '<div class="ar-coach-mission" data-mission="' + esc(option.key) + '">',
@@ -177,10 +193,7 @@
           '<strong>' + esc(text.stallBadge) + '</strong>',
           '<p>' + esc(option.stallLine) + '</p>',
         '</div>',
-        '<div class="ar-coach-detail">',
-          '<strong>Q</strong>',
-          '<p>' + esc(option.ask) + '</p>',
-        '</div>',
+        askCard(option, text),
         '<div class="ar-coach-detail">',
           '<strong>🍳</strong>',
           '<p>' + esc(option.cook) + '</p>',
@@ -225,6 +238,35 @@
     });
   }
 
+  function copyAskText(button) {
+    var value = button.getAttribute('data-copy-ask') || '';
+    var copiedLabel = button.getAttribute('data-copied-label') || button.textContent;
+    var resetLabel = button.getAttribute('data-copy-label') || button.textContent;
+
+    function markCopied() {
+      button.textContent = copiedLabel;
+      button.setAttribute('aria-live', 'polite');
+      window.setTimeout(function () {
+        button.textContent = resetLabel;
+      }, 1800);
+    }
+
+    if (navigator.clipboard && navigator.clipboard.writeText) {
+      navigator.clipboard.writeText(value).then(markCopied).catch(markCopied);
+      return;
+    }
+
+    markCopied();
+  }
+
+  function bindCopyAsk(section) {
+    Array.prototype.slice.call(section.querySelectorAll('[data-copy-ask]')).forEach(function (button) {
+      button.addEventListener('click', function () {
+        copyAskText(button);
+      });
+    });
+  }
+
   function bind(section, text) {
     var buttons = Array.prototype.slice.call(section.querySelectorAll('[data-coach-pick]'));
     var results = Array.prototype.slice.call(section.querySelectorAll('[data-result]'));
@@ -237,6 +279,7 @@
       });
     });
     bindMission(section, text);
+    bindCopyAsk(section);
   }
 
   function render() {
