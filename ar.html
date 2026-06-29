@@ -166,6 +166,10 @@
           });
         }
 
+        function prefersReducedMotion() {
+          return !!(reduceMotionQuery && reduceMotionQuery.matches);
+        }
+
         function focusFishStage() {
           var stage = document.getElementById('fishfull-ar-stage');
           if (!stage) return;
@@ -173,9 +177,9 @@
           var navHeight = nav ? nav.getBoundingClientRect().height : 0;
           var safeTop = Math.max(12, navHeight + 10);
           var targetY = window.scrollY + stage.getBoundingClientRect().top - safeTop;
-          window.scrollTo({ top: Math.max(0, targetY), behavior: 'smooth' });
+          window.scrollTo({ top: Math.max(0, targetY), behavior: prefersReducedMotion() ? 'auto' : 'smooth' });
           stage.setAttribute('tabindex', '-1');
-          window.setTimeout(function () { stage.focus({ preventScroll: true }); }, 300);
+          window.setTimeout(function () { stage.focus({ preventScroll: true }); }, prefersReducedMotion() ? 40 : 300);
         }
 
         function shouldFocusQrEntry() {
