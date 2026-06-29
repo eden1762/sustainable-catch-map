@@ -104,6 +104,7 @@
           zh: '回看完整 3D 魚',
           en: 'Back to the full 3D fish'
         };
+        var timer = null;
 
         function currentLang() {
           return window.SCMLanguage ? window.SCMLanguage.current() : 'zh';
@@ -121,19 +122,23 @@
           window.setTimeout(function () { stage.focus({ preventScroll: true }); }, 260);
         }
 
+        function applyButtonText(button) {
+          var text = label();
+          if (button.textContent !== text) button.textContent = text;
+          if (button.getAttribute('aria-label') !== text) button.setAttribute('aria-label', text);
+        }
+
         function enhanceCoach() {
           Array.prototype.slice.call(document.querySelectorAll('.ar-coach-result')).forEach(function (card) {
             var existing = card.querySelector('.ar-coach-view-return');
             if (existing) {
-              existing.textContent = label();
-              existing.setAttribute('aria-label', label());
+              applyButtonText(existing);
               return;
             }
             var button = document.createElement('button');
             button.type = 'button';
             button.className = 'ar-coach-view-return';
-            button.textContent = label();
-            button.setAttribute('aria-label', label());
+            applyButtonText(button);
             button.addEventListener('click', focusFishStage);
             var mainAction = card.querySelector('a[href]');
             if (mainAction) card.insertBefore(button, mainAction);
@@ -142,7 +147,8 @@
         }
 
         function scheduleEnhance() {
-          window.setTimeout(enhanceCoach, 80);
+          window.clearTimeout(timer);
+          timer = window.setTimeout(enhanceCoach, 80);
         }
 
         if (document.readyState === 'loading') document.addEventListener('DOMContentLoaded', scheduleEnhance);
