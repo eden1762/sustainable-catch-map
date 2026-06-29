@@ -26,6 +26,7 @@
       .page-ar-game .ar-coach-picks button,
       .page-ar-game .ar-coach-mission-steps button,
       .page-ar-game .ar-coach-copy-ask,
+      .page-ar-game .ar-coach-view-return,
       .page-ar-game .ar-coach-result > a {
         box-sizing: border-box;
         touch-action: manipulation;
@@ -34,9 +35,34 @@
       .page-ar-game .ar-coach-picks button:focus-visible,
       .page-ar-game .ar-coach-mission-steps button:focus-visible,
       .page-ar-game .ar-coach-copy-ask:focus-visible,
+      .page-ar-game .ar-coach-view-return:focus-visible,
       .page-ar-game .ar-coach-result > a:focus-visible {
         outline: 3px solid rgba(255,159,28,.7);
         outline-offset: 3px;
+      }
+
+      .page-ar-game .ar-coach-view-return {
+        justify-self: start;
+        max-width: 100%;
+        min-height: 44px;
+        padding: 11px 15px;
+        border: 1px solid rgba(8,93,117,.18);
+        border-radius: 999px;
+        color: var(--ocean-deep);
+        font: inherit;
+        font-size: 14px;
+        font-weight: 900;
+        text-align: center;
+        background: rgba(232,248,244,.86);
+        box-shadow: 0 10px 24px rgba(7,54,77,.08);
+        cursor: pointer;
+        overflow-wrap: anywhere;
+      }
+
+      .page-ar-game .ar-coach-view-return:hover,
+      .page-ar-game .ar-coach-view-return:focus-visible {
+        border-color: rgba(8,93,117,.3);
+        background: rgba(255,255,255,.94);
       }
 
       @media (max-width: 560px) {
@@ -46,7 +72,8 @@
         }
 
         .page-ar-game .ar-coach-result > a,
-        .page-ar-game .ar-coach-copy-ask {
+        .page-ar-game .ar-coach-copy-ask,
+        .page-ar-game .ar-coach-view-return {
           width: 100%;
           min-height: 48px;
           display: inline-flex;
@@ -69,5 +96,60 @@
     <script src="/pages/sustainability-real-fish-ar.js" defer></script>
     <script src="/pages/ar-safe-view.js" defer></script>
     <script src="/fishfull-site-shell.js" defer></script>
+    <script>
+      (function () {
+        'use strict';
+
+        var labels = {
+          zh: '回看完整 3D 魚',
+          en: 'Back to the full 3D fish'
+        };
+
+        function currentLang() {
+          return window.SCMLanguage ? window.SCMLanguage.current() : 'zh';
+        }
+
+        function label() {
+          return labels[currentLang()] || labels.zh;
+        }
+
+        function focusFishStage() {
+          var stage = document.getElementById('fishfull-ar-stage');
+          if (!stage) return;
+          stage.scrollIntoView({ block: 'start', behavior: 'smooth' });
+          stage.setAttribute('tabindex', '-1');
+          window.setTimeout(function () { stage.focus({ preventScroll: true }); }, 260);
+        }
+
+        function enhanceCoach() {
+          Array.prototype.slice.call(document.querySelectorAll('.ar-coach-result')).forEach(function (card) {
+            var existing = card.querySelector('.ar-coach-view-return');
+            if (existing) {
+              existing.textContent = label();
+              existing.setAttribute('aria-label', label());
+              return;
+            }
+            var button = document.createElement('button');
+            button.type = 'button';
+            button.className = 'ar-coach-view-return';
+            button.textContent = label();
+            button.setAttribute('aria-label', label());
+            button.addEventListener('click', focusFishStage);
+            var mainAction = card.querySelector('a[href]');
+            if (mainAction) card.insertBefore(button, mainAction);
+            else card.appendChild(button);
+          });
+        }
+
+        function scheduleEnhance() {
+          window.setTimeout(enhanceCoach, 80);
+        }
+
+        if (document.readyState === 'loading') document.addEventListener('DOMContentLoaded', scheduleEnhance);
+        else scheduleEnhance();
+        document.addEventListener('scm-language-change', scheduleEnhance);
+        new MutationObserver(scheduleEnhance).observe(document.documentElement, { childList: true, subtree: true });
+      })();
+    </script>
   </body>
 </html>
