@@ -153,9 +153,13 @@
         function focusFishStage() {
           var stage = document.getElementById('fishfull-ar-stage');
           if (!stage) return;
-          stage.scrollIntoView({ block: 'start', behavior: 'smooth' });
+          var nav = document.querySelector('.page-ar-game .page-nav, .page-ar-game .site-nav, .page-ar-game .brand');
+          var navHeight = nav ? nav.getBoundingClientRect().height : 0;
+          var safeTop = Math.max(12, navHeight + 10);
+          var targetY = window.scrollY + stage.getBoundingClientRect().top - safeTop;
+          window.scrollTo({ top: Math.max(0, targetY), behavior: 'smooth' });
           stage.setAttribute('tabindex', '-1');
-          window.setTimeout(function () { stage.focus({ preventScroll: true }); }, 260);
+          window.setTimeout(function () { stage.focus({ preventScroll: true }); }, 300);
         }
 
         function applyButtonText(button) {
