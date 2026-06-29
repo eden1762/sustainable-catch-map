@@ -124,6 +124,7 @@
           en: 'FishFull official logo'
         };
         var timer = null;
+        var reduceMotionQuery = window.matchMedia ? window.matchMedia('(prefers-reduced-motion: reduce)') : null;
 
         function currentLang() {
           return window.SCMLanguage ? window.SCMLanguage.current() : 'zh';
@@ -150,6 +151,20 @@
           });
         }
 
+        function syncMotionPreference() {
+          var shouldReduce = !!(reduceMotionQuery && reduceMotionQuery.matches);
+          Array.prototype.slice.call(document.querySelectorAll('.page-ar-game model-viewer.ar-model')).forEach(function (model) {
+            if (shouldReduce) {
+              if (!model.dataset.originalRotation) model.dataset.originalRotation = model.getAttribute('rotation-per-second') || '16deg';
+              model.removeAttribute('auto-rotate');
+              model.setAttribute('interaction-prompt', 'none');
+            } else {
+              model.setAttribute('auto-rotate', '');
+              model.setAttribute('rotation-per-second', model.dataset.originalRotation || model.getAttribute('rotation-per-second') || '16deg');
+            }
+          });
+        }
+
         function focusFishStage() {
           var stage = document.getElementById('fishfull-ar-stage');
           if (!stage) return;
@@ -170,6 +185,7 @@
 
         function enhanceCoach() {
           enforceOfficialLogo();
+          syncMotionPreference();
           Array.prototype.slice.call(document.querySelectorAll('.ar-coach-result')).forEach(function (card) {
             var existing = card.querySelector('.ar-coach-view-return');
             if (existing) {
@@ -195,6 +211,10 @@
         if (document.readyState === 'loading') document.addEventListener('DOMContentLoaded', scheduleEnhance);
         else scheduleEnhance();
         document.addEventListener('scm-language-change', scheduleEnhance);
+        if (reduceMotionQuery) {
+          if (reduceMotionQuery.addEventListener) reduceMotionQuery.addEventListener('change', scheduleEnhance);
+          else if (reduceMotionQuery.addListener) reduceMotionQuery.addListener(scheduleEnhance);
+        }
         new MutationObserver(scheduleEnhance).observe(document.documentElement, { childList: true, subtree: true });
       })();
     </script>
