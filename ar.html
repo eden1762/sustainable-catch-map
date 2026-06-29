@@ -23,6 +23,21 @@
     <link rel="stylesheet" href="/pages/ar-market-thumb-flow.css" />
     <link rel="stylesheet" href="/fishfull-brand.css" />
     <style>
+      .page-ar-game .brand-symbol {
+        padding: 0;
+        overflow: hidden;
+        background: #fff;
+        color: transparent;
+      }
+
+      .page-ar-game .brand-symbol img {
+        display: block;
+        width: 100%;
+        height: 100%;
+        object-fit: cover;
+        border-radius: inherit;
+      }
+
       .page-ar-game .ar-coach-picks button,
       .page-ar-game .ar-coach-mission-steps button,
       .page-ar-game .ar-coach-copy-ask,
@@ -104,6 +119,10 @@
           zh: '回看完整 3D 魚',
           en: 'Back to the full 3D fish'
         };
+        var logoLabels = {
+          zh: 'FishFull 漁有料官方商標',
+          en: 'FishFull official logo'
+        };
         var timer = null;
 
         function currentLang() {
@@ -112,6 +131,23 @@
 
         function label() {
           return labels[currentLang()] || labels.zh;
+        }
+
+        function logoLabel() {
+          return logoLabels[currentLang()] || logoLabels.zh;
+        }
+
+        function enforceOfficialLogo() {
+          Array.prototype.slice.call(document.querySelectorAll('.page-ar-game .brand .brand-symbol')).forEach(function (symbol) {
+            var text = logoLabel();
+            var img = symbol.querySelector('img[src="/fishfull.jpg"]');
+            if (!img) {
+              symbol.removeAttribute('aria-hidden');
+              symbol.innerHTML = '<img src="/fishfull.jpg" width="42" height="42" loading="eager" decoding="async" alt="">';
+              img = symbol.querySelector('img');
+            }
+            if (img && img.getAttribute('alt') !== text) img.setAttribute('alt', text);
+          });
         }
 
         function focusFishStage() {
@@ -129,6 +165,7 @@
         }
 
         function enhanceCoach() {
+          enforceOfficialLogo();
           Array.prototype.slice.call(document.querySelectorAll('.ar-coach-result')).forEach(function (card) {
             var existing = card.querySelector('.ar-coach-view-return');
             if (existing) {
