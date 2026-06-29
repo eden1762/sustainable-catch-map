@@ -96,6 +96,10 @@
     return window.SCMLanguage ? window.SCMLanguage.escapeHtml(value) : String(value);
   }
 
+  function logoAlt(currentLang) {
+    return currentLang === 'en' ? 'FishFull official logo' : 'FishFull 漁有料官方商標';
+  }
+
   function navTemplate(items) {
     return items.map(function (item) {
       return '<a href="' + escapeHtml(item.href) + '">' + escapeHtml(item.label) + '</a>';
@@ -171,7 +175,7 @@
       '<div class="page-home">',
         '<header class="site-nav" aria-label="Main navigation">',
           '<a class="brand-mark" href="/" aria-label="' + escapeHtml(text.brand) + '">',
-            '<span class="brand-sun" aria-hidden="true"></span>',
+            '<span class="fishfull-logo-mark home-brand-logo"><img src="/fishfull.jpg" width="44" height="44" loading="eager" decoding="async" alt="' + escapeHtml(logoAlt(currentLang)) + '"></span>',
             '<span class="brand-text"><span class="brand-kicker">' + escapeHtml(text.kicker) + '</span><strong>' + escapeHtml(text.brand) + '</strong></span>',
           '</a>',
           '<nav class="nav-links" aria-label="Homepage links">' + navTemplate(text.nav) + '</nav>',
