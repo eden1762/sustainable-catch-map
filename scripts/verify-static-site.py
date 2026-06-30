@@ -47,6 +47,8 @@ def assert_official_logo_guard() -> None:
         raise AssertionError("fishfull-site-shell.js must enforce the exact copyright footer")
     if "dedupeBrandLogos" not in shell:
         raise AssertionError("fishfull-site-shell.js must remove duplicate or alternate brand-logo visuals")
+    if "removeAlternateTrademarkVisuals" not in shell:
+        raise AssertionError("fishfull-site-shell.js must remove SVG, icon, or generated alternate trademark visuals")
     if "removeDuplicateCopyrightText" not in shell:
         raise AssertionError("fishfull-site-shell.js must remove duplicate copyright text outside the managed footer")
 
@@ -93,7 +95,7 @@ def main() -> int:
     assert_ar_entry_is_primary()
     assert_no_public_phrase("Elon Musk")
     assert_no_public_phrase("first principles")
-    print("FishFull static checks passed: official logo, no duplicate footer guard, AR entry, and mobile fish-fit guard are present.")
+    print("FishFull static checks passed: official logo, no duplicate footer guard, alternate trademark cleanup, AR entry, and mobile fish-fit guard are present.")
     return 0
 
 
