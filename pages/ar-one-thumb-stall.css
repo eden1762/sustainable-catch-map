@@ -1,0 +1,101 @@
+/* FishFull AR one-thumb stall flow: keep the full fish visible while controls stay tappable on phones. */
+@media (max-width: 680px) {
+  .page-ar-game #fishfull-ar-stage {
+    scroll-margin-top: 10px;
+  }
+
+  .page-ar-game .ar-stage {
+    min-height: min(78svh, 620px);
+    max-height: none;
+    padding: 10px max(10px, env(safe-area-inset-left)) calc(12px + env(safe-area-inset-bottom)) max(10px, env(safe-area-inset-right));
+    overflow: hidden;
+  }
+
+  .page-ar-game .ar-model {
+    width: 100%;
+    height: clamp(300px, 58svh, 520px);
+    max-height: calc(100svh - 170px - env(safe-area-inset-bottom));
+    margin-inline: auto;
+    z-index: 1;
+  }
+
+  .page-ar-game .ar-toolbar {
+    position: relative;
+    inset: auto;
+    z-index: 4;
+    width: 100%;
+    display: grid;
+    grid-template-columns: 1fr;
+    gap: 8px;
+    margin-top: 6px;
+    padding: 8px;
+    border-radius: 20px;
+    background: rgba(255, 255, 255, .88);
+    box-shadow: 0 12px 30px rgba(3, 44, 64, .14);
+    backdrop-filter: blur(14px);
+  }
+
+  .page-ar-game .ar-toolbar-left,
+  .page-ar-game .ar-toolbar-right,
+  .page-ar-game .ar-fish-options {
+    width: 100%;
+    min-width: 0;
+  }
+
+  .page-ar-game .ar-fish-options {
+    display: grid;
+    grid-template-columns: repeat(3, minmax(0, 1fr));
+    gap: 7px;
+  }
+
+  .page-ar-game .ar-action-btn,
+  .page-ar-game .ar-fish-btn {
+    min-width: 0;
+    min-height: 46px;
+    padding: 10px 9px;
+    white-space: normal;
+    line-height: 1.16;
+    overflow-wrap: anywhere;
+  }
+
+  .page-ar-game .ar-title-pill {
+    width: 100%;
+    justify-content: center;
+    text-align: center;
+    white-space: normal;
+  }
+
+  .page-ar-game .ar-hint-pill,
+  .page-ar-game .ar-fresh-strip,
+  .page-ar-game .ar-species-panel {
+    position: relative;
+    z-index: 3;
+    max-width: 100%;
+  }
+}
+
+@media (max-width: 390px), (max-height: 720px) {
+  .page-ar-game .ar-stage {
+    min-height: min(82svh, 560px);
+    padding-top: 8px;
+  }
+
+  .page-ar-game .ar-model {
+    height: clamp(270px, 55svh, 430px);
+    max-height: calc(100svh - 150px - env(safe-area-inset-bottom));
+  }
+
+  .page-ar-game .ar-fish-options {
+    grid-template-columns: 1fr;
+  }
+
+  .page-ar-game .ar-action-btn,
+  .page-ar-game .ar-fish-btn {
+    min-height: 44px;
+  }
+
+  .page-ar-game .ar-hint-pill {
+    font-size: 12px;
+    line-height: 1.35;
+  }
+}
