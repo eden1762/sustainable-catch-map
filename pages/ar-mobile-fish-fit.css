@@ -286,3 +286,20 @@
     max-block-size: calc(30svh + env(safe-area-inset-bottom)) !important;
   }
 }
+
+@media (max-width: 640px) {
+  .page-ar-game #fishfull-ar-stage,
+  .page-ar-game .ar-focus-layout {
+    scroll-margin-top: calc(72px + env(safe-area-inset-top));
+    scroll-margin-bottom: calc(112px + env(safe-area-inset-bottom));
+  }
+
+  .page-ar-game .model-stage {
+    padding-bottom: calc(18px + env(safe-area-inset-bottom)) !important;
+  }
+
+  .page-ar-game .ar-model,
+  .page-ar-game .ar-stage.is-ar-on .ar-model {
+    max-block-size: calc(100% - var(--ar-safe-top) - var(--ar-safe-bottom) - env(safe-area-inset-bottom)) !important;
+  }
+}
