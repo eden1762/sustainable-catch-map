@@ -1,0 +1,69 @@
+/* FishFull AR ultra-small phone guard: keep the full 3D fish readable on very narrow phones. */
+@media (max-width: 340px) and (orientation: portrait) {
+  .page-ar-game {
+    --fishfull-phone-gutter: max(10px, env(safe-area-inset-left), env(safe-area-inset-right));
+  }
+
+  .page-ar-game .model-stage {
+    min-block-size: min(584px, calc(100svh - 6px)) !important;
+  }
+
+  .page-ar-game .ar-stage {
+    --ar-safe-top: clamp(84px, 17svh, 104px);
+    --ar-safe-bottom: clamp(124px, 30svh, 154px);
+    min-block-size: min(568px, calc(100svh - 8px)) !important;
+  }
+
+  .page-ar-game .ar-model,
+  .page-ar-game .ar-stage.is-ar-on .ar-model {
+    inline-size: min(64%, 214px) !important;
+    min-block-size: clamp(138px, 29svh, 188px) !important;
+    max-block-size: calc(100% - var(--ar-safe-top) - var(--ar-safe-bottom)) !important;
+  }
+
+  .page-ar-game .ar-fallback-fish {
+    inline-size: min(58%, 198px) !important;
+  }
+
+  .page-ar-game .ar-fish-options {
+    grid-template-columns: 1fr !important;
+    gap: 6px !important;
+  }
+
+  .page-ar-game .ar-toolbar {
+    gap: 7px !important;
+    max-block-size: calc(36svh + env(safe-area-inset-bottom)) !important;
+    overflow-y: auto !important;
+    overscroll-behavior: contain;
+    -webkit-overflow-scrolling: touch;
+  }
+
+  .page-ar-game .ar-fish-btn,
+  .page-ar-game .ar-toggle-camera {
+    min-block-size: 42px !important;
+    padding: 8px 10px !important;
+    font-size: .82rem !important;
+    line-height: 1.2 !important;
+  }
+
+  .page-ar-game .ar-real-ar-btn,
+  .page-ar-game .ar-hint-pill,
+  .page-ar-game .ar-fresh-strip,
+  .page-ar-game .ar-species-panel {
+    font-size: .74rem !important;
+    line-height: 1.25 !important;
+  }
+}
+
+@media (max-width: 340px) and (max-height: 620px) and (orientation: portrait) {
+  .page-ar-game .ar-stage {
+    --ar-safe-top: clamp(76px, 16svh, 96px);
+    --ar-safe-bottom: clamp(120px, 31svh, 146px);
+  }
+
+  .page-ar-game .ar-model,
+  .page-ar-game .ar-stage.is-ar-on .ar-model {
+    inline-size: min(60%, 196px) !important;
+    min-block-size: clamp(126px, 27svh, 172px) !important;
+  }
+}
