@@ -63,6 +63,34 @@
     }
   }
 
+  function bindModelPowerGuard(stage, model) {
+    if (model.dataset.powerGuardBound === '1') return;
+    model.dataset.powerGuardBound = '1';
+    var hadAutoRotate = model.hasAttribute('auto-rotate');
+    var stageIsVisible = true;
+
+    function syncRotation() {
+      if (!hadAutoRotate) return;
+      if (document.hidden || !stageIsVisible) model.removeAttribute('auto-rotate');
+      else model.setAttribute('auto-rotate', '');
+    }
+
+    if ('IntersectionObserver' in window) {
+      var observer = new IntersectionObserver(function (entries) {
+        stageIsVisible = entries.some(function (entry) {
+          return entry.isIntersecting && entry.intersectionRatio >= 0.34;
+        });
+        syncRotation();
+      }, { threshold: [0, 0.34, 0.7] });
+      observer.observe(stage);
+    }
+
+    document.addEventListener('visibilitychange', syncRotation);
+    window.addEventListener('pagehide', syncRotation);
+    window.addEventListener('pageshow', syncRotation);
+    syncRotation();
+  }
+
   function watchModel(stage) {
     var model = stage.querySelector('model-viewer');
     if (!model) {
@@ -70,6 +98,7 @@
       window.setTimeout(function () { watchModel(stage); }, 220);
       return;
     }
+    bindModelPowerGuard(stage, model);
     if (model.dataset.safeStatusBound === '1') return;
     model.dataset.safeStatusBound = '1';
     setStatus(stage, model.loaded ? 'ready' : 'loading');
@@ -99,7 +128,7 @@
       frame.className = 'ar-safe-view';
       frame.setAttribute('aria-hidden', 'true');
       frame.setAttribute('data-ar-safe-view', '1');
-      frame.innerHTML = '<span class="ar-safe-view__corner"></span><span class="ar-safe-view__corner"></span><span class="ar-safe-view__corner"></span><span class="ar-safe-view__corner"></span><span class="ar-safe-view__line"></span><span class="ar-safe-view__label"></span>';
+      frame.innerHTML = '<span class="ar-safe-view__corner"></span><span class="ar-safe-view__corner"></span><span class="ar-safe-view__corner"></span><span class="ar-safe-view__line"></span><span class="ar-safe-view__label"></span>';
       stage.appendChild(frame);
     }
 
