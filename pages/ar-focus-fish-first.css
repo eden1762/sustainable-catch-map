@@ -1,0 +1,38 @@
+/* FishFull AR focus mode: when shoppers jump straight to the fish, keep the model first and controls safe. */
+@media (max-width: 640px) {
+  .page-ar-game #fishfull-ar-stage:target {
+    scroll-margin-top: calc(76px + env(safe-area-inset-top));
+    scroll-margin-bottom: calc(132px + env(safe-area-inset-bottom));
+  }
+
+  .page-ar-game #fishfull-ar-stage:target .model-stage {
+    order: -1;
+    min-block-size: min(720px, calc(100svh - 10px)) !important;
+    padding-block: max(8px, env(safe-area-inset-top)) calc(22px + env(safe-area-inset-bottom)) !important;
+  }
+
+  .page-ar-game #fishfull-ar-stage:target .ar-stage {
+    min-block-size: min(690px, calc(100svh - 18px)) !important;
+  }
+
+  .page-ar-game #fishfull-ar-stage:target .ar-side-copy {
+    order: 2;
+  }
+
+  .page-ar-game #fishfull-ar-stage:target .ar-model,
+  .page-ar-game #fishfull-ar-stage:target .ar-stage.is-ar-on .ar-model {
+    object-fit: contain !important;
+    object-position: center center !important;
+    max-inline-size: calc(100% - max(28px, env(safe-area-inset-left)) - max(28px, env(safe-area-inset-right))) !important;
+  }
+
+  .page-ar-game #fishfull-ar-stage:target .ar-toolbar {
+    left: max(12px, env(safe-area-inset-left)) !important;
+    right: max(12px, env(safe-area-inset-right)) !important;
+    bottom: max(12px, env(safe-area-inset-bottom)) !important;
+    max-block-size: calc(30svh + env(safe-area-inset-bottom)) !important;
+    overflow-y: auto !important;
+    overscroll-behavior: contain;
+    -webkit-overflow-scrolling: touch;
+  }
+}
