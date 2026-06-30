@@ -1,0 +1,78 @@
+/* AR buy-light cues: quick red/yellow/green decision help beside the full fish view. */
+.page-ar-game .ar-buy-light-cues {
+  display: grid;
+  grid-template-columns: repeat(3, minmax(0, 1fr));
+  gap: 10px;
+  margin: 16px 0 18px;
+}
+
+.page-ar-game .ar-buy-light-card {
+  display: grid;
+  gap: 7px;
+  min-width: 0;
+  border: 1px solid rgba(8, 93, 117, .13);
+  border-radius: 18px;
+  padding: 12px;
+  background: rgba(255, 255, 255, .86);
+  box-shadow: 0 14px 30px rgba(7, 54, 77, .08);
+}
+
+.page-ar-game .ar-buy-light-card strong,
+.page-ar-game .ar-buy-light-card span,
+.page-ar-game .ar-buy-light-card em {
+  display: block;
+  min-width: 0;
+}
+
+.page-ar-game .ar-buy-light-card strong {
+  color: var(--ocean-deep);
+  font-size: 14px;
+  font-weight: 950;
+  line-height: 1.25;
+}
+
+.page-ar-game .ar-buy-light-card span {
+  color: var(--muted);
+  font-size: 12px;
+  font-weight: 750;
+  line-height: 1.45;
+}
+
+.page-ar-game .ar-buy-light-card em {
+  align-self: start;
+  width: max-content;
+  max-width: 100%;
+  border-radius: 999px;
+  padding: 6px 9px;
+  color: #fff;
+  font-size: 11px;
+  font-style: normal;
+  font-weight: 950;
+  letter-spacing: .06em;
+  white-space: normal;
+}
+
+.page-ar-game .ar-buy-light-card[data-tone="green"] em {
+  background: #15845a;
+}
+
+.page-ar-game .ar-buy-light-card[data-tone="yellow"] em {
+  background: #b57400;
+}
+
+.page-ar-game .ar-buy-light-card[data-tone="red"] em {
+  background: #b64545;
+}
+
+@media (max-width: 768px) {
+  .page-ar-game .ar-buy-light-cues {
+    grid-template-columns: 1fr;
+    gap: 8px;
+    margin: 12px 0 14px;
+  }
+
+  .page-ar-game .ar-buy-light-card {
+    border-radius: 16px;
+    padding: 11px 12px;
+  }
+}
