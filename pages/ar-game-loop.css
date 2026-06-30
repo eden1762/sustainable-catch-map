@@ -198,3 +198,57 @@
     margin: 0 0 6px;
   }
 }
+
+@media (max-width: 560px) {
+  .page-ar-game .ar-game-loop,
+  .page-ar-game .ar-vendor-handoff {
+    scroll-margin-top: 84px;
+  }
+
+  .page-ar-game .ar-loop-step,
+  .page-ar-game .ar-handoff-card {
+    box-shadow: 0 10px 24px rgba(7,54,77,.07);
+    overflow-wrap: anywhere;
+  }
+
+  .page-ar-game .ar-loop-step {
+    grid-template-columns: 42px minmax(0, 1fr);
+    padding: 14px;
+  }
+
+  .page-ar-game .ar-loop-step span {
+    min-width: 34px;
+    height: 30px;
+    font-size: 12px;
+    letter-spacing: .04em;
+  }
+
+  .page-ar-game .ar-loop-step h3,
+  .page-ar-game .ar-handoff-card h3 {
+    font-size: 17px;
+    line-height: 1.25;
+  }
+
+  .page-ar-game .ar-loop-step p,
+  .page-ar-game .ar-handoff-card p {
+    font-size: 14px;
+    line-height: 1.55;
+  }
+}
+
+@media (max-width: 360px) {
+  .page-ar-game .ar-game-loop::before {
+    display: none;
+  }
+
+  .page-ar-game .ar-loop-step,
+  .page-ar-game .ar-handoff-card {
+    grid-template-columns: 1fr;
+  }
+
+  .page-ar-game .ar-loop-step span,
+  .page-ar-game .ar-handoff-card span {
+    grid-row: auto;
+    margin-bottom: 8px;
+  }
+}
