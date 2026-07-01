@@ -6,6 +6,7 @@
   "scripts": {
     "start": "node ./scripts/static-server.js 4173",
     "preview": "node ./scripts/static-server.js 4173",
-    "build": "node ./scripts/verify-static-site.js"
+    "verify": "node ./scripts/verify-static-site.js",
+    "build": "node ./scripts/build-static-site.js"
   }
 }
