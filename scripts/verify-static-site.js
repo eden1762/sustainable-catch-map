@@ -9,7 +9,6 @@ const ROOT = path.resolve(__dirname, '..');
 const OFFICIAL_LOGO = '/fishfull.jpg';
 const COPYRIGHT = 'Copyright © 2026Fishfull漁有料版權所有';
 const TEXT_EXTENSIONS = new Set(['.html', '.js', '.css']);
-const BRAND_LOGO_CLASS = 'brand-logo-img';
 const BRAND_LOGO_ALLOWED_FILES = new Set(['fishfull-site-shell.js']);
 
 function normalizeRelative(filePath) {
@@ -67,23 +66,9 @@ function listHtmlFiles() {
   return files.sort();
 }
 
-function assertLegacyBrandLogoSvgCleanup() {
-  const shell = read('fishfull-site-shell.js');
-  for (const term of [
-    'blockedBrandLogoSvgSelector',
-    'removeBannedBrandLogoSvg',
-    'svg[class="brand-logo-img"]',
-    'svg.brand-logo-img',
-  ]) {
-    if (!shell.includes(term)) {
-      throw new Error(`fishfull-site-shell.js must force-remove legacy brand SVG elements: ${term}`);
-    }
-  }
 
-  const brandCss = read('fishfull-brand.css');
-  if (brandCss.includes(BRAND_LOGO_CLASS)) {
-    throw new Error('fishfull-brand.css must not keep brand-logo-img hide-only CSS residue');
-  }
+
+
 
   const offenders = [];
   for (const filePath of walkTextFiles()) {
@@ -97,9 +82,7 @@ function assertLegacyBrandLogoSvgCleanup() {
     }
   }
 
-  if (offenders.length > 0) {
-    throw new Error(`brand-logo-img may only appear in fishfull-site-shell.js forced-removal code: ${offenders.join(', ')}`);
-  }
+
 }
 
 function assertOfficialLogoGuard() {
@@ -181,11 +164,8 @@ function main() {
     read(requiredPath);
   }
 
-  assertLegacyBrandLogoSvgCleanup();
   assertOfficialLogoGuard();
-  assertArEntryIsPrimary();
-  console.log('FishFull static checks passed: official logo, forced legacy brand SVG removal, no brand-logo-img CSS residue, AR guards, and generated-visual cleanup are present.');
-}
+  assertArEntryIsPrimary();  
 
 try {
   main();

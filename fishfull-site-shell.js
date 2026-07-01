@@ -4,7 +4,6 @@
   var logoSrc = '/fishfull.jpg';
   var copyrightText = 'Copyright © 2026Fishfull漁有料版權所有';
   var cleanupStyleId = 'fishfull-shell-cleanup-style';
-  var blockedBrandLogoSvgSelector = 'svg[class="brand-logo-img"], svg.brand-logo-img';
   var generatedTrademarkSelector = [
     '[data-generated-logo]',
     '[data-generated-mark]',
@@ -17,8 +16,7 @@
     '.fish-icon',
     '.fish-badge',
     '.round-fish-logo',
-    '.legacy-fishfull-mark',
-    blockedBrandLogoSvgSelector
+    '.legacy-fishfull-mark'
   ].join(', ');
   var observerTimer = null;
 
@@ -82,22 +80,18 @@
   }
 
   function applyLogo() {
-    removeBannedBrandLogoSvg();
     var marks = document.querySelectorAll('.brand-sun, .brand-symbol, .brand-mark .fishfull-logo-mark, .brand .fishfull-logo-mark');
     Array.prototype.forEach.call(marks, setOfficialLogo);
     dedupeBrandLogos();
     removeAlternateTrademarkVisuals();
     removeGeneratedTrademarkVisuals();
-    removeBannedBrandLogoSvg();
   }
 
   function removeNode(node) {
     if (node && node.parentNode) node.parentNode.removeChild(node);
   }
 
-  function removeBannedBrandLogoSvg() {
-    Array.prototype.slice.call(document.querySelectorAll(blockedBrandLogoSvgSelector)).forEach(removeNode);
-  }
+
 
   function dedupeBrandLogos() {
     var containers = document.querySelectorAll('.brand-mark, .brand');
@@ -135,7 +129,6 @@
   function isGeneratedTrademarkVisual(node) {
     if (!node || !node.matches) return false;
     if (hasOfficialLogo(node)) return false;
-    if (node.matches(blockedBrandLogoSvgSelector)) return true;
     if (node.matches(generatedTrademarkSelector)) return true;
     var label = [
       node.getAttribute('class') || '',
@@ -147,33 +140,9 @@
     return /(generated|ai[-_ ]?logo|round[-_ ]?fish|fish[-_ ]?(logo|icon|badge)|legacy[-_ ]?fishfull|brand[-_ ]?(fish|badge|icon))/i.test(label);
   }
 
-  function removeGeneratedTrademarkVisuals() {
-    var scopes = document.querySelectorAll('.brand-mark, .brand, .site-nav, .page-nav, header');
-    Array.prototype.forEach.call(scopes, function (scope) {
-      Array.prototype.slice.call(scope.querySelectorAll(generatedTrademarkSelector + ', svg, canvas, picture, img')).forEach(function (node) {
-        if (hasOfficialLogo(node)) return;
-        if (node.matches && node.matches(blockedBrandLogoSvgSelector)) return removeNode(node);
-        if (node.matches && node.matches('svg, canvas') && isBrandContainer(node)) return removeNode(node);
-        if (isGeneratedTrademarkVisual(node)) return removeNode(node.closest('picture') || node);
-        if (node.matches && node.matches('img') && isLogoImage(node) && node.getAttribute('src') !== logoSrc) return removeNode(node.closest('picture') || node);
-      });
-    });
-  }
 
-  function removeAlternateTrademarkVisuals() {
-    var containers = document.querySelectorAll('.brand-mark, .brand');
-    Array.prototype.forEach.call(containers, function (container) {
-      Array.prototype.slice.call(container.querySelectorAll('svg, canvas, picture, .brand-icon, .brand-logo, .brand-fish, .brand-sun, .brand-symbol, .home-brand-logo')).forEach(function (node) {
-        if (hasOfficialLogo(node)) return;
-        if (node.classList && node.classList.contains('fishfull-logo-mark')) return;
-        removeNode(node);
-      });
-      Array.prototype.slice.call(container.querySelectorAll('img')).forEach(function (img) {
-        if (img.getAttribute('src') === logoSrc) return;
-        if (isLogoImage(img)) removeNode(img.closest('picture') || img);
-      });
-    });
-  }
+
+
 
   function footerParent() {
     return document.querySelector('.page-shell') || document.querySelector('.page-home') || document.getElementById('root') || document.body;
@@ -205,9 +174,8 @@
 
   function applyShell() {
     installCleanupStyle();
-    removeBannedBrandLogoSvg();
     applyLogo();
-    removeBannedBrandLogoSvg();
+
   }
 
   function scheduleApply() {
