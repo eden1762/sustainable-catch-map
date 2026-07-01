@@ -91,7 +91,6 @@ function assertNoBannedLiteral() {
   for (const filePath of walkTextFiles()) {
     const rel = normalizeRelative(filePath);
     const content = fs.readFileSync(filePath, 'utf8');
-    if (rel === 'scripts/verify-static-site.js') continue;
     if (content.includes(bannedLiteral)) offenders.push(rel);
   }
   if (offenders.length) {
