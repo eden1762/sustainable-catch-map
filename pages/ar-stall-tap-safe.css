@@ -1,0 +1,68 @@
+/* FishFull AR：魚攤現場單手操作安全區。只調整排版，不加入任何自製品牌圖形。 */
+.page-ar-game .ar-stage.is-ar-on .ar-toolbar,
+.page-ar-game .ar-stage.is-ar-on .ar-real-ar-btn,
+.page-ar-game .ar-stage.is-ar-on .ar-hint-pill {
+  box-sizing: border-box;
+  touch-action: manipulation;
+}
+
+.page-ar-game .ar-stage.is-ar-on .ar-toolbar {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 8px;
+  justify-content: center;
+  align-items: center;
+  z-index: 7;
+}
+
+.page-ar-game .ar-stage.is-ar-on .ar-toolbar button,
+.page-ar-game .ar-stage.is-ar-on .ar-real-ar-btn {
+  min-height: 46px;
+  max-width: 100%;
+  white-space: normal;
+  line-height: 1.25;
+}
+
+.page-ar-game .ar-stage.is-ar-on .ar-model {
+  z-index: 3;
+  pointer-events: auto;
+}
+
+@media (max-width: 520px) {
+  .page-ar-game .ar-stage.is-ar-on {
+    overflow-x: clip;
+    padding-inline: max(10px, env(safe-area-inset-left)) max(10px, env(safe-area-inset-right));
+  }
+
+  .page-ar-game .ar-stage.is-ar-on .ar-toolbar {
+    left: max(8px, env(safe-area-inset-left));
+    right: max(8px, env(safe-area-inset-right));
+    bottom: max(8px, env(safe-area-inset-bottom));
+    max-inline-size: calc(100vw - 16px - env(safe-area-inset-left) - env(safe-area-inset-right));
+    padding: 8px;
+    border-radius: 18px;
+  }
+
+  .page-ar-game .ar-stage.is-ar-on .ar-toolbar button {
+    flex: 1 1 132px;
+    min-inline-size: min(132px, 100%);
+  }
+
+  .page-ar-game .ar-stage.is-ar-on .ar-real-ar-btn {
+    right: max(10px, env(safe-area-inset-right));
+    max-inline-size: calc(100vw - 20px - env(safe-area-inset-left) - env(safe-area-inset-right));
+  }
+}
+
+@media (max-width: 360px) {
+  .page-ar-game .ar-stage.is-ar-on .ar-toolbar button,
+  .page-ar-game .ar-stage.is-ar-on .ar-real-ar-btn {
+    min-height: 44px;
+    font-size: 12px;
+    padding-inline: 10px;
+  }
+
+  .page-ar-game .ar-stage.is-ar-on .ar-toolbar {
+    gap: 6px;
+  }
+}
