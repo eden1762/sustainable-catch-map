@@ -1,0 +1,55 @@
+/* FishFull AR: only the real 3D model is used as the fish visual; no substitute fish drawing. */
+.page-ar-game .ar-fallback-fish,
+.page-ar-game .fish-body,
+.page-ar-game .fish-tail,
+.page-ar-game .fish-fin,
+.page-ar-game .fish-eye,
+.page-ar-game .fish-shine,
+.page-ar-game .fish-gill,
+.page-ar-game .fish-scale {
+  display: none !important;
+  opacity: 0 !important;
+  visibility: hidden !important;
+}
+
+.page-ar-game .ar-stage:not(.is-model-ready) .ar-model {
+  opacity: .7;
+}
+
+.page-ar-game .ar-model-fallback {
+  top: 50% !important;
+  width: min(82%, 420px);
+  max-width: calc(100% - 40px);
+  border-radius: 22px !important;
+  padding: 14px 16px !important;
+  white-space: normal;
+  line-height: 1.45;
+}
+
+.page-ar-game .ar-photo-model-wait {
+  position: absolute;
+  left: 50%;
+  bottom: max(118px, calc(88px + env(safe-area-inset-bottom)));
+  z-index: 12;
+  width: min(88%, 420px);
+  transform: translateX(-50%);
+  border: 1px solid rgba(255,255,255,.9);
+  border-radius: 18px;
+  padding: 12px 14px;
+  background: rgba(255,255,255,.94);
+  color: #123047;
+  font-weight: 900;
+  text-align: center;
+  box-shadow: 0 16px 34px rgba(8,39,61,.18);
+}
+
+.page-ar-game [data-ar-photo][aria-disabled="true"] {
+  opacity: .76;
+}
+
+@media (max-width: 560px) {
+  .page-ar-game .ar-photo-model-wait {
+    bottom: max(104px, calc(78px + env(safe-area-inset-bottom)));
+    font-size: .88rem;
+  }
+}
