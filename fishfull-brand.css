@@ -15,14 +15,6 @@
   line-height: 1.1;
 }
 
-svg.brand-logo-img {
-  display: none !important;
-  visibility: hidden !important;
-  width: 0 !important;
-  height: 0 !important;
-  overflow: hidden !important;
-}
-
 footer.site-footer.fishfull-global-footer::before {
   content: none !important;
   display: none !important;
