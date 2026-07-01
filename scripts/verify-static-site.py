@@ -82,6 +82,7 @@ def assert_ar_entry_is_primary() -> None:
     assert_contains("ar.html", "/pages/ar-mobile-fish-fit.css", "mobile AR full-fish fit guard")
     assert_contains("ar.html", "/pages/ar-ultra-small-phone.css", "ultra-small phone and landscape AR guard")
     assert_contains("ar.html", "/pages/ar-safe-view.css", "AR safe-view frame")
+    assert_contains("ar.html", "/pages/ar-stall-tap-safe.css", "fish-stall tap-safe mobile controls")
     assert_contains("ar.html", "/pages/ar-official-model-only.css", "AR official 3D model only styles")
     assert_contains("ar.html", "/pages/ar-official-model-only.js", "AR official 3D model only behavior")
     assert_contains("ar.html", "/pages/ar-no-generated-fish-visuals.css", "AR generated fish visual guard")
@@ -92,6 +93,12 @@ def assert_ar_entry_is_primary() -> None:
         raise AssertionError("pages/ar-ultra-small-phone.css must protect the full 3D fish in mobile landscape view")
     if "overflow-x: clip" not in phone_guard or "max-block-size" not in phone_guard:
         raise AssertionError("pages/ar-ultra-small-phone.css must prevent landscape AR control overflow")
+
+    tap_safe = read("pages/ar-stall-tap-safe.css")
+    if "touch-action: manipulation" not in tap_safe or "max-inline-size" not in tap_safe:
+        raise AssertionError("pages/ar-stall-tap-safe.css must keep fish-stall AR controls tappable without horizontal overflow")
+    if "自製品牌圖形" not in tap_safe:
+        raise AssertionError("pages/ar-stall-tap-safe.css must document that it does not add generated brand graphics")
 
     model_only_css = read("pages/ar-official-model-only.css")
     model_only_js = read("pages/ar-official-model-only.js")
@@ -119,6 +126,7 @@ def main() -> int:
         "pages/ar-mobile-fish-fit.css",
         "pages/ar-ultra-small-phone.css",
         "pages/ar-safe-view.css",
+        "pages/ar-stall-tap-safe.css",
         "pages/ar-official-model-only.css",
         "pages/ar-official-model-only.js",
         "pages/ar-no-generated-fish-visuals.css",
@@ -130,7 +138,7 @@ def main() -> int:
     assert_ar_entry_is_primary()
     assert_no_public_phrase("Elon Musk")
     assert_no_public_phrase("first principles")
-    print("FishFull static checks passed: official logo, no duplicate footer guard, generated-logo cleanup, alternate trademark cleanup, AR entry, mobile fish-fit guard, landscape phone guard, official 3D model-only AR guard, and no generated hero fish visuals are present.")
+    print("FishFull static checks passed: official logo, no duplicate footer guard, generated-logo cleanup, alternate trademark cleanup, AR entry, mobile fish-fit guard, landscape phone guard, fish-stall tap-safe controls, official 3D model-only AR guard, and no generated hero fish visuals are present.")
     return 0
 
 
