@@ -14,6 +14,13 @@ ROOT = Path(__file__).resolve().parents[1]
 COPYRIGHT = "Copyright © 2026Fishfull漁有料版權所有"
 OFFICIAL_LOGO = "/fishfull.jpg"
 PUBLIC_TEXT_EXTENSIONS = {".html", ".js", ".css"}
+GENERATED_LOGO_GUARD_TERMS = [
+    "generatedTrademarkSelector",
+    "removeGeneratedTrademarkVisuals",
+    "round-fish-logo",
+    "ai-generated-logo",
+    "legacy-fishfull-mark",
+]
 
 
 def read(path: str) -> str:
@@ -51,6 +58,9 @@ def assert_official_logo_guard() -> None:
         raise AssertionError("fishfull-site-shell.js must remove SVG, icon, or generated alternate trademark visuals")
     if "removeDuplicateCopyrightText" not in shell:
         raise AssertionError("fishfull-site-shell.js must remove duplicate copyright text outside the managed footer")
+    for term in GENERATED_LOGO_GUARD_TERMS:
+        if term not in shell:
+            raise AssertionError(f"fishfull-site-shell.js must guard against generated logo assets: {term}")
 
     html_paths = sorted(ROOT.glob("*.html")) + sorted((ROOT / "pages").glob("*.html"))
     for path in html_paths:
@@ -95,7 +105,7 @@ def main() -> int:
     assert_ar_entry_is_primary()
     assert_no_public_phrase("Elon Musk")
     assert_no_public_phrase("first principles")
-    print("FishFull static checks passed: official logo, no duplicate footer guard, alternate trademark cleanup, AR entry, and mobile fish-fit guard are present.")
+    print("FishFull static checks passed: official logo, no duplicate footer guard, generated-logo cleanup, alternate trademark cleanup, AR entry, and mobile fish-fit guard are present.")
     return 0
 
 
