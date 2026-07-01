@@ -3,6 +3,20 @@
 
   var logoSrc = '/fishfull.jpg';
   var copyrightText = 'Copyright © 2026Fishfull漁有料版權所有';
+  var generatedTrademarkSelector = [
+    '[data-generated-logo]',
+    '[data-generated-mark]',
+    '[data-ai-logo]',
+    '.generated-logo',
+    '.generated-mark',
+    '.ai-logo',
+    '.ai-generated-logo',
+    '.fish-logo',
+    '.fish-icon',
+    '.fish-badge',
+    '.round-fish-logo',
+    '.legacy-fishfull-mark'
+  ].join(', ');
   var observerTimer = null;
 
   function currentLang() {
@@ -61,6 +75,7 @@
     Array.prototype.forEach.call(marks, setOfficialLogo);
     dedupeBrandLogos();
     removeAlternateTrademarkVisuals();
+    removeGeneratedTrademarkVisuals();
   }
 
   function removeNode(node) {
@@ -96,6 +111,32 @@
 
       holders.forEach(function (holder) {
         if (holder !== keeper && !keeper.contains(holder)) removeNode(holder);
+      });
+    });
+  }
+
+  function isGeneratedTrademarkVisual(node) {
+    if (!node || !node.matches) return false;
+    if (hasOfficialLogo(node)) return false;
+    if (node.matches(generatedTrademarkSelector)) return true;
+    var label = [
+      node.getAttribute('class') || '',
+      node.getAttribute('id') || '',
+      node.getAttribute('aria-label') || '',
+      node.getAttribute('alt') || '',
+      node.getAttribute('src') || ''
+    ].join(' ');
+    return /(generated|ai[-_ ]?logo|round[-_ ]?fish|fish[-_ ]?(logo|icon|badge)|legacy[-_ ]?fishfull|brand[-_ ]?(fish|badge|icon))/i.test(label);
+  }
+
+  function removeGeneratedTrademarkVisuals() {
+    var scopes = document.querySelectorAll('.brand-mark, .brand, .site-nav, .page-nav, header');
+    Array.prototype.forEach.call(scopes, function (scope) {
+      Array.prototype.slice.call(scope.querySelectorAll(generatedTrademarkSelector + ', svg, canvas, picture, img')).forEach(function (node) {
+        if (hasOfficialLogo(node)) return;
+        if (node.matches && node.matches('svg, canvas') && isBrandContainer(node)) return removeNode(node);
+        if (isGeneratedTrademarkVisual(node)) return removeNode(node.closest('picture') || node);
+        if (node.matches && node.matches('img') && isLogoImage(node) && node.getAttribute('src') !== logoSrc) return removeNode(node.closest('picture') || node);
       });
     });
   }
