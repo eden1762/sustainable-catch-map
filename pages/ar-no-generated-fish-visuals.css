@@ -6,6 +6,18 @@
   display: none !important;
 }
 
+.page-ar-game .ar-phone-card .phone-fish::before,
+.page-ar-game .ar-phone-card .phone-fish::after,
+.page-ar-game .ar-phone-card .phone-fish-tail::before,
+.page-ar-game .ar-phone-card .phone-fish-tail::after,
+.page-ar-game .ar-phone-card .phone-fish-body::before,
+.page-ar-game .ar-phone-card .phone-fish-body::after,
+.page-ar-game .ar-phone-card .phone-fish-eye::before,
+.page-ar-game .ar-phone-card .phone-fish-eye::after {
+  content: none !important;
+  display: none !important;
+}
+
 .page-ar-game .ar-phone-card {
   min-height: 240px;
   justify-content: center;
