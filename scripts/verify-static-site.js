@@ -10,6 +10,7 @@ const OFFICIAL_LOGO = '/fishfull.jpg';
 const COPYRIGHT = 'Copyright © 2026Fishfull漁有料版權所有';
 const TEXT_EXTENSIONS = new Set(['.html', '.js', '.css']);
 const SKIP_DIRS = new Set(['.git', 'node_modules', '.vercel']);
+const LEGACY_BRAND_CLASS = ['brand', 'logo', 'img'].join('-');
 
 function normalizeRelative(filePath) {
   return path.relative(ROOT, filePath).split(path.sep).join('/');
@@ -69,13 +70,13 @@ function listHtmlFiles() {
 
 function assertNoStaticGeneratedLogoFragments() {
   const offenders = [];
-  const generatedSvgPattern = /<svg\b[^>]*class=["'][^"']*\bbrand-logo-img\b[^"']*["'][^>]*>/i;
+  const generatedSvgPattern = new RegExp(`<svg\\b[^>]*class=["'][^"']*\\b${LEGACY_BRAND_CLASS}\\b[^"']*["'][^>]*>`, 'i');
   const legacyFooterPattern = /<footer\b[^>]*class=["'][^"']*\bfishfull-global-footer\b[^"']*["'][^>]*>/i;
 
   for (const filePath of listHtmlFiles()) {
     const rel = normalizeRelative(filePath);
     const content = fs.readFileSync(filePath, 'utf8');
-    if (generatedSvgPattern.test(content)) offenders.push(`${rel}: contains svg.brand-logo-img`);
+    if (generatedSvgPattern.test(content)) offenders.push(`${rel}: contains generated brand logo SVG`);
     if (legacyFooterPattern.test(content)) offenders.push(`${rel}: contains footer.fishfull-global-footer`);
   }
 
@@ -84,10 +85,25 @@ function assertNoStaticGeneratedLogoFragments() {
   }
 }
 
+function assertNoBannedLiteral() {
+  const bannedLiteral = LEGACY_BRAND_CLASS;
+  const offenders = [];
+  for (const filePath of walkTextFiles()) {
+    const rel = normalizeRelative(filePath);
+    const content = fs.readFileSync(filePath, 'utf8');
+    if (rel === 'scripts/verify-static-site.js') continue;
+    if (content.includes(bannedLiteral)) offenders.push(rel);
+  }
+  if (offenders.length) {
+    throw new Error(`Banned legacy brand class literal found in:\n${offenders.join('\n')}`);
+  }
+}
+
 function assertOfficialLogoGuard() {
   const shell = read('fishfull-site-shell.js');
   const requiredTerms = [
     `var logoSrc = '${OFFICIAL_LOGO}'`,
+    'legacyBrandClass',
     'generatedTrademarkSelector',
     'function removeGeneratedTrademarkVisuals',
     'function removeAlternateTrademarkVisuals',
@@ -170,10 +186,10 @@ function assertRequiredFiles() {
 function main() {
   assertRequiredFiles();
   assertNoStaticGeneratedLogoFragments();
+  assertNoBannedLiteral();
   assertOfficialLogoGuard();
   assertArEntryIsPrimary();
 
-  // Touch all text files so syntax/path mistakes caused by unreadable files fail early.
   for (const filePath of walkTextFiles()) {
     fs.readFileSync(filePath, 'utf8');
   }
