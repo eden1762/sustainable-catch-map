@@ -4,6 +4,7 @@
   var logoSrc = '/fishfull.jpg';
   var copyrightText = 'Copyright © 2026Fishfull漁有料版權所有';
   var cleanupStyleId = 'fishfull-shell-cleanup-style';
+  var legacyBrandClass = ['brand', 'logo', 'img'].join('-');
   var generatedTrademarkSelector = [
     '[data-generated-logo]',
     '[data-generated-mark]',
@@ -12,8 +13,8 @@
     '.generated-mark',
     '.ai-logo',
     '.ai-generated-logo',
-    '.brand-logo-img',
-    'svg.brand-logo-img',
+    '.' + legacyBrandClass,
+    'svg.' + legacyBrandClass,
     '.fish-logo',
     '.fish-icon',
     '.fish-badge',
@@ -36,7 +37,7 @@
     style.id = cleanupStyleId;
     style.textContent = [
       'footer.site-footer.fishfull-global-footer::before{content:none!important;display:none!important;background:none!important;background-image:none!important;border:0!important;box-shadow:none!important;}',
-      'svg.brand-logo-img,.brand-logo-img[data-generated-logo],.generated-logo,.generated-mark,.ai-logo,.ai-generated-logo,.round-fish-logo,.legacy-fishfull-mark{display:none!important;}'
+      'svg.' + legacyBrandClass + ',.' + legacyBrandClass + '[data-generated-logo],.generated-logo,.generated-mark,.ai-logo,.ai-generated-logo,.round-fish-logo,.legacy-fishfull-mark{display:none!important;}'
     ].join('\n');
     document.head.appendChild(style);
   }
@@ -100,14 +101,14 @@
     if (!document.querySelectorAll) return;
     Array.prototype.slice.call(document.querySelectorAll('img, svg')).forEach(function (node) {
       if (!node || hasOfficialLogo(node)) return;
-      if (node.matches && node.matches('svg.brand-logo-img')) {
+      if (node.matches && node.matches('svg.' + legacyBrandClass)) {
         removeNode(node);
         return;
       }
       if (!node.matches || !node.matches('img')) return;
       if (!isLogoImage(node)) return;
       if (node.getAttribute('src') === logoSrc) return;
-      var removable = node.closest && node.closest('.home-brand-logo, .brand-symbol, .brand-sun, .generated-logo, .generated-mark, .ai-logo, .ai-generated-logo, .brand-logo-img, .fish-logo, .fish-icon, .fish-badge, .round-fish-logo, .legacy-fishfull-mark');
+      var removable = node.closest && node.closest('.home-brand-logo, .brand-symbol, .brand-sun, .generated-logo, .generated-mark, .ai-logo, .ai-generated-logo, .' + legacyBrandClass + ', .fish-logo, .fish-icon, .fish-badge, .round-fish-logo, .legacy-fishfull-mark');
       removeNode(removable || node);
     });
   }
@@ -164,7 +165,7 @@
       node.getAttribute('alt') || '',
       node.getAttribute('src') || ''
     ].join(' ');
-    return /(generated|ai[-_ ]?logo|round[-_ ]?fish|fish[-_ ]?(logo|icon|badge)|legacy[-_ ]?fishfull|brand[-_ ]?(fish|badge|icon))/i.test(label);
+    return /(generated|ai[-_ ]?logo|round[-_ ]?fish|fish[-_ ]?(logo|icon|badge)|legacy[-_ ]?fishfull|brand[-_ ]?logo[-_ ]?img|brand[-_ ]?(fish|badge|icon))/i.test(label);
   }
 
   function removeGeneratedTrademarkContainers() {
