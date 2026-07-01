@@ -67,3 +67,87 @@
     min-block-size: clamp(126px, 27svh, 172px) !important;
   }
 }
+
+/* FishFull AR landscape guard: keep the complete fish visible when a phone is turned sideways at the stall. */
+@media (max-height: 480px) and (orientation: landscape) {
+  .page-ar-game {
+    --fishfull-landscape-gutter: max(10px, env(safe-area-inset-left), env(safe-area-inset-right));
+  }
+
+  .page-ar-game .ar-hero,
+  .page-ar-game .ar-intro,
+  .page-ar-game .ar-shell,
+  .page-ar-game .ar-playground {
+    max-inline-size: 100%;
+    overflow-x: clip;
+  }
+
+  .page-ar-game .ar-stage {
+    --ar-safe-top: clamp(46px, 13svh, 66px);
+    --ar-safe-bottom: clamp(74px, 22svh, 104px);
+    min-block-size: min(430px, calc(100svh - 8px)) !important;
+    padding-inline: var(--fishfull-landscape-gutter) !important;
+  }
+
+  .page-ar-game .ar-stage.is-ar-on {
+    min-block-size: min(420px, calc(100svh - 8px)) !important;
+  }
+
+  .page-ar-game .ar-model,
+  .page-ar-game .ar-stage.is-ar-on .ar-model {
+    inline-size: min(48vw, 320px) !important;
+    min-block-size: clamp(134px, 46svh, 236px) !important;
+    max-block-size: calc(100% - var(--ar-safe-top) - var(--ar-safe-bottom)) !important;
+    margin-inline: auto !important;
+  }
+
+  .page-ar-game .ar-toolbar {
+    inset-inline: var(--fishfull-landscape-gutter) !important;
+    gap: 8px !important;
+    max-block-size: calc(34svh + env(safe-area-inset-bottom)) !important;
+    overflow-y: auto !important;
+    overscroll-behavior: contain;
+    -webkit-overflow-scrolling: touch;
+  }
+
+  .page-ar-game .ar-fish-options {
+    grid-template-columns: repeat(3, minmax(0, 1fr)) !important;
+    gap: 7px !important;
+  }
+
+  .page-ar-game .ar-fish-btn,
+  .page-ar-game .ar-toggle-camera,
+  .page-ar-game .ar-real-ar-btn {
+    min-block-size: 40px !important;
+    padding: 7px 9px !important;
+    font-size: .78rem !important;
+    line-height: 1.16 !important;
+  }
+
+  .page-ar-game .ar-hint-pill,
+  .page-ar-game .ar-fresh-strip,
+  .page-ar-game .ar-species-panel {
+    max-inline-size: calc(100% - (var(--fishfull-landscape-gutter) * 2)) !important;
+    font-size: .72rem !important;
+    line-height: 1.22 !important;
+  }
+}
+
+@media (max-width: 740px) and (max-height: 380px) and (orientation: landscape) {
+  .page-ar-game .ar-stage,
+  .page-ar-game .ar-stage.is-ar-on {
+    --ar-safe-top: clamp(38px, 12svh, 54px);
+    --ar-safe-bottom: clamp(64px, 22svh, 88px);
+    min-block-size: min(360px, calc(100svh - 6px)) !important;
+  }
+
+  .page-ar-game .ar-model,
+  .page-ar-game .ar-stage.is-ar-on .ar-model {
+    inline-size: min(42vw, 260px) !important;
+    min-block-size: clamp(112px, 43svh, 182px) !important;
+  }
+
+  .page-ar-game .ar-toolbar {
+    max-block-size: calc(32svh + env(safe-area-inset-bottom)) !important;
+  }
+}
