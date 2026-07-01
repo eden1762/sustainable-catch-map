@@ -82,6 +82,8 @@ def assert_ar_entry_is_primary() -> None:
     assert_contains("ar.html", "/pages/ar-mobile-fish-fit.css", "mobile AR full-fish fit guard")
     assert_contains("ar.html", "/pages/ar-ultra-small-phone.css", "ultra-small phone and landscape AR guard")
     assert_contains("ar.html", "/pages/ar-safe-view.css", "AR safe-view frame")
+    assert_contains("ar.html", "/pages/ar-official-model-only.css", "AR official 3D model only styles")
+    assert_contains("ar.html", "/pages/ar-official-model-only.js", "AR official 3D model only behavior")
     assert_contains("ar.html", "Back to the full 3D fish", "English full-fish return action")
 
     phone_guard = read("pages/ar-ultra-small-phone.css")
@@ -89,6 +91,13 @@ def assert_ar_entry_is_primary() -> None:
         raise AssertionError("pages/ar-ultra-small-phone.css must protect the full 3D fish in mobile landscape view")
     if "overflow-x: clip" not in phone_guard or "max-block-size" not in phone_guard:
         raise AssertionError("pages/ar-ultra-small-phone.css must prevent landscape AR control overflow")
+
+    model_only_css = read("pages/ar-official-model-only.css")
+    model_only_js = read("pages/ar-official-model-only.js")
+    if ".ar-fallback-fish" not in model_only_css or "display: none !important" not in model_only_css:
+        raise AssertionError("pages/ar-official-model-only.css must hide substitute fish art")
+    if "removeFallbackFish" not in model_only_js or "modelReady" not in model_only_js:
+        raise AssertionError("pages/ar-official-model-only.js must remove substitute fish art and hold photos until the full 3D model is ready")
 
     home = read("home.js")
     if "ar.html" not in home:
@@ -105,6 +114,8 @@ def main() -> int:
         "pages/ar-mobile-fish-fit.css",
         "pages/ar-ultra-small-phone.css",
         "pages/ar-safe-view.css",
+        "pages/ar-official-model-only.css",
+        "pages/ar-official-model-only.js",
     ]
     for path in required_files:
         read(path)
@@ -113,7 +124,7 @@ def main() -> int:
     assert_ar_entry_is_primary()
     assert_no_public_phrase("Elon Musk")
     assert_no_public_phrase("first principles")
-    print("FishFull static checks passed: official logo, no duplicate footer guard, generated-logo cleanup, alternate trademark cleanup, AR entry, mobile fish-fit guard, and landscape phone guard are present.")
+    print("FishFull static checks passed: official logo, no duplicate footer guard, generated-logo cleanup, alternate trademark cleanup, AR entry, mobile fish-fit guard, landscape phone guard, and official 3D model-only AR guard are present.")
     return 0
 
 
