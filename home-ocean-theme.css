@@ -43,15 +43,60 @@ body {
   border-color: rgba(255,255,255,.78);
 }
 
+.coast-panel {
+  background: linear-gradient(180deg, rgba(255,255,255,.88), rgba(232,248,255,.86));
+}
+
 .coast-sky {
   background: linear-gradient(180deg, rgba(255,255,255,.9), rgba(232,248,255,.72));
 }
 
-.static-sun {
+/* Screenshot fix: replace the old mint ball and cloud decorations with cute ocean-only ornaments. */
+.static-sun,
+.cloud {
+  display: none !important;
+}
+
+.coast-sky::before,
+.coast-sky::after,
+.coast-water::before,
+.coast-water::after,
+.coast-sand::before,
+.coast-sand::after {
+  content: "";
+  position: absolute;
+  pointer-events: none;
+}
+
+.coast-sky::before {
+  left: 8%;
+  right: 8%;
+  bottom: -10px;
+  height: 58px;
+  border-radius: 999px;
   background:
-    radial-gradient(circle at 38% 32%, rgba(255,255,255,.95) 0 16%, rgba(255,255,255,0) 17%),
-    linear-gradient(135deg, #e8f8ff, #ffffff 48%, #dff7ed);
-  box-shadow: 0 20px 70px rgba(8,111,159,.18);
+    radial-gradient(ellipse at 10% 70%, rgba(8,111,159,.18) 0 18%, transparent 19%),
+    radial-gradient(ellipse at 30% 70%, rgba(255,255,255,.9) 0 19%, transparent 20%),
+    radial-gradient(ellipse at 50% 70%, rgba(8,111,159,.16) 0 18%, transparent 19%),
+    radial-gradient(ellipse at 70% 70%, rgba(255,255,255,.86) 0 19%, transparent 20%),
+    radial-gradient(ellipse at 90% 70%, rgba(31,157,114,.14) 0 18%, transparent 19%);
+  opacity: .95;
+}
+
+.coast-sky::after {
+  top: 50px;
+  right: 16%;
+  width: 86px;
+  height: 42px;
+  border-radius: 58% 46% 46% 58%;
+  background:
+    radial-gradient(circle at 24% 40%, rgba(255,255,255,.96) 0 8%, transparent 9%),
+    linear-gradient(135deg, rgba(31,157,114,.9), rgba(8,111,159,.88));
+  box-shadow:
+    -16px 18px 0 -12px rgba(8,111,159,.34),
+    24px 3px 0 -13px rgba(31,157,114,.76);
+  transform: rotate(-7deg);
+  opacity: .9;
 }
 
 .coast-water {
@@ -61,11 +106,66 @@ body {
     linear-gradient(180deg, var(--fishfull-blue), var(--fishfull-blue-deep));
 }
 
+.coast-water::before {
+  left: -8%;
+  right: -8%;
+  top: -28px;
+  height: 72px;
+  background:
+    radial-gradient(ellipse at 9% 68%, rgba(255,255,255,.92) 0 15%, transparent 16%),
+    radial-gradient(ellipse at 28% 64%, rgba(255,255,255,.82) 0 15%, transparent 16%),
+    radial-gradient(ellipse at 48% 68%, rgba(255,255,255,.9) 0 15%, transparent 16%),
+    radial-gradient(ellipse at 68% 64%, rgba(255,255,255,.82) 0 15%, transparent 16%),
+    radial-gradient(ellipse at 88% 68%, rgba(255,255,255,.9) 0 15%, transparent 16%);
+  opacity: .86;
+}
+
+.coast-water::after {
+  left: 12%;
+  bottom: 18px;
+  width: 58px;
+  height: 30px;
+  border-radius: 55% 45% 45% 55%;
+  background:
+    radial-gradient(circle at 26% 40%, rgba(255,255,255,.94) 0 7%, transparent 8%),
+    linear-gradient(135deg, rgba(255,255,255,.82), rgba(31,157,114,.72) 48%, rgba(8,111,159,.75));
+  box-shadow: 18px 2px 0 -11px rgba(31,157,114,.64);
+  transform: rotate(5deg);
+  opacity: .88;
+}
+
 .coast-sand {
   background:
     radial-gradient(ellipse at 20% 0, rgba(255,255,255,.84) 0 16%, transparent 17%),
     radial-gradient(ellipse at 70% 0, rgba(255,255,255,.72) 0 13%, transparent 14%),
     linear-gradient(180deg, var(--fishfull-green-soft), var(--fishfull-white));
+}
+
+.coast-sand::before,
+.coast-sand::after {
+  bottom: 12px;
+  width: 12px;
+  height: 88px;
+  border-radius: 999px 999px 14px 14px;
+  background: linear-gradient(180deg, rgba(31,157,114,.18), rgba(31,157,114,.72));
+  transform-origin: bottom center;
+  opacity: .9;
+}
+
+.coast-sand::before {
+  left: 7%;
+  box-shadow:
+    18px 12px 0 -3px rgba(8,114,79,.58),
+    38px -2px 0 -2px rgba(31,157,114,.52);
+  transform: rotate(-9deg);
+}
+
+.coast-sand::after {
+  right: 9%;
+  box-shadow:
+    -18px 9px 0 -3px rgba(8,114,79,.54),
+    -38px -5px 0 -2px rgba(31,157,114,.5);
+  transform: rotate(8deg);
 }
 
 .route-orange,
@@ -83,4 +183,31 @@ body {
   color: var(--fishfull-green-deep);
   background: var(--fishfull-green-soft);
   border-color: rgba(31,157,114,.18);
+}
+
+@media (max-width: 720px) {
+  .coast-sky::before {
+    left: 5%;
+    right: 5%;
+    height: 50px;
+  }
+
+  .coast-sky::after {
+    top: 46px;
+    right: 10%;
+    width: 72px;
+    height: 36px;
+  }
+
+  .coast-water::after {
+    left: 10%;
+    bottom: 12px;
+    width: 50px;
+    height: 26px;
+  }
+
+  .coast-sand::before,
+  .coast-sand::after {
+    height: 70px;
+  }
 }
